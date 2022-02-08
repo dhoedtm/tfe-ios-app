@@ -16,6 +16,7 @@
 		CE036EDA27AAD17E00585B7A /* TFETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE036ED927AAD17E00585B7A /* TFETests.swift */; };
 		CE036EE427AAD17E00585B7A /* TFEUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE036EE327AAD17E00585B7A /* TFEUITests.swift */; };
 		CE036EE627AAD17F00585B7A /* TFEUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE036EE527AAD17F00585B7A /* TFEUITestsLaunchTests.swift */; };
+		DBCDA37053CFE4FBACDF0769 /* libPods-TFE.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8478B5A6C90819578314850C /* libPods-TFE.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		54973BF1C6BD9FFB63C734FE /* Pods-TFE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFE.release.xcconfig"; path = "Target Support Files/Pods-TFE/Pods-TFE.release.xcconfig"; sourceTree = "<group>"; };
+		8478B5A6C90819578314850C /* libPods-TFE.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TFE.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE036EC027AAD17900585B7A /* TFE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE036EC327AAD17900585B7A /* TFEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEApp.swift; sourceTree = "<group>"; };
 		CE036EC527AAD17900585B7A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -48,6 +51,7 @@
 		CE036EDF27AAD17E00585B7A /* TFEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TFEUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE036EE327AAD17E00585B7A /* TFEUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEUITests.swift; sourceTree = "<group>"; };
 		CE036EE527AAD17F00585B7A /* TFEUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E86120B4E5C2E5353A872822 /* Pods-TFE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFE.debug.xcconfig"; path = "Target Support Files/Pods-TFE/Pods-TFE.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBCDA37053CFE4FBACDF0769 /* libPods-TFE.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +80,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6D07CB7F832429ED763BDD96 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8478B5A6C90819578314850C /* libPods-TFE.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C414612EFC49878A248BA014 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E86120B4E5C2E5353A872822 /* Pods-TFE.debug.xcconfig */,
+				54973BF1C6BD9FFB63C734FE /* Pods-TFE.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		CE02E39927B29E5400B949C5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		CE02E39A27B29ECD00B949C5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		CE02E39B27B29EE200B949C5 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		CE036EB727AAD17900585B7A = {
 			isa = PBXGroup;
 			children = (
@@ -82,6 +126,8 @@
 				CE036ED827AAD17E00585B7A /* TFETests */,
 				CE036EE227AAD17E00585B7A /* TFEUITests */,
 				CE036EC127AAD17900585B7A /* Products */,
+				C414612EFC49878A248BA014 /* Pods */,
+				6D07CB7F832429ED763BDD96 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,6 +144,9 @@
 		CE036EC227AAD17900585B7A /* TFE */ = {
 			isa = PBXGroup;
 			children = (
+				CE02E39B27B29EE200B949C5 /* ViewModel */,
+				CE02E39A27B29ECD00B949C5 /* View */,
+				CE02E39927B29E5400B949C5 /* Model */,
 				CE036EC327AAD17900585B7A /* TFEApp.swift */,
 				CE036EC527AAD17900585B7A /* ContentView.swift */,
 				CE036EC727AAD17E00585B7A /* Assets.xcassets */,
@@ -140,9 +189,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE036EE927AAD17F00585B7A /* Build configuration list for PBXNativeTarget "TFE" */;
 			buildPhases = (
+				4907BD91ED9539C8B0A15B60 /* [CP] Check Pods Manifest.lock */,
 				CE036EBC27AAD17900585B7A /* Sources */,
 				CE036EBD27AAD17900585B7A /* Frameworks */,
 				CE036EBE27AAD17900585B7A /* Resources */,
+				32E05D4B7DAA3CB1B44F4140 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -257,6 +308,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		32E05D4B7DAA3CB1B44F4140 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TFE/Pods-TFE-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TFE/Pods-TFE-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TFE/Pods-TFE-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4907BD91ED9539C8B0A15B60 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TFE-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CE036EBC27AAD17900585B7A /* Sources */ = {
@@ -421,6 +514,7 @@
 		};
 		CE036EEA27AAD17F00585B7A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E86120B4E5C2E5353A872822 /* Pods-TFE.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -449,6 +543,7 @@
 		};
 		CE036EEB27AAD17F00585B7A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 54973BF1C6BD9FFB63C734FE /* Pods-TFE.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

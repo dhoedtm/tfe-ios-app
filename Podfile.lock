@@ -1,0 +1,42 @@
+PODS:
+  - Alamofire (5.5.0)
+  - RxCocoa (6.5.0):
+    - RxRelay (= 6.5.0)
+    - RxSwift (= 6.5.0)
+  - RxRelay (6.5.0):
+    - RxSwift (= 6.5.0)
+  - RxSwift (6.5.0)
+  - Siesta (1.5.2):
+    - Siesta/Core (= 1.5.2)
+  - Siesta/Alamofire (1.5.2):
+    - Alamofire (> 5.0)
+    - Siesta/Core
+  - Siesta/Core (1.5.2)
+  - Siesta/UI (1.5.2):
+    - Siesta/Core
+
+DEPENDENCIES:
+  - RxCocoa (~> 6.5.0)
+  - RxSwift (~> 6.5.0)
+  - Siesta (~> 1.0)
+  - Siesta/Alamofire (~> 1.0)
+  - Siesta/UI (~> 1.0)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - RxCocoa
+    - RxRelay
+    - RxSwift
+    - Siesta
+
+SPEC CHECKSUMS:
+  Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
+  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
+  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
+  Siesta: d1e1966af43ffca170f658ad6d987228a5b40873
+
+PODFILE CHECKSUM: 545bd5fc905677d18cfc94a63e07e7ff96a23351
+
+COCOAPODS: 1.11.2

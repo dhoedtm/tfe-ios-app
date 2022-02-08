@@ -1,0 +1,6 @@
+module Pods_TFE {
+  umbrella header "Pods-TFE-umbrella.h"
+
+  export *
+  module * { export * }
+}
