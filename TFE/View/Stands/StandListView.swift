@@ -7,10 +7,12 @@
 
 import SwiftUI
 
+
+
 struct StandListView: View {
     var body: some View {
-        List {
-            ForEach()
+        List(stands) { stand in
+            Text("Coucou from : \(stand.name)")
         }
     }
 }

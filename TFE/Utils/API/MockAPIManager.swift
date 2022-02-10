@@ -5,11 +5,13 @@
 //  Created by user on 09/02/2022.
 //
 
+import Foundation
+
 class MockAPIManager : APIManaging {
     func getStands() -> [Stand] {
         var stands = [Stand]()
         stands.append(Stand(
-            id: 1,
+            idStand: 1,
             name: "stand_1",
             filePath: "NaN",
             treeCount: 13,
@@ -18,7 +20,7 @@ class MockAPIManager : APIManaging {
             treePerAcre: 7,
             description: "my 1st stand"))
         stands.append(Stand(
-            id: 2,
+            idStand: 2,
             name: "stand_2",
             filePath: "NaN",
             treeCount: 14,
@@ -27,7 +29,7 @@ class MockAPIManager : APIManaging {
             treePerAcre: 3,
             description: "my 2nd stand"))
         stands.append(Stand(
-            id: 3,
+            idStand: 3,
             name: "stand_3",
             filePath: "NaN",
             treeCount: 5,
