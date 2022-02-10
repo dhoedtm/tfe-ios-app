@@ -6,6 +6,15 @@
 //
 
 import SwiftUI
+import Swinject
+
+let container : Container = {
+    let container = Container()
+    container.register(APIManaging.self) { _ in
+        return MockAPIManager()
+    }
+    return container
+}()
 
 @main
 struct TFEApp: App {

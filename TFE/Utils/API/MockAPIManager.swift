@@ -5,7 +5,7 @@
 //  Created by user on 09/02/2022.
 //
 
-class MockAPIManager : ApiManaging {
+class MockAPIManager : APIManaging {
     func getStands() -> [Stand] {
         var stands = [Stand]()
         stands.append(Stand(

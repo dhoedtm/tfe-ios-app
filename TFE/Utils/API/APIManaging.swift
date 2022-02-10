@@ -5,6 +5,6 @@
 //  Created by user on 09/02/2022.
 //
 
-protocol ApiManaging {
+protocol APIManaging {
     func getStands() -> [Stand]
 }

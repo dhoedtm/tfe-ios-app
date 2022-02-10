@@ -10,7 +10,7 @@ import SwiftUI
 struct StandListView: View {
     var body: some View {
         List {
-        
+            ForEach()
         }
     }
 }
