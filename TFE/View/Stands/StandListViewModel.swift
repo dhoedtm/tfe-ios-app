@@ -6,7 +6,15 @@
 //
 
 import Foundation
-import RxSwift
+// import RxSwift
 
-let api = container.resolve(APIManaging.self)!
-let stands : [Stand] = api.getStands()
+class StandListViewModel : ObservableObject {
+
+    let api = container.resolve(APIManaging.self)!
+    
+    @Published var stands : [Stand]
+    
+    init() {
+        self.stands = api.getStands()
+    }
+}

@@ -15,7 +15,6 @@
 		CE6E74AD27B3F9B800E9B583 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AC27B3F9B800E9B583 /* JSON.swift */; };
 		CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */; };
 		CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A39B27B3D3970098628D /* TFEApp.swift */; };
-		CEE8A39E27B3D3970098628D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A39D27B3D3970098628D /* ContentView.swift */; };
 		CEE8A3A027B3D39A0098628D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A39F27B3D39A0098628D /* Assets.xcassets */; };
 		CEE8A3A327B3D39A0098628D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A3A227B3D39A0098628D /* Preview Assets.xcassets */; };
 		CEE8A3AD27B3D39B0098628D /* TFETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A3AC27B3D39B0098628D /* TFETests.swift */; };
@@ -55,7 +54,6 @@
 		CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandListViewModel.swift; sourceTree = "<group>"; };
 		CEE8A39827B3D3970098628D /* TFE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE8A39B27B3D3970098628D /* TFEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEApp.swift; sourceTree = "<group>"; };
-		CEE8A39D27B3D3970098628D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CEE8A39F27B3D39A0098628D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEE8A3A227B3D39A0098628D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CEE8A3A827B3D39B0098628D /* TFETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TFETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,7 +164,6 @@
 				CE6E749D27B3F12C00E9B583 /* Utils */,
 				CE6E74A227B3F12C00E9B583 /* View */,
 				CEE8A39B27B3D3970098628D /* TFEApp.swift */,
-				CEE8A39D27B3D3970098628D /* ContentView.swift */,
 				CEE8A39F27B3D39A0098628D /* Assets.xcassets */,
 				CEE8A3A127B3D39A0098628D /* Preview Content */,
 			);
@@ -341,7 +338,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE6E74A527B3F12C00E9B583 /* APIManager.swift in Sources */,
-				CEE8A39E27B3D3970098628D /* ContentView.swift in Sources */,
 				CE6E74A627B3F12C00E9B583 /* MockAPIManager.swift in Sources */,
 				CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */,
 				CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */,

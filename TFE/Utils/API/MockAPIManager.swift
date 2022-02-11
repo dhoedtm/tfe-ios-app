@@ -11,7 +11,7 @@ class MockAPIManager : APIManaging {
     func getStands() -> [Stand] {
         var stands = [Stand]()
         stands.append(Stand(
-            idStand: 1,
+            id: 1,
             name: "stand_1",
             filePath: "NaN",
             treeCount: 13,
@@ -20,7 +20,7 @@ class MockAPIManager : APIManaging {
             treePerAcre: 7,
             description: "my 1st stand"))
         stands.append(Stand(
-            idStand: 2,
+            id: 2,
             name: "stand_2",
             filePath: "NaN",
             treeCount: 14,
@@ -29,7 +29,7 @@ class MockAPIManager : APIManaging {
             treePerAcre: 3,
             description: "my 2nd stand"))
         stands.append(Stand(
-            idStand: 3,
+            id: 3,
             name: "stand_3",
             filePath: "NaN",
             treeCount: 5,

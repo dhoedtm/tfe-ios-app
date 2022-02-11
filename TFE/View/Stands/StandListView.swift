@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-
-
 struct StandListView: View {
+    
+    //
+    @EnvironmentObject private var vm : StandListViewModel
+    
     var body: some View {
-        List(stands) { stand in
+        List(vm.stands) { stand in
             Text("Coucou from : \(stand.name)")
         }
     }
@@ -20,5 +22,6 @@ struct StandListView: View {
 struct StandListView_Previews: PreviewProvider {
     static var previews: some View {
         StandListView()
+            .environmentObject(StandListViewModel())
     }
 }

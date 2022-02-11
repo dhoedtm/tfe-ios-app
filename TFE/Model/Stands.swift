@@ -8,11 +8,10 @@
 import Foundation
 
 // Identifiable is required in order to be used in a List in a View
-// items need to be uniquely identifiable, key "id" initiliazed with UUID()
-// could use actual "standId" but better to semantically separate the two
+// items need to be uniquely identifiable, "id" could also be initiliazed with UUID()
 struct Stand : Identifiable {
-    let id = UUID()
-    let idStand : Int
+    // let id = UUID()
+    let id : Int
     let name : String
     let filePath : String
     let treeCount : Int
@@ -29,7 +28,7 @@ extension Stand {
     init?(json: JSON) {
         // returns nil if one of those keys is not defined
         guard
-            let idStand = json["idStand"] as? Int,
+            let id = json["idStand"] as? Int,
             let name = json["name"] as? String,
             let filePath = json["filePath"] as? String,
             let treeCount = json["treeCount"] as? Int,
@@ -42,7 +41,7 @@ extension Stand {
         }
         
         self.init(
-            idStand:idStand, name:name, filePath: filePath, treeCount: treeCount, basalArea:basalArea, standDensity: standDensity, treePerAcre:treePerAcre, description: description
+            id:id, name:name, filePath: filePath, treeCount: treeCount, basalArea:basalArea, standDensity: standDensity, treePerAcre:treePerAcre, description: description
         )
     }
 }
