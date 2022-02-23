@@ -23,6 +23,8 @@ struct Stand : Identifiable {
 
 // init defined as extension to benefit from the defaut initializer
 // provided by the framework
+// the extension holds the functions whereas the main body of the struct is kept
+// short and only contains the state variables
 extension Stand {
     // JSON is a typealias for a Dictionnary String -> Any
     init?(json: JSON) {
