@@ -21,37 +21,62 @@ class StandListViewModel : ObservableObject {
     let api = container.resolve(APIManaging.self)!
     
     @Published var stands : [Stand]
-    @Published var selectedStand : Stand {
+    @Published var selectedStand : Stand? {
         didSet {
-            // reflects changes to the variable "selectedStandRegion"
-            updateMapRegion(stand: selectedStand)
+            if (selectedStand != nil) {
+                if let firstTree = selectedStand!.trees.first {
+                    selectedTree = firstTree
+                } else {
+                    print("tree list for selected stand is empty")
+                    selectedTree = nil
+                }
+            }
         }
     }
-    // automatically updated via the "didSet" trigger on the variable "selectedStand"
-    @Published var selectedStandRegion : MKCoordinateRegion = MKCoordinateRegion() // blank initially
+    @Published var selectedTree : Tree? {
+        didSet {
+            // property observer, triggers after the variable "selectedTreeRegion" is set
+            if (selectedTree == nil) {
+                print("could not update map region, selected tree is nil")
+                return
+            }
+            updateMapRegion(tree: selectedTree!)
+        }
+    }
+    // automatically updated via the "didSet" trigger on the variable "selectedTree"
+    @Published var selectedTreeRegion : MKCoordinateRegion = MKCoordinateRegion() // blank initially
     
-    func getLocationFromCoordinates(stand:Stand) -> MKCoordinateRegion {
+    func getLocationFromCoordinates(tree:Tree) -> MKCoordinateRegion {
         // TODO: retrieve lat, long from stand
         return MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 50.708225, longitude: 4.352829), // center of the map, focus
+            center: CLLocationCoordinate2D(latitude: tree.latitude, longitude: tree.longitude), // center of the map, focus
             span: mapSpan // how much zoomed on the center
         )
     }
     
-    private func updateMapRegion(stand: Stand) {
+    private func updateMapRegion(tree: Tree) {
         withAnimation(.easeInOut) {
-            selectedStandRegion = getLocationFromCoordinates(stand: stand)
+            selectedTreeRegion = getLocationFromCoordinates(tree: tree)
         }
     }
     
     init() {
         let stands = api.getStands()
         self.stands = stands
-        // Explicit unwrap of the 1st item with "!"
-        // Not safe for network retrieved information
-        // TODO: better handle failures (try/catch ? using alamofire ?)
-        self.selectedStand = stands.first!
         
-        self.updateMapRegion(stand: selectedStand)
+        // TODO: messy, amount of if statements would grow with deeper levels of nested data
+        // could use alamofire to better handle missing/empty data ?
+        if let firstStand = stands.first {
+            self.selectedStand = firstStand
+            if let firstTree = selectedStand!.trees.first {
+                self.selectedTree = firstTree
+            } else {
+                print("tree list for selected stand is empty")
+                self.selectedTree = nil
+            }
+        } else {
+            print("no stand could be selected as the retrieved stands list is empty")
+            self.selectedStand = nil
+        }
     }
 }

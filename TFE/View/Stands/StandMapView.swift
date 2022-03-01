@@ -16,7 +16,7 @@ struct StandMapView: View {
         ZStack {
             // "coordinateRegion" : for a set of long/lat points
             // could use "mapRect" to show zoom in on a specific area (a given stand bounding box)
-            Map(coordinateRegion: $vm.selectedStandRegion)
+            Map(coordinateRegion: $vm.selectedTreeRegion)
                 // default safe area add padding to very top and bottom of the screen (curved areas)
                 .ignoresSafeArea()
             
@@ -41,12 +41,16 @@ struct StandMapView_Previews: PreviewProvider {
 extension StandMapView {
     private var header: some View {
         VStack {
-            Text(vm.selectedStand.name)
-                .font(.title2)
-                .fontWeight(.black)
-                .foregroundColor(.primary)
-                .frame(height: 55)
-            .frame(maxWidth: .infinity)
+            if let stand = vm.selectedStand {
+                Text(stand.name)
+                    .font(.title2)
+                    .fontWeight(.black)
+                    .foregroundColor(.primary)
+                    .frame(height: 55)
+                .frame(maxWidth: .infinity)
+            } else {
+                Text("no stand could be found")
+            }
         }
         .background(.thinMaterial)
         .cornerRadius(10)

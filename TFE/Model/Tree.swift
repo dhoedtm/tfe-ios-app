@@ -12,8 +12,8 @@ import Foundation
 struct Tree : Identifiable {
     // let id = UUID()
     let id : Int
-    let longitude : Double
     let latitude : Double
+    let longitude : Double
     let description : String
 }
 
@@ -27,15 +27,15 @@ extension Tree {
         // returns nil if one of those keys is not defined
         guard
             let id = json["idTree"] as? Int,
-            let longitude = json["longitude"] as? Double,
             let latitude = json["latitude"] as? Double,
+            let longitude = json["longitude"] as? Double,
             let description = json["description"] as? String
         else {
             return nil
         }
         
         self.init(
-            id:id, longitude:longitude, latitude:latitude, description: description
+            id:id, latitude:latitude, longitude:longitude, description: description
         )
     }
 }

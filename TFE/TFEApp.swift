@@ -36,7 +36,7 @@ struct TFEApp: App {
         // throughout the use of the application
         WindowGroup {
             // first screen
-            StandMapView()
+            StandListView()
                 .environmentObject(standListVM)
         }
     }

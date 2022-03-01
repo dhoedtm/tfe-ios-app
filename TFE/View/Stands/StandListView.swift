@@ -9,12 +9,11 @@ import SwiftUI
 
 struct StandListView: View {
     
-    //
     @EnvironmentObject private var vm : StandListViewModel
     
     var body: some View {
         List(vm.stands) { stand in
-            Text("Coucou from : \(stand.name)")
+            Text("stand : \(stand.name)")
         }
     }
 }

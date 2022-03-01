@@ -19,6 +19,7 @@ struct Stand : Identifiable {
     let standDensity : Double
     let treePerAcre : Double
     let description : String
+    let trees : [Tree]
 }
 
 // init defined as extension to benefit from the defaut initializer
@@ -37,13 +38,14 @@ extension Stand {
             let basalArea = json["basalArea"] as? Double,
             let standDensity = json["standDensity"] as? Double,
             let treePerAcre = json["treePerAcre"] as? Double,
-            let description = json["description"] as? String
+            let description = json["description"] as? String,
+            let trees = json["trees"] as? [Tree]
         else {
             return nil
         }
         
         self.init(
-            id:id, name:name, filePath: filePath, treeCount: treeCount, basalArea:basalArea, standDensity: standDensity, treePerAcre:treePerAcre, description: description
+            id:id, name:name, filePath: filePath, treeCount: treeCount, basalArea:basalArea, standDensity: standDensity, treePerAcre:treePerAcre, description: description, trees:trees
         )
     }
 }
