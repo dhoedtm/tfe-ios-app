@@ -10,7 +10,7 @@ import MapKit
 
 struct StandMapView: View {
     
-    @EnvironmentObject private var vm : StandListViewModel
+    @EnvironmentObject private var vm : TreesMapViewModel
     
     var body: some View {
         ZStack {
@@ -23,7 +23,10 @@ struct StandMapView: View {
             VStack(spacing:0) {
                 header
                     .padding()
-                
+                if (vm.trees.isEmpty) {
+                    Text("stand is empty, no trees could be found")
+                        .bold()
+                }
                 Spacer()
             }
         }
@@ -31,10 +34,17 @@ struct StandMapView: View {
 }
 
 struct StandMapView_Previews: PreviewProvider {
+    static private let stand : Stand = MockAPIManager().getStands().first!
     static var previews: some View {
         StandMapView()
+            .environmentObject(
+                TreesMapViewModel(selectedStand: stand)
+            )
     }
 }
+
+// EXTENSIONS
+// ----------
 
 // in order to keep the main body of the view relatively short and thus readable,
 // it is good practice to create extensions of that view

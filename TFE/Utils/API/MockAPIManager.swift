@@ -19,14 +19,7 @@ class MockAPIManager : APIManaging {
             standDensity: 4,
             treePerAcre: 7,
             description: "my 1st stand",
-            trees: [
-                Tree(id: 1, latitude: 50.708224, longitude: 4.352827, description: "un arbre"),
-                Tree(id: 2, latitude: 50.708325, longitude: 4.352828, description: "un arbre"),
-                Tree(id: 3, latitude: 50.708226, longitude: 4.352829, description: "un arbre"),
-                Tree(id: 4, latitude: 50.708224, longitude: 4.352827, description: "un arbre"),
-                Tree(id: 5, latitude: 50.708225, longitude: 4.352828, description: "un arbre"),
-                Tree(id: 6, latitude: 50.708226, longitude: 4.352829, description: "un arbre"),
-            ]
+            trees: []
         ))
         stands.append(Stand(
             id: 2,
@@ -37,9 +30,7 @@ class MockAPIManager : APIManaging {
             standDensity: 5,
             treePerAcre: 3,
             description: "my 2nd stand",
-            trees: [
-              Tree(id: 1, latitude: 50.708224, longitude: 4.352827, description: "un arbre")
-            ]
+            trees: []
         ))
         stands.append(Stand(
             id: 3,
@@ -54,4 +45,29 @@ class MockAPIManager : APIManaging {
         ))
         return stands
     }
+
+    func getTreesFromStand(idStand: Int) -> [Tree] {
+        switch idStand {
+        case 1:
+            return [
+                Tree(id: 1, latitude: 50.708224, longitude: 4.352827, description: "un arbre"),
+                Tree(id: 2, latitude: 50.708325, longitude: 4.352828, description: "un arbre"),
+                Tree(id: 3, latitude: 50.708226, longitude: 4.352829, description: "un arbre"),
+                Tree(id: 4, latitude: 50.708224, longitude: 4.352827, description: "un arbre"),
+                Tree(id: 5, latitude: 50.708225, longitude: 4.352828, description: "un arbre"),
+                Tree(id: 6, latitude: 50.708226, longitude: 4.352829, description: "un arbre"),
+            ]
+        case 2:
+            return [
+                Tree(id: 1, latitude: 50.708224, longitude: 4.352827, description: "un arbre")
+            ]
+        case 3:
+            return []
+        default:
+            print("MockAPI couldn't find trees for idStand \(idStand)")
+            return []
+        }
+    }
+
 }
+

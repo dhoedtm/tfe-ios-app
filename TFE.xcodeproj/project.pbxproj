@@ -15,6 +15,7 @@
 		CE6E74AD27B3F9B800E9B583 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AC27B3F9B800E9B583 /* JSON.swift */; };
 		CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */; };
 		CEA422F427C6817900D7FAFB /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA422F327C6817900D7FAFB /* Tree.swift */; };
+		CEE5C8D427CE738100A92F91 /* TreesMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE5C8D327CE738100A92F91 /* TreesMapViewModel.swift */; };
 		CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A39B27B3D3970098628D /* TFEApp.swift */; };
 		CEE8A3A027B3D39A0098628D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A39F27B3D39A0098628D /* Assets.xcassets */; };
 		CEE8A3A327B3D39A0098628D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A3A227B3D39A0098628D /* Preview Assets.xcassets */; };
@@ -26,7 +27,7 @@
 		CEF5EAB927B56A990040CDD6 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EAB827B56A990040CDD6 /* Swinject */; };
 		CEF5EABF27B5747A0040CDD6 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EABE27B5747A0040CDD6 /* RxCocoa */; };
 		CEF5EAC127B5747A0040CDD6 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EAC027B5747A0040CDD6 /* RxSwift */; };
-		CEF5EACD27C544BE0040CDD6 /* StandMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5EACC27C544BE0040CDD6 /* StandMapView.swift */; };
+		CEF5EACD27C544BE0040CDD6 /* TreesMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5EACC27C544BE0040CDD6 /* TreesMapView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		CE6E74AC27B3F9B800E9B583 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandListViewModel.swift; sourceTree = "<group>"; };
 		CEA422F327C6817900D7FAFB /* Tree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
+		CEE5C8D327CE738100A92F91 /* TreesMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreesMapViewModel.swift; sourceTree = "<group>"; };
 		CEE8A39827B3D3970098628D /* TFE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE8A39B27B3D3970098628D /* TFEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEApp.swift; sourceTree = "<group>"; };
 		CEE8A39F27B3D39A0098628D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -64,7 +66,7 @@
 		CEE8A3B227B3D39B0098628D /* TFEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TFEUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE8A3B627B3D39B0098628D /* TFEUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEUITests.swift; sourceTree = "<group>"; };
 		CEE8A3B827B3D39B0098628D /* TFEUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		CEF5EACC27C544BE0040CDD6 /* StandMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandMapView.swift; sourceTree = "<group>"; };
+		CEF5EACC27C544BE0040CDD6 /* TreesMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreesMapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 		CE6E74A227B3F12C00E9B583 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				CEE5C8D227CE734800A92F91 /* Trees */,
 				CE6E74B027B40A8900E9B583 /* Stands */,
 			);
 			path = View;
@@ -138,9 +141,17 @@
 			children = (
 				CE6E74A327B3F12C00E9B583 /* StandListView.swift */,
 				CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */,
-				CEF5EACC27C544BE0040CDD6 /* StandMapView.swift */,
 			);
 			path = Stands;
+			sourceTree = "<group>";
+		};
+		CEE5C8D227CE734800A92F91 /* Trees */ = {
+			isa = PBXGroup;
+			children = (
+				CEF5EACC27C544BE0040CDD6 /* TreesMapView.swift */,
+				CEE5C8D327CE738100A92F91 /* TreesMapViewModel.swift */,
+			);
+			path = Trees;
 			sourceTree = "<group>";
 		};
 		CEE8A38F27B3D3970098628D = {
@@ -346,11 +357,12 @@
 				CE6E74A527B3F12C00E9B583 /* APIManager.swift in Sources */,
 				CE6E74A627B3F12C00E9B583 /* MockAPIManager.swift in Sources */,
 				CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */,
-				CEF5EACD27C544BE0040CDD6 /* StandMapView.swift in Sources */,
+				CEF5EACD27C544BE0040CDD6 /* TreesMapView.swift in Sources */,
 				CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */,
 				CEA422F427C6817900D7FAFB /* Tree.swift in Sources */,
 				CE6E74AB27B3F4BA00E9B583 /* Stand.swift in Sources */,
 				CE6E74A727B3F12C00E9B583 /* APIManaging.swift in Sources */,
+				CEE5C8D427CE738100A92F91 /* TreesMapViewModel.swift in Sources */,
 				CE6E74A827B3F12C00E9B583 /* StandListView.swift in Sources */,
 				CE6E74AD27B3F9B800E9B583 /* JSON.swift in Sources */,
 			);

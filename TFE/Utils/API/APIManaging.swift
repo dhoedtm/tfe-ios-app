@@ -7,4 +7,5 @@
 
 protocol APIManaging {
     func getStands() -> [Stand]
+    func getTreesFromStand(idStand : Int) -> [Tree]
 }

@@ -12,8 +12,20 @@ struct StandListView: View {
     @EnvironmentObject private var vm : StandListViewModel
     
     var body: some View {
-        List(vm.stands) { stand in
-            Text("stand : \(stand.name)")
+        NavigationView {
+            List(vm.stands) { stand in
+                NavigationLink(
+                    // selectedStand : stand
+                    destination: StandMapView()
+                        .environmentObject(
+                            TreesMapViewModel(selectedStand: stand)
+                        )
+                ) {
+                    Text("stand : \(stand.name)")
+                }
+            }
+            .navigationTitle("Stands")
+            // .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
