@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE0CB6C427CF836600AA2107 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CB6C327CF836600AA2107 /* DocumentPicker.swift */; };
+		CE3B579327D1277E00C778C0 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3B579227D1277E00C778C0 /* ButtonStyles.swift */; };
+		CE3B579627D12ABB00C778C0 /* SimpleAlert in Frameworks */ = {isa = PBXBuildFile; productRef = CE3B579527D12ABB00C778C0 /* SimpleAlert */; };
 		CE6E74A527B3F12C00E9B583 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E749F27B3F12C00E9B583 /* APIManager.swift */; };
 		CE6E74A627B3F12C00E9B583 /* MockAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74A027B3F12C00E9B583 /* MockAPIManager.swift */; };
 		CE6E74A727B3F12C00E9B583 /* APIManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74A127B3F12C00E9B583 /* APIManaging.swift */; };
@@ -48,6 +51,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CE0CB6C327CF836600AA2107 /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
+		CE3B579227D1277E00C778C0 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		CE6E749F27B3F12C00E9B583 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		CE6E74A027B3F12C00E9B583 /* MockAPIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAPIManager.swift; sourceTree = "<group>"; };
 		CE6E74A127B3F12C00E9B583 /* APIManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManaging.swift; sourceTree = "<group>"; };
@@ -75,6 +80,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEF5EAB427B564330040CDD6 /* Siesta in Frameworks */,
+				CE3B579627D12ABB00C778C0 /* SimpleAlert in Frameworks */,
 				CEF5EAB627B564330040CDD6 /* SiestaUI in Frameworks */,
 				CEF5EAC127B5747A0040CDD6 /* RxSwift in Frameworks */,
 				CEF5EABF27B5747A0040CDD6 /* RxCocoa in Frameworks */,
@@ -99,6 +105,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE0CB6C227CF834800AA2107 /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				CE0CB6C327CF836600AA2107 /* DocumentPicker.swift */,
+			);
+			path = shared;
+			sourceTree = "<group>";
+		};
+		CE3B579127D1276300C778C0 /* styles */ = {
+			isa = PBXGroup;
+			children = (
+				CE3B579227D1277E00C778C0 /* ButtonStyles.swift */,
+			);
+			path = styles;
+			sourceTree = "<group>";
+		};
 		CE6E749D27B3F12C00E9B583 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +143,8 @@
 		CE6E74A227B3F12C00E9B583 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				CE3B579127D1276300C778C0 /* styles */,
+				CE0CB6C227CF834800AA2107 /* shared */,
 				CEE5C8D227CE734800A92F91 /* Trees */,
 				CE6E74B027B40A8900E9B583 /* Stands */,
 			);
@@ -234,6 +258,7 @@
 				CEF5EAB827B56A990040CDD6 /* Swinject */,
 				CEF5EABE27B5747A0040CDD6 /* RxCocoa */,
 				CEF5EAC027B5747A0040CDD6 /* RxSwift */,
+				CE3B579527D12ABB00C778C0 /* SimpleAlert */,
 			);
 			productName = TFE;
 			productReference = CEE8A39827B3D3970098628D /* TFE.app */;
@@ -311,6 +336,7 @@
 				CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */,
 				CEF5EAB727B56A990040CDD6 /* XCRemoteSwiftPackageReference "Swinject" */,
 				CEF5EABD27B5747A0040CDD6 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				CE3B579427D12ABA00C778C0 /* XCRemoteSwiftPackageReference "SimpleAlert.git" */,
 			);
 			productRefGroup = CEE8A39927B3D3970098628D /* Products */;
 			projectDirPath = "";
@@ -358,8 +384,10 @@
 				CE6E74A627B3F12C00E9B583 /* MockAPIManager.swift in Sources */,
 				CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */,
 				CEF5EACD27C544BE0040CDD6 /* TreesMapView.swift in Sources */,
+				CE0CB6C427CF836600AA2107 /* DocumentPicker.swift in Sources */,
 				CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */,
 				CEA422F427C6817900D7FAFB /* Tree.swift in Sources */,
+				CE3B579327D1277E00C778C0 /* ButtonStyles.swift in Sources */,
 				CE6E74AB27B3F4BA00E9B583 /* Stand.swift in Sources */,
 				CE6E74A727B3F12C00E9B583 /* APIManaging.swift in Sources */,
 				CEE5C8D427CE738100A92F91 /* TreesMapViewModel.swift in Sources */,
@@ -687,6 +715,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		CE3B579427D12ABA00C778C0 /* XCRemoteSwiftPackageReference "SimpleAlert.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/KyoheiG3/SimpleAlert.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bustoutsolutions/siesta";
@@ -714,6 +750,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CE3B579527D12ABB00C778C0 /* SimpleAlert */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE3B579427D12ABA00C778C0 /* XCRemoteSwiftPackageReference "SimpleAlert.git" */;
+			productName = SimpleAlert;
+		};
 		CEF5EAB327B564330040CDD6 /* Siesta */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */;

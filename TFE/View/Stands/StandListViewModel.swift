@@ -8,6 +8,7 @@
 import Foundation
 import MapKit
 import SwiftUI
+import SimpleAlert
 
 class StandListViewModel : ObservableObject {
     
@@ -15,6 +16,12 @@ class StandListViewModel : ObservableObject {
     
     @Published var stands : [Stand]
     @Published var selectedStand : Stand?
+    
+    func uploadPointClouds(filePaths: [URL]) {
+        for path in filePaths {
+            api.uploadPointCloud(filePath: path)
+        }
+    }
     
     init() {
         let stands = api.getStands()

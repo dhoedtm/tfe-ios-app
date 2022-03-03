@@ -8,6 +8,7 @@
 import Foundation
 
 class MockAPIManager : APIManaging {
+    
     func getStands() -> [Stand] {
         var stands = [Stand]()
         stands.append(Stand(
@@ -69,5 +70,8 @@ class MockAPIManager : APIManaging {
         }
     }
 
+    func uploadPointCloud(filePath: URL) {
+        print("MockAPI uploaded point cloud : \(filePath)")
+    }
 }
 

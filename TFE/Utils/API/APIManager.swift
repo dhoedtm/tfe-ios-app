@@ -7,11 +7,18 @@
 
 // TODO: add siesta / alamofire support
 
+import Foundation
+
 class APIManager : APIManaging {
     func getStands() -> [Stand] {
-        return [Stand]()
+        fatalError("not implemented")
+        // return [Stand]()
     }
     func getTreesFromStand(idStand: Int) -> [Tree] {
-        return [Tree]()
+        fatalError("not implemented")
+        // return [Tree]()
+    }
+    func uploadPointCloud(filePath: URL) {
+        fatalError("not implemented")
     }
 }
