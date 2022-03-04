@@ -51,12 +51,12 @@ class MockAPIManager : APIManaging {
         switch idStand {
         case 1:
             return [
-                Tree(id: 1, latitude: 50.708224, longitude: 4.352827, description: "un arbre"),
-                Tree(id: 2, latitude: 50.708325, longitude: 4.352828, description: "un arbre"),
-                Tree(id: 3, latitude: 50.708226, longitude: 4.352829, description: "un arbre"),
-                Tree(id: 4, latitude: 50.708224, longitude: 4.352827, description: "un arbre"),
-                Tree(id: 5, latitude: 50.708225, longitude: 4.352828, description: "un arbre"),
-                Tree(id: 6, latitude: 50.708226, longitude: 4.352829, description: "un arbre"),
+                Tree(id: 1, latitude: 50.708228, longitude: 4.352911, description: "un arbre"),
+                Tree(id: 2, latitude: 50.708239, longitude: 4.35288, description: "un arbre"),
+                Tree(id: 3, latitude: 50.708262, longitude: 4.352855, description: "un arbre"),
+                Tree(id: 4, latitude: 50.708251, longitude: 4.352834, description: "un arbre"),
+                Tree(id: 5, latitude: 50.708251, longitude: 4.352862, description: "un arbre"),
+                Tree(id: 6, latitude: 50.708262, longitude: 4.3528879, description: "un arbre"),
             ]
         case 2:
             return [

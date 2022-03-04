@@ -34,17 +34,21 @@ class TreesMapViewModel : ObservableObject {
     // automatically updated via the "didSet" trigger on the variable "selectedTree"
     @Published var selectedTreeRegion : MKCoordinateRegion = MKCoordinateRegion() // blank initially
     
-    func getLocationFromCoordinates(tree:Tree) -> MKCoordinateRegion {
-        // TODO: retrieve lat, long from stand
+    
+    func getLocationFromCoordinates(tree:Tree) -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: tree.latitude, longitude: tree.longitude)
+    }
+    func getRegionFromCoordinates(tree:Tree) -> MKCoordinateRegion {
+        // TODO: retrieve lat, long from stand to center map in the middle of the stand
         return MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: tree.latitude, longitude: tree.longitude), // center of the map, focus
+            center: getLocationFromCoordinates(tree: tree), // center of the map, focus
             span: mapSpan // how much zoomed on the center
         )
     }
     
     private func updateMapRegion(tree: Tree) {
         withAnimation(.easeInOut) {
-            selectedTreeRegion = getLocationFromCoordinates(tree: tree)
+            selectedTreeRegion = getRegionFromCoordinates(tree: tree)
         }
     }
     

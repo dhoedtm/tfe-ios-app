@@ -12,8 +12,8 @@ import Foundation
 struct Tree : Identifiable {
     // let id = UUID()
     let id : Int
-    let latitude : Double
-    let longitude : Double
+    var latitude : Double
+    var longitude : Double
     let description : String
 }
 

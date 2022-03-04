@@ -14,22 +14,18 @@ struct StandMapView: View {
     
     var body: some View {
         ZStack {
-            // "coordinateRegion" : for a set of long/lat points
-            // could use "mapRect" to show zoom in on a specific area (a given stand bounding box)
-            Map(coordinateRegion: $vm.selectedTreeRegion)
-                // default safe area add padding to very top and bottom of the screen (curved areas)
-                .ignoresSafeArea()
-            
-            VStack(spacing:0) {
-                header
-                    .padding()
-                if (vm.trees.isEmpty) {
-                    Text("stand is empty, no trees could be found")
-                        .bold()
+            if (vm.trees.isEmpty) {
+                Text("stand is empty, no trees could be found")
+                    .bold()
+            } else {
+                treeMap
+                VStack(spacing:0) {
+                    header
+                        .padding()
+                    Spacer()
                 }
-                Spacer()
             }
-        }
+        }        
     }
 }
 
@@ -48,6 +44,30 @@ struct StandMapView_Previews: PreviewProvider {
 
 // in order to keep the main body of the view relatively short and thus readable,
 // it is good practice to create extensions of that view
+
+extension StandMapView {
+    private var treeMap: some View {
+        // "coordinateRegion" : for a set of long/lat points
+        // could use "mapRect" to show zoom in on a specific area (a given stand bounding box)
+        Map(
+            coordinateRegion: $vm.selectedTreeRegion,
+            annotationItems: vm.trees,
+            annotationContent: { tree in
+                MapAnnotation(coordinate: vm.getLocationFromCoordinates(tree: tree)) {
+                    Image(systemName: "map.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 10, height: 10)
+                        .background(.green)
+                        .foregroundColor(.green)
+                }
+            }
+        )
+            // default safe area add padding to very top and bottom of the screen (curved areas)
+            .ignoresSafeArea()
+    }
+}
+
 extension StandMapView {
     private var header: some View {
         VStack {

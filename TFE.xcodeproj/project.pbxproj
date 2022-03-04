@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		CE0CB6C427CF836600AA2107 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CB6C327CF836600AA2107 /* DocumentPicker.swift */; };
 		CE3B579327D1277E00C778C0 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3B579227D1277E00C778C0 /* ButtonStyles.swift */; };
-		CE3B579627D12ABB00C778C0 /* SimpleAlert in Frameworks */ = {isa = PBXBuildFile; productRef = CE3B579527D12ABB00C778C0 /* SimpleAlert */; };
 		CE6E74A527B3F12C00E9B583 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E749F27B3F12C00E9B583 /* APIManager.swift */; };
 		CE6E74A627B3F12C00E9B583 /* MockAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74A027B3F12C00E9B583 /* MockAPIManager.swift */; };
 		CE6E74A727B3F12C00E9B583 /* APIManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74A127B3F12C00E9B583 /* APIManaging.swift */; };
@@ -80,7 +79,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEF5EAB427B564330040CDD6 /* Siesta in Frameworks */,
-				CE3B579627D12ABB00C778C0 /* SimpleAlert in Frameworks */,
 				CEF5EAB627B564330040CDD6 /* SiestaUI in Frameworks */,
 				CEF5EAC127B5747A0040CDD6 /* RxSwift in Frameworks */,
 				CEF5EABF27B5747A0040CDD6 /* RxCocoa in Frameworks */,
@@ -258,7 +256,6 @@
 				CEF5EAB827B56A990040CDD6 /* Swinject */,
 				CEF5EABE27B5747A0040CDD6 /* RxCocoa */,
 				CEF5EAC027B5747A0040CDD6 /* RxSwift */,
-				CE3B579527D12ABB00C778C0 /* SimpleAlert */,
 			);
 			productName = TFE;
 			productReference = CEE8A39827B3D3970098628D /* TFE.app */;
@@ -336,7 +333,6 @@
 				CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */,
 				CEF5EAB727B56A990040CDD6 /* XCRemoteSwiftPackageReference "Swinject" */,
 				CEF5EABD27B5747A0040CDD6 /* XCRemoteSwiftPackageReference "RxSwift" */,
-				CE3B579427D12ABA00C778C0 /* XCRemoteSwiftPackageReference "SimpleAlert.git" */,
 			);
 			productRefGroup = CEE8A39927B3D3970098628D /* Products */;
 			projectDirPath = "";
@@ -715,14 +711,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CE3B579427D12ABA00C778C0 /* XCRemoteSwiftPackageReference "SimpleAlert.git" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/KyoheiG3/SimpleAlert.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
 		CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bustoutsolutions/siesta";
@@ -750,11 +738,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CE3B579527D12ABB00C778C0 /* SimpleAlert */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CE3B579427D12ABA00C778C0 /* XCRemoteSwiftPackageReference "SimpleAlert.git" */;
-			productName = SimpleAlert;
-		};
 		CEF5EAB327B564330040CDD6 /* Siesta */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */;
