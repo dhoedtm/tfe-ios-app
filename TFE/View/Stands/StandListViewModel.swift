@@ -8,7 +8,6 @@
 import Foundation
 import MapKit
 import SwiftUI
-import SimpleAlert
 
 class StandListViewModel : ObservableObject {
     
@@ -27,6 +26,7 @@ class StandListViewModel : ObservableObject {
         let stands = api.getStands()
         self.stands = stands
         
+        /*
         // TODO: messy, amount of if statements would grow with deeper levels of nested data
         // could use alamofire to better handle missing/empty data ?
         if let firstStand = stands.first {
@@ -35,5 +35,6 @@ class StandListViewModel : ObservableObject {
             print("no stand could be selected as the retrieved stands list is empty")
             self.selectedStand = nil
         }
+        */
     }
 }

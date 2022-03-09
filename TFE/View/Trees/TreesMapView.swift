@@ -57,7 +57,7 @@ extension StandMapView {
                     Image(systemName: "map.circle.fill")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 10, height: 10)
+                        .frame(width: 15, height: 15)
                         .background(.green)
                         .foregroundColor(.green)
                 }
