@@ -13,11 +13,16 @@ struct Stand : Identifiable {
     // let id = UUID()
     let id : Int
     let name : String
-    let filePath : String
     let treeCount : Int
     let basalArea : Double
-    let standDensity : Double
-    let treePerAcre : Double
+    let convexAreaMeter: Double
+    let convexAreaHectare: Double
+    let concaveAreaMeter: Double
+    let concaveAreaHectare: Double    
+    let treeDensity: Double
+    let meanDbh: Double
+    let meanDistance: Double
+    let captureDate: Date
     let description : String
     let trees : [Tree]
 }
@@ -33,11 +38,16 @@ extension Stand {
         guard
             let id = json["idStand"] as? Int,
             let name = json["name"] as? String,
-            let filePath = json["filePath"] as? String,
             let treeCount = json["treeCount"] as? Int,
             let basalArea = json["basalArea"] as? Double,
-            let standDensity = json["standDensity"] as? Double,
-            let treePerAcre = json["treePerAcre"] as? Double,
+            let convexAreaMeter = json["convexAreaMeter"] as? Double,
+            let convexAreaHectare = json["convexAreaHectare"] as? Double,
+            let concaveAreaMeter = json["concaveAreaMeter"] as? Double,
+            let concaveAreaHectare = json["concaveAreaHectare"] as? Double,
+            let treeDensity = json["treeDensity"] as? Double,
+            let meanDbh = json["meanDbh"] as? Double,
+            let meanDistance = json["meanDistance"] as? Double,
+            let captureDate = DateParser.parse(date: json["captureDate"] as! String),
             let description = json["description"] as? String,
             let trees = json["trees"] as? [Tree]
         else {
@@ -45,7 +55,7 @@ extension Stand {
         }
         
         self.init(
-            id:id, name:name, filePath: filePath, treeCount: treeCount, basalArea:basalArea, standDensity: standDensity, treePerAcre:treePerAcre, description: description, trees:trees
+            id: id, name:name, treeCount: treeCount, basalArea: basalArea, convexAreaMeter: convexAreaMeter, convexAreaHectare: convexAreaHectare, concaveAreaMeter: concaveAreaMeter, concaveAreaHectare: concaveAreaHectare, treeDensity: treeDensity, meanDbh: meanDbh, meanDistance: meanDistance, captureDate: captureDate, description: description, trees: trees
         )
     }
 }
