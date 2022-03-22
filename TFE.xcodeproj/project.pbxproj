@@ -24,11 +24,7 @@
 		CEE8A3AD27B3D39B0098628D /* TFETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A3AC27B3D39B0098628D /* TFETests.swift */; };
 		CEE8A3B727B3D39B0098628D /* TFEUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A3B627B3D39B0098628D /* TFEUITests.swift */; };
 		CEE8A3B927B3D39B0098628D /* TFEUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A3B827B3D39B0098628D /* TFEUITestsLaunchTests.swift */; };
-		CEF5EAB427B564330040CDD6 /* Siesta in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EAB327B564330040CDD6 /* Siesta */; };
-		CEF5EAB627B564330040CDD6 /* SiestaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EAB527B564330040CDD6 /* SiestaUI */; };
 		CEF5EAB927B56A990040CDD6 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EAB827B56A990040CDD6 /* Swinject */; };
-		CEF5EABF27B5747A0040CDD6 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EABE27B5747A0040CDD6 /* RxCocoa */; };
-		CEF5EAC127B5747A0040CDD6 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EAC027B5747A0040CDD6 /* RxSwift */; };
 		CEF5EACD27C544BE0040CDD6 /* TreesMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5EACC27C544BE0040CDD6 /* TreesMapView.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,10 +74,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEF5EAB427B564330040CDD6 /* Siesta in Frameworks */,
-				CEF5EAB627B564330040CDD6 /* SiestaUI in Frameworks */,
-				CEF5EAC127B5747A0040CDD6 /* RxSwift in Frameworks */,
-				CEF5EABF27B5747A0040CDD6 /* RxCocoa in Frameworks */,
 				CEF5EAB927B56A990040CDD6 /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -251,11 +243,7 @@
 			);
 			name = TFE;
 			packageProductDependencies = (
-				CEF5EAB327B564330040CDD6 /* Siesta */,
-				CEF5EAB527B564330040CDD6 /* SiestaUI */,
 				CEF5EAB827B56A990040CDD6 /* Swinject */,
-				CEF5EABE27B5747A0040CDD6 /* RxCocoa */,
-				CEF5EAC027B5747A0040CDD6 /* RxSwift */,
 			);
 			productName = TFE;
 			productReference = CEE8A39827B3D3970098628D /* TFE.app */;
@@ -330,9 +318,7 @@
 			);
 			mainGroup = CEE8A38F27B3D3970098628D;
 			packageReferences = (
-				CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */,
 				CEF5EAB727B56A990040CDD6 /* XCRemoteSwiftPackageReference "Swinject" */,
-				CEF5EABD27B5747A0040CDD6 /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = CEE8A39927B3D3970098628D /* Products */;
 			projectDirPath = "";
@@ -483,6 +469,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -537,6 +524,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -713,14 +701,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/bustoutsolutions/siesta";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		CEF5EAB727B56A990040CDD6 /* XCRemoteSwiftPackageReference "Swinject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject";
@@ -729,41 +709,13 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		CEF5EABD27B5747A0040CDD6 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ReactiveX/RxSwift";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CEF5EAB327B564330040CDD6 /* Siesta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */;
-			productName = Siesta;
-		};
-		CEF5EAB527B564330040CDD6 /* SiestaUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CEF5EAB227B564330040CDD6 /* XCRemoteSwiftPackageReference "siesta" */;
-			productName = SiestaUI;
-		};
 		CEF5EAB827B56A990040CDD6 /* Swinject */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CEF5EAB727B56A990040CDD6 /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
-		};
-		CEF5EABE27B5747A0040CDD6 /* RxCocoa */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CEF5EABD27B5747A0040CDD6 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxCocoa;
-		};
-		CEF5EAC027B5747A0040CDD6 /* RxSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CEF5EABD27B5747A0040CDD6 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
