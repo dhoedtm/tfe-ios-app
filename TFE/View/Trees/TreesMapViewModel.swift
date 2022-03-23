@@ -8,7 +8,6 @@
 import Foundation
 import MapKit
 import SwiftUI
-// import RxSwift
 
 class TreesMapViewModel : ObservableObject {
     
@@ -19,8 +18,16 @@ class TreesMapViewModel : ObservableObject {
     
     let api = container.resolve(APIManaging.self)!
     
-    @Published var trees : [Tree]
+    @Published var error : String? = nil
+    @Published var isFetchingTrees : Bool = false
     @Published var selectedStand : Stand
+    @Published var trees : [Tree] = [Tree]() {
+        didSet {
+            if (!self.trees.isEmpty) {
+                self.selectedTree = self.trees.first
+            }
+        }
+    }
     @Published var selectedTree : Tree? {
         didSet {
             // property observer, triggers after the variable "selectedTreeRegion" is set
@@ -33,7 +40,6 @@ class TreesMapViewModel : ObservableObject {
     }
     // automatically updated via the "didSet" trigger on the variable "selectedTree"
     @Published var selectedTreeRegion : MKCoordinateRegion = MKCoordinateRegion() // blank initially
-    
     
     func getLocationFromCoordinates(tree:Tree) -> CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: tree.latitude, longitude: tree.longitude)
@@ -52,19 +58,30 @@ class TreesMapViewModel : ObservableObject {
         }
     }
     
+    func fetchTrees(idStand: Int) {
+        self.isFetchingTrees = true
+        api.getTreesFromStand(
+            idStand: selectedStand.id,
+            handler: {
+                [weak self] (returnedResult) in
+                if let data = returnedResult.data {
+                    guard let trees = try? JSONDecoder().decode([Tree].self, from: data) else {
+                        self?.error = "Internal error while decoding Tree array"
+                        self?.isFetchingTrees = false
+                        return
+                    }
+                    self?.trees = trees
+                } else {
+                    self?.error = returnedResult.error ?? "Unknown error occured"
+                }
+                self?.isFetchingTrees = false
+            }
+        )
+    }
+    
     init(selectedStand: Stand) {
         self.selectedStand = selectedStand
-        let trees = api.getTreesFromStand(idStand: selectedStand.id)
-        self.trees = trees
-        
-        // TODO: messy, amount of if statements would grow with deeper levels of nested data
-        // could use alamofire to better handle missing/empty data ?
-        if let firstTree = trees.first {
-            self.selectedTree = firstTree
-        } else {
-            print("tree list for selected stand is empty")
-            self.selectedTree = nil
-        }
+        fetchTrees(idStand: self.selectedStand.id)
     }
 }
 

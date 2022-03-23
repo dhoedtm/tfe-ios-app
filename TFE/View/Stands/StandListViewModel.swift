@@ -13,28 +13,44 @@ class StandListViewModel : ObservableObject {
     
     let api = container.resolve(APIManaging.self)!
     
-    @Published var stands : [Stand]
+    @Published var isFetchingStands : Bool = false
+    @Published var error : String? = nil
+    @Published var stands : [Stand] = [Stand]()
     @Published var selectedStand : Stand?
     
     func uploadPointClouds(filePaths: [URL]) {
         for path in filePaths {
-            api.uploadPointCloud(filePath: path)
+            api.uploadPointCloud(filePath: path) { [weak self] (returnedResult) in
+                // TODO
+            }
+        }
+    }
+    
+    func getStands() {
+        print("getStands from VM started")
+        self.isFetchingStands = true
+        api.getStands { (returnedResult) in
+            DispatchQueue.main.async { [weak self] in
+                print("getStands from VM main thread handling started")
+                
+                if let data = returnedResult.data {
+                    print(String(data: data, encoding: .utf8))
+                    do {
+                        let stands = try JSONDecoder().decode([Stand].self, from: data)
+                        self?.stands = stands
+                    } catch {
+                        self?.isFetchingStands = false
+                    }
+                } else {
+                    self?.error = returnedResult.error ?? "Unknown error occured"
+                }
+                print("getStands from VM ended")
+                self?.isFetchingStands = false
+            }
         }
     }
     
     init() {
-        let stands = api.getStands()
-        self.stands = stands
-        
-        /*
-        // TODO: messy, amount of if statements would grow with deeper levels of nested data
-        // could use alamofire to better handle missing/empty data ?
-        if let firstStand = stands.first {
-            self.selectedStand = firstStand
-        } else {
-            print("no stand could be selected as the retrieved stands list is empty")
-            self.selectedStand = nil
-        }
-        */
+        self.getStands()
     }
 }

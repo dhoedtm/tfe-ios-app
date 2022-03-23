@@ -9,7 +9,7 @@ import Foundation
 
 class MockAPIManager : APIManaging {
     
-    func getStands() -> [Stand] {
+    func getStands(handler: @escaping TransferCompletion) {
         var stands = [Stand]()
         stands.append(Stand(
             id: 1,
@@ -23,9 +23,8 @@ class MockAPIManager : APIManaging {
             treeDensity: 5,
             meanDbh: 2,
             meanDistance: 898,
-            captureDate: Date(),
-            description: "my 1st stand",
-            trees: []
+            captureDate: "2022-03-11T15:24:22.102033",
+            description: "my 1st stand"
         ))
         stands.append(Stand(
             id: 2,
@@ -39,9 +38,8 @@ class MockAPIManager : APIManaging {
             treeDensity: 5,
             meanDbh: 2,
             meanDistance: 898,
-            captureDate: Date(),
-            description: "my 2nd stand",
-            trees: []
+            captureDate: "2022-01-12T14:14:33.102033",
+            description: "my 2nd stand"
         ))
         stands.append(Stand(
             id: 3,
@@ -55,17 +53,21 @@ class MockAPIManager : APIManaging {
             treeDensity: 5,
             meanDbh: 2,
             meanDistance: 898,
-            captureDate: Date(),
-            description: "my 3rd stand",
-            trees: []
+            captureDate: "2022-03-12T18:54:43.102033",
+            description: "my 3rd stand"
         ))
-        return stands
+        
+        let jsonData = try? JSONEncoder().encode(stands)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            handler(TransferResult(data: jsonData, error: nil))
+        }
     }
 
-    func getTreesFromStand(idStand: Int) -> [Tree] {
+    func getTreesFromStand(idStand: Int, handler: @escaping TransferCompletion) {
+        var trees : [Tree]
         switch idStand {
         case 1:
-            return [
+            trees = [
                 Tree(id: 1, idStand: 1, latitude: 50.708228, longitude: 4.352911, description: "un arbre"),
                 Tree(id: 2, idStand: 1, latitude: 50.708239, longitude: 4.35288, description: "un arbre"),
                 Tree(id: 3, idStand: 1, latitude: 50.708262, longitude: 4.352855, description: "un arbre"),
@@ -74,19 +76,27 @@ class MockAPIManager : APIManaging {
                 Tree(id: 6, idStand: 1, latitude: 50.708262, longitude: 4.3528879, description: "un arbre"),
             ]
         case 2:
-            return [
+            trees = [
                 Tree(id: 1, idStand: 2, latitude: 50.708224, longitude: 4.352827, description: "un arbre")
             ]
         case 3:
-            return []
+            trees = []
         default:
             print("MockAPI couldn't find trees for idStand \(idStand)")
-            return []
+            trees = []
+        }
+        
+        let jsonData = try? JSONEncoder().encode(trees)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            handler(TransferResult(data: jsonData, error: nil))
         }
     }
-
-    func uploadPointCloud(filePath: URL) {
-        print("MockAPI uploaded point cloud : \(filePath)")
+    
+    func uploadPointCloud(filePath: URL, handler: @escaping TransferCompletion) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            handler(TransferResult(data: nil, error: nil))
+            print("MockAPI uploaded point cloud : \(filePath)")
+        }
     }
 }
 

@@ -14,15 +14,18 @@ struct StandMapView: View {
     
     var body: some View {
         ZStack {
-            if (vm.trees.isEmpty) {
-                Text("stand is empty, no trees could be found")
-                    .bold()
-            } else {
-                treeMap
-                VStack(spacing:0) {
-                    header
-                        .padding()
-                    Spacer()
+            if let error = vm.error { Text(error) }
+            if (vm.isFetchingTrees) { ProgressView() } else {
+                if (vm.trees.isEmpty) {
+                    Text("stand is empty, no trees could be found")
+                        .bold()
+                } else {
+                    treeMap
+                    VStack(spacing:0) {
+                        header
+                            .padding()
+                        Spacer()
+                    }
                 }
             }
         }        
@@ -30,7 +33,22 @@ struct StandMapView: View {
 }
 
 struct StandMapView_Previews: PreviewProvider {
-    static private let stand : Stand = MockAPIManager().getStands().first!
+    static let stand : Stand = Stand(
+        id: 1,
+        name: "stand_1_braine",
+        treeCount: 13,
+        basalArea: 23.2,
+        convexAreaMeter: 34,
+        convexAreaHectare: 23,
+        concaveAreaMeter: 45,
+        concaveAreaHectare: 33,
+        treeDensity: 5,
+        meanDbh: 2,
+        meanDistance: 898,
+        captureDate: "2022-03-11T15:24:22.102033",
+        description: "my 1st stand"
+    )
+    
     static var previews: some View {
         StandMapView()
             .environmentObject(

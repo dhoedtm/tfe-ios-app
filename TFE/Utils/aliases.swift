@@ -8,3 +8,4 @@
 import Foundation
 
 typealias JSON = Dictionary<String, Any>
+

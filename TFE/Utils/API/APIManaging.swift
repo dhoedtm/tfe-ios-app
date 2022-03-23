@@ -7,8 +7,15 @@
 
 import Foundation
 
+struct TransferResult {
+    let data: Data?
+    let error: String?
+}
+
+typealias TransferCompletion = (TransferResult) -> ()
+
 protocol APIManaging {
-    func getStands() -> [Stand]
-    func getTreesFromStand(idStand : Int) -> [Tree]
-    func uploadPointCloud(filePath: URL)
+    func getStands(handler: @escaping TransferCompletion)
+    func getTreesFromStand(idStand : Int, handler: @escaping TransferCompletion)
+    func uploadPointCloud(filePath: URL, handler: @escaping TransferCompletion)
 }

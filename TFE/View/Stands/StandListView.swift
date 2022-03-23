@@ -18,24 +18,20 @@ struct StandListView: View {
     var body: some View {
         NavigationView {
             VStack {
-                standList
-                    .navigationTitle("Stands")
+                if let error = vm.error { Text(error) }
+                if(vm.isFetchingStands) { ProgressView() } else {
+                    standList
+                        .navigationTitle("Stands")
                     // .navigationBarTitleDisplayMode(.inline)
+                }
+                Spacer()
                 uploadStand
             }
         }
     }
 }
 
-struct StandListView_Previews: PreviewProvider {
-    static var previews: some View {
-        StandListView()
-            .environmentObject(StandListViewModel())
-    }
-}
-
-// EXTENSION
-// ---------
+// MARK: EXTENSIONS
 
 extension StandListView {
     private var standList: some View {
@@ -90,5 +86,14 @@ extension StandListView {
             )
             .buttonStyle(StandardButton())
         }.padding(10)
+    }
+}
+
+// MARK: PREVIEW
+
+struct StandListView_Previews: PreviewProvider {
+    static var previews: some View {
+        StandListView()
+            .environmentObject(StandListViewModel())
     }
 }
