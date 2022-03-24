@@ -28,7 +28,7 @@ struct StandMapView: View {
                     }
                 }
             }
-        }        
+        }
     }
 }
 

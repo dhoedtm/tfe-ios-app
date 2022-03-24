@@ -27,24 +27,19 @@ class StandListViewModel : ObservableObject {
     }
     
     func getStands() {
-        print("getStands from VM started")
         self.isFetchingStands = true
         api.getStands { (returnedResult) in
             DispatchQueue.main.async { [weak self] in
-                print("getStands from VM main thread handling started")
-                
                 if let data = returnedResult.data {
-                    print(String(data: data, encoding: .utf8))
-                    do {
-                        let stands = try JSONDecoder().decode([Stand].self, from: data)
-                        self?.stands = stands
-                    } catch {
+                    guard let stands = try? JSONDecoder().decode([Stand].self, from: data) else {
+                        self?.error = "Could not decode JSON array"
                         self?.isFetchingStands = false
+                        return
                     }
+                    self?.stands = stands
                 } else {
                     self?.error = returnedResult.error ?? "Unknown error occured"
                 }
-                print("getStands from VM ended")
                 self?.isFetchingStands = false
             }
         }

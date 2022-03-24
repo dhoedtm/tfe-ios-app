@@ -66,7 +66,7 @@ class TreesMapViewModel : ObservableObject {
                 [weak self] (returnedResult) in
                 if let data = returnedResult.data {
                     guard let trees = try? JSONDecoder().decode([Tree].self, from: data) else {
-                        self?.error = "Internal error while decoding Tree array"
+                        self?.error = "Could not decode JSON array"
                         self?.isFetchingTrees = false
                         return
                     }
@@ -81,6 +81,7 @@ class TreesMapViewModel : ObservableObject {
     
     init(selectedStand: Stand) {
         self.selectedStand = selectedStand
+        // TODO: runs before even visiting the page as the VM is init from the stand list already
         fetchTrees(idStand: self.selectedStand.id)
     }
 }

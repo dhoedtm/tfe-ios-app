@@ -69,8 +69,6 @@ class APIManager : APIManaging {
             var errorMessage : String? = nil
             if let error = error {
                 errorMessage = error.localizedDescription
-//                print("[API] couldn't get \(resourceString) : error \(error)")
-//                return
             }
             
             print("getStands from api handler")
