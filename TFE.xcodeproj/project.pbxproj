@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A818F4D727ED0A050087A286 /* StandMasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818F4D627ED0A050087A286 /* StandMasterView.swift */; };
+		A818F4D927ED0A150087A286 /* StandMasterVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818F4D827ED0A150087A286 /* StandMasterVM.swift */; };
 		A81E93DF27EC8C87004C47A7 /* NetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81E93DE27EC8C87004C47A7 /* NetworkingManager.swift */; };
 		A81E93E327ECACD7004C47A7 /* StandDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81E93E227ECACD7004C47A7 /* StandDetailsView.swift */; };
 		A81E93E527ECACF1004C47A7 /* StandDetailsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81E93E427ECACF1004C47A7 /* StandDetailsVM.swift */; };
@@ -19,15 +21,14 @@
 		CE6E74AD27B3F9B800E9B583 /* aliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AC27B3F9B800E9B583 /* aliases.swift */; };
 		CE6E74AF27B40A8400E9B583 /* StandListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AE27B40A8400E9B583 /* StandListVM.swift */; };
 		CEA422F427C6817900D7FAFB /* TreeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA422F327C6817900D7FAFB /* TreeModel.swift */; };
-		CEE5C8D427CE738100A92F91 /* TreesMapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE5C8D327CE738100A92F91 /* TreesMapVM.swift */; };
+		CEE5C8D427CE738100A92F91 /* StandMapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE5C8D327CE738100A92F91 /* StandMapVM.swift */; };
 		CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A39B27B3D3970098628D /* TFEApp.swift */; };
 		CEE8A3A027B3D39A0098628D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A39F27B3D39A0098628D /* Assets.xcassets */; };
 		CEE8A3A327B3D39A0098628D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A3A227B3D39A0098628D /* Preview Assets.xcassets */; };
 		CEE8A3AD27B3D39B0098628D /* TFETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A3AC27B3D39B0098628D /* TFETests.swift */; };
 		CEE8A3B727B3D39B0098628D /* TFEUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A3B627B3D39B0098628D /* TFEUITests.swift */; };
 		CEE8A3B927B3D39B0098628D /* TFEUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A3B827B3D39B0098628D /* TFEUITestsLaunchTests.swift */; };
-		CEF5EAB927B56A990040CDD6 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = CEF5EAB827B56A990040CDD6 /* Swinject */; };
-		CEF5EACD27C544BE0040CDD6 /* TreesMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5EACC27C544BE0040CDD6 /* TreesMapView.swift */; };
+		CEF5EACD27C544BE0040CDD6 /* StandMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5EACC27C544BE0040CDD6 /* StandMapView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A818F4D627ED0A050087A286 /* StandMasterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandMasterView.swift; sourceTree = "<group>"; };
+		A818F4D827ED0A150087A286 /* StandMasterVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandMasterVM.swift; sourceTree = "<group>"; };
 		A81E93DE27EC8C87004C47A7 /* NetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingManager.swift; sourceTree = "<group>"; };
 		A81E93E227ECACD7004C47A7 /* StandDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandDetailsView.swift; sourceTree = "<group>"; };
 		A81E93E427ECACF1004C47A7 /* StandDetailsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandDetailsVM.swift; sourceTree = "<group>"; };
@@ -60,7 +63,7 @@
 		CE6E74AC27B3F9B800E9B583 /* aliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = aliases.swift; sourceTree = "<group>"; };
 		CE6E74AE27B40A8400E9B583 /* StandListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandListVM.swift; sourceTree = "<group>"; };
 		CEA422F327C6817900D7FAFB /* TreeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeModel.swift; sourceTree = "<group>"; };
-		CEE5C8D327CE738100A92F91 /* TreesMapVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreesMapVM.swift; sourceTree = "<group>"; };
+		CEE5C8D327CE738100A92F91 /* StandMapVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandMapVM.swift; sourceTree = "<group>"; };
 		CEE8A39827B3D3970098628D /* TFE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE8A39B27B3D3970098628D /* TFEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEApp.swift; sourceTree = "<group>"; };
 		CEE8A39F27B3D39A0098628D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -70,7 +73,7 @@
 		CEE8A3B227B3D39B0098628D /* TFEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TFEUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE8A3B627B3D39B0098628D /* TFEUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEUITests.swift; sourceTree = "<group>"; };
 		CEE8A3B827B3D39B0098628D /* TFEUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		CEF5EACC27C544BE0040CDD6 /* TreesMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreesMapView.swift; sourceTree = "<group>"; };
+		CEF5EACC27C544BE0040CDD6 /* StandMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandMapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +81,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEF5EAB927B56A990040CDD6 /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +123,8 @@
 			children = (
 				CEE5C8D227CE734800A92F91 /* Map */,
 				A8654E2D27ECDAA900D03BA2 /* Form */,
+				A818F4D627ED0A050087A286 /* StandMasterView.swift */,
+				A818F4D827ED0A150087A286 /* StandMasterVM.swift */,
 			);
 			path = Details;
 			sourceTree = "<group>";
@@ -199,8 +203,8 @@
 		CEE5C8D227CE734800A92F91 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				CEF5EACC27C544BE0040CDD6 /* TreesMapView.swift */,
-				CEE5C8D327CE738100A92F91 /* TreesMapVM.swift */,
+				CEF5EACC27C544BE0040CDD6 /* StandMapView.swift */,
+				CEE5C8D327CE738100A92F91 /* StandMapVM.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -281,7 +285,6 @@
 			);
 			name = TFE;
 			packageProductDependencies = (
-				CEF5EAB827B56A990040CDD6 /* Swinject */,
 			);
 			productName = TFE;
 			productReference = CEE8A39827B3D3970098628D /* TFE.app */;
@@ -356,7 +359,6 @@
 			);
 			mainGroup = CEE8A38F27B3D3970098628D;
 			packageReferences = (
-				CEF5EAB727B56A990040CDD6 /* XCRemoteSwiftPackageReference "Swinject" */,
 			);
 			productRefGroup = CEE8A39927B3D3970098628D /* Products */;
 			projectDirPath = "";
@@ -400,10 +402,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A818F4D927ED0A150087A286 /* StandMasterVM.swift in Sources */,
 				CE6E74A527B3F12C00E9B583 /* ApiDataService.swift in Sources */,
+				A818F4D727ED0A050087A286 /* StandMasterView.swift in Sources */,
 				A8C101CF27EA2DCC004D31D5 /* DateParser.swift in Sources */,
 				CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */,
-				CEF5EACD27C544BE0040CDD6 /* TreesMapView.swift in Sources */,
+				CEF5EACD27C544BE0040CDD6 /* StandMapView.swift in Sources */,
 				CE0CB6C427CF836600AA2107 /* DocumentPicker.swift in Sources */,
 				CE6E74AF27B40A8400E9B583 /* StandListVM.swift in Sources */,
 				CEA422F427C6817900D7FAFB /* TreeModel.swift in Sources */,
@@ -411,7 +415,7 @@
 				A81E93DF27EC8C87004C47A7 /* NetworkingManager.swift in Sources */,
 				A81E93E527ECACF1004C47A7 /* StandDetailsVM.swift in Sources */,
 				CE6E74AB27B3F4BA00E9B583 /* StandModel.swift in Sources */,
-				CEE5C8D427CE738100A92F91 /* TreesMapVM.swift in Sources */,
+				CEE5C8D427CE738100A92F91 /* StandMapVM.swift in Sources */,
 				CE6E74A827B3F12C00E9B583 /* StandListView.swift in Sources */,
 				A81E93E327ECACD7004C47A7 /* StandDetailsView.swift in Sources */,
 				CE6E74AD27B3F9B800E9B583 /* aliases.swift in Sources */,
@@ -502,7 +506,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -558,7 +562,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -739,25 +743,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		CEF5EAB727B56A990040CDD6 /* XCRemoteSwiftPackageReference "Swinject" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Swinject/Swinject";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		CEF5EAB827B56A990040CDD6 /* Swinject */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CEF5EAB727B56A990040CDD6 /* XCRemoteSwiftPackageReference "Swinject" */;
-			productName = Swinject;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CEE8A39027B3D3970098628D /* Project object */;
 }

@@ -10,7 +10,7 @@ import MapKit
 
 struct StandMapView: View {
     
-    @EnvironmentObject private var vm : TreesMapVM
+    @EnvironmentObject private var vm : StandMapVM
     
     var body: some View {
         ZStack {
@@ -102,7 +102,7 @@ struct StandMapView_Previews: PreviewProvider {
     static var previews: some View {
         StandMapView()
             .environmentObject(
-                TreesMapVM(selectedStand: stand)
+                StandMapVM(selectedStand: stand)
             )
     }
 }

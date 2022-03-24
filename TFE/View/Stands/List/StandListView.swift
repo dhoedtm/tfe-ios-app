@@ -46,7 +46,7 @@ extension StandListView {
                 // selectedStand : stand
                 destination: StandMapView()
                     .environmentObject(
-                        TreesMapVM(selectedStand: stand)
+                        StandMasterView(selectedStand: stand)
                     )
             ) {
                 Text("stand : \(stand.name)")

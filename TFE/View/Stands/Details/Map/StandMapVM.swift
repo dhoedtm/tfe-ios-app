@@ -1,5 +1,5 @@
 //
-//  TreesMapVM.swift
+//  StandMapVM.swift
 //  TFE
 //
 //  Created by user on 01/03/2022.
@@ -10,7 +10,7 @@ import MapKit
 import SwiftUI
 import Combine
 
-class TreesMapVM : ObservableObject {
+class StandMapVM : ObservableObject {
     
     let mapSpan : MKCoordinateSpan = {
         let mapZoomDelta = 0.005

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Swinject
 
 // TODO: move init DI inside constructor
 // Create Mock and Prod DI setups in separate classes
