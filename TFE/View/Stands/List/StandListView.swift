@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StandListView: View {
     
-    @EnvironmentObject private var vm : StandListViewModel
+    @EnvironmentObject private var vm : StandListVM
     
     @State var filePaths : [URL] = [URL]()
     @State var showAlert : Bool = false
@@ -22,7 +22,7 @@ struct StandListView: View {
                 if(vm.isFetchingStands) {
                     Spacer()
                     ProgressView("Downloading stands...")
-                        .scaleEffect(1.5)
+                        // .scaleEffect(1.5) // causes memory leak on xcode 13.2.1
                         .font(.system(size: 8))
                     Spacer()
                 } else {
@@ -46,7 +46,7 @@ extension StandListView {
                 // selectedStand : stand
                 destination: StandMapView()
                     .environmentObject(
-                        TreesMapViewModel(selectedStand: stand)
+                        TreesMapVM(selectedStand: stand)
                     )
             ) {
                 Text("stand : \(stand.name)")
@@ -100,6 +100,6 @@ extension StandListView {
 struct StandListView_Previews: PreviewProvider {
     static var previews: some View {
         StandListView()
-            .environmentObject(StandListViewModel())
+            .environmentObject(StandListVM())
     }
 }

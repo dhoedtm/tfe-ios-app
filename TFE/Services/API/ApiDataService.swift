@@ -10,25 +10,25 @@
 import Foundation
 import Combine
 
-class StandDataService {
+class ApiDataService {
     
-    enum ApiResource {
-        case stand
-        case tree
-        
-        var name: String? {
-            switch self {
-            case .stand: return "stand"
-            case .tree: return "tree"
-            }
-        }
-        var model: Any? {
-            switch self {
-            case .stand: return StandModel.self
-            case .tree: return TreeModel.self
-            }
-        }
-    }
+//    enum ApiResource {
+//        case stand
+//        case tree
+//
+//        var name: String? {
+//            switch self {
+//            case .stand: return "stand"
+//            case .tree: return "tree"
+//            }
+//        }
+//        var model: Any? {
+//            switch self {
+//            case .stand: return StandModel.self
+//            case .tree: return TreeModel.self
+//            }
+//        }
+//    }
     
     // cancellables
     var standSubscription: AnyCancellable?
@@ -60,6 +60,27 @@ class StandDataService {
             .sink(receiveCompletion: NetworkingManager.handleCompletion,
                   receiveValue: { [weak self] (trees) in
                 self?.treesForStands[idStand] = trees
+                self?.standSubscription?.cancel()
+            })
+    }
+    
+    func updateStandDetails(stand: StandModel) {
+        let resourceString = "stands/\(stand.id)"
+        let url = NetworkingManager.baseURL.appendingPathComponent(resourceString)
+        guard let json = try? JSONEncoder().encode(stand) else {
+            print("[updateStandDetails] JSON encoding error")
+            return
+        }
+        
+        standSubscription = NetworkingManager.sendData(url: url, method: .PUT, data: json)
+            .decode(type: [TreeModel].self, decoder: JSONDecoder())
+            // .replaceError(with: [])
+            .sink(receiveCompletion: NetworkingManager.handleCompletion,
+                  receiveValue: { [weak self] (returnedStand) in
+                print("DONE : \(returnedStand)")
+//                self?.allStands.map({ stand in
+//                    stand
+//                })
                 self?.standSubscription?.cancel()
             })
     }

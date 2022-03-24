@@ -1,5 +1,5 @@
 //
-//  StandListViewModel.swift
+//  StandListVM.swift
 //  TFE
 //
 //  Created by user on 09/02/2022.
@@ -10,9 +10,9 @@ import MapKit
 import SwiftUI
 import Combine
 
-class StandListViewModel : ObservableObject {
+class StandListVM : ObservableObject {
     
-    private let api = StandDataService()
+    private let api = ApiDataService()
     private var cancellables = Set<AnyCancellable>()
     
     @Published var isFetchingStands : Bool = false

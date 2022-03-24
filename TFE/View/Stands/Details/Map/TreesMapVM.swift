@@ -1,5 +1,5 @@
 //
-//  TreesMapViewModel.swift
+//  TreesMapVM.swift
 //  TFE
 //
 //  Created by user on 01/03/2022.
@@ -10,14 +10,14 @@ import MapKit
 import SwiftUI
 import Combine
 
-class TreesMapViewModel : ObservableObject {
+class TreesMapVM : ObservableObject {
     
     let mapSpan : MKCoordinateSpan = {
         let mapZoomDelta = 0.005
         return MKCoordinateSpan(latitudeDelta: mapZoomDelta, longitudeDelta: mapZoomDelta)
     }()
     
-    private let api = StandDataService()
+    private let api = ApiDataService()
     private var cancellables = Set<AnyCancellable>()
     
     @Published var error : String? = nil

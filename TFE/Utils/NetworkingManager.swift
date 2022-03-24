@@ -12,11 +12,33 @@ class NetworkingManager {
     
     static let baseURL : URL = URL(string: "http://192.168.1.11:3000/api/")!
     
+    enum HTTPMethods : String {
+        case GET
+        case POST
+        case PUT
+        case DELETE
+    }
+    
     static func download(url: URL) -> AnyPublisher<Data, Error> {
         // Combine framework uses publishers and subscribers
         // publishers should run on background threads
         // dataTaskPublisher already takes care of that for us
         let subscription = URLSession.shared.dataTaskPublisher(for: url)
+        // .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.main)
+            .tryMap({ try handleURLResponse(output: $0, url: url) })
+            .eraseToAnyPublisher() // adds abstraction, now subscription is of type AnyPublisher<Data, Error>
+        return subscription
+    }
+    
+    static func sendData(url: URL, method: HTTPMethods, data: Data) -> AnyPublisher<Data, Error> {
+        // Combine framework uses publishers and subscribers
+        // publishers should run on background threads
+        // dataTaskPublisher already takes care of that for us
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        request.httpBody = data
+        let subscription = URLSession.shared.dataTaskPublisher(for: request)
         // .subscribe(on: DispatchQueue.global(qos: .background))
             .receive(on: DispatchQueue.main)
             .tryMap({ try handleURLResponse(output: $0, url: url) })

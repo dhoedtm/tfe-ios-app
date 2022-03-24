@@ -10,7 +10,7 @@ import MapKit
 
 struct StandMapView: View {
     
-    @EnvironmentObject private var vm : TreesMapViewModel
+    @EnvironmentObject private var vm : TreesMapVM
     
     var body: some View {
         ZStack {
@@ -32,33 +32,7 @@ struct StandMapView: View {
     }
 }
 
-struct StandMapView_Previews: PreviewProvider {
-    static let stand : StandModel = StandModel(
-        id: 1,
-        name: "stand_1_braine",
-        treeCount: 13,
-        basalArea: 23.2,
-        convexAreaMeter: 34,
-        convexAreaHectare: 23,
-        concaveAreaMeter: 45,
-        concaveAreaHectare: 33,
-        treeDensity: 5,
-        meanDbh: 2,
-        meanDistance: 898,
-        captureDate: "2022-03-11T15:24:22.102033",
-        description: "my 1st stand"
-    )
-    
-    static var previews: some View {
-        StandMapView()
-            .environmentObject(
-                TreesMapViewModel(selectedStand: stand)
-            )
-    }
-}
-
-// EXTENSIONS
-// ----------
+// MARK: EXTENSIONS
 
 // in order to keep the main body of the view relatively short and thus readable,
 // it is good practice to create extensions of that view
@@ -103,5 +77,32 @@ extension StandMapView {
         .background(.thinMaterial)
         .cornerRadius(10)
         .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 15)
+    }
+}
+
+// MARK: PREVIEW
+
+struct StandMapView_Previews: PreviewProvider {
+    static let stand : StandModel = StandModel(
+        id: 1,
+        name: "stand_1_braine",
+        treeCount: 13,
+        basalArea: 23.2,
+        convexAreaMeter: 34,
+        convexAreaHectare: 23,
+        concaveAreaMeter: 45,
+        concaveAreaHectare: 33,
+        treeDensity: 5,
+        meanDbh: 2,
+        meanDistance: 898,
+        captureDate: "2022-03-11T15:24:22.102033",
+        description: "my 1st stand"
+    )
+    
+    static var previews: some View {
+        StandMapView()
+            .environmentObject(
+                TreesMapVM(selectedStand: stand)
+            )
     }
 }

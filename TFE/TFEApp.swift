@@ -27,7 +27,7 @@ struct TFEApp: App {
     
     // VMs can be replaced with mocks for testing purposes
     // TODO: consider using Swinject also for this kind of DI (not only services)
-    @StateObject private var standListVM = StandListViewModel()
+    @StateObject private var standListVM = StandListVM()
     
     // init() {}
     

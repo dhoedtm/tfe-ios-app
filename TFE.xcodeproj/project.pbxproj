@@ -8,16 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		A81E93DF27EC8C87004C47A7 /* NetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81E93DE27EC8C87004C47A7 /* NetworkingManager.swift */; };
+		A81E93E327ECACD7004C47A7 /* StandDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81E93E227ECACD7004C47A7 /* StandDetailsView.swift */; };
+		A81E93E527ECACF1004C47A7 /* StandDetailsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81E93E427ECACF1004C47A7 /* StandDetailsVM.swift */; };
 		A8C101CF27EA2DCC004D31D5 /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C101CE27EA2DCC004D31D5 /* DateParser.swift */; };
 		CE0CB6C427CF836600AA2107 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CB6C327CF836600AA2107 /* DocumentPicker.swift */; };
 		CE3B579327D1277E00C778C0 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3B579227D1277E00C778C0 /* ButtonStyles.swift */; };
-		CE6E74A527B3F12C00E9B583 /* StandDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E749F27B3F12C00E9B583 /* StandDataService.swift */; };
+		CE6E74A527B3F12C00E9B583 /* ApiDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E749F27B3F12C00E9B583 /* ApiDataService.swift */; };
 		CE6E74A827B3F12C00E9B583 /* StandListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74A327B3F12C00E9B583 /* StandListView.swift */; };
 		CE6E74AB27B3F4BA00E9B583 /* StandModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AA27B3F4BA00E9B583 /* StandModel.swift */; };
 		CE6E74AD27B3F9B800E9B583 /* aliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AC27B3F9B800E9B583 /* aliases.swift */; };
-		CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */; };
+		CE6E74AF27B40A8400E9B583 /* StandListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AE27B40A8400E9B583 /* StandListVM.swift */; };
 		CEA422F427C6817900D7FAFB /* TreeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA422F327C6817900D7FAFB /* TreeModel.swift */; };
-		CEE5C8D427CE738100A92F91 /* TreesMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE5C8D327CE738100A92F91 /* TreesMapViewModel.swift */; };
+		CEE5C8D427CE738100A92F91 /* TreesMapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE5C8D327CE738100A92F91 /* TreesMapVM.swift */; };
 		CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A39B27B3D3970098628D /* TFEApp.swift */; };
 		CEE8A3A027B3D39A0098628D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A39F27B3D39A0098628D /* Assets.xcassets */; };
 		CEE8A3A327B3D39A0098628D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A3A227B3D39A0098628D /* Preview Assets.xcassets */; };
@@ -47,16 +49,18 @@
 
 /* Begin PBXFileReference section */
 		A81E93DE27EC8C87004C47A7 /* NetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingManager.swift; sourceTree = "<group>"; };
+		A81E93E227ECACD7004C47A7 /* StandDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandDetailsView.swift; sourceTree = "<group>"; };
+		A81E93E427ECACF1004C47A7 /* StandDetailsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandDetailsVM.swift; sourceTree = "<group>"; };
 		A8C101CE27EA2DCC004D31D5 /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
 		CE0CB6C327CF836600AA2107 /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
 		CE3B579227D1277E00C778C0 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
-		CE6E749F27B3F12C00E9B583 /* StandDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandDataService.swift; sourceTree = "<group>"; };
+		CE6E749F27B3F12C00E9B583 /* ApiDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiDataService.swift; sourceTree = "<group>"; };
 		CE6E74A327B3F12C00E9B583 /* StandListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandListView.swift; sourceTree = "<group>"; };
 		CE6E74AA27B3F4BA00E9B583 /* StandModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandModel.swift; sourceTree = "<group>"; };
 		CE6E74AC27B3F9B800E9B583 /* aliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = aliases.swift; sourceTree = "<group>"; };
-		CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandListViewModel.swift; sourceTree = "<group>"; };
+		CE6E74AE27B40A8400E9B583 /* StandListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandListVM.swift; sourceTree = "<group>"; };
 		CEA422F327C6817900D7FAFB /* TreeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeModel.swift; sourceTree = "<group>"; };
-		CEE5C8D327CE738100A92F91 /* TreesMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreesMapViewModel.swift; sourceTree = "<group>"; };
+		CEE5C8D327CE738100A92F91 /* TreesMapVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreesMapVM.swift; sourceTree = "<group>"; };
 		CEE8A39827B3D3970098628D /* TFE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE8A39B27B3D3970098628D /* TFEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEApp.swift; sourceTree = "<group>"; };
 		CEE8A39F27B3D39A0098628D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -103,6 +107,33 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		A81E93E027ECA75D004C47A7 /* List */ = {
+			isa = PBXGroup;
+			children = (
+				CE6E74A327B3F12C00E9B583 /* StandListView.swift */,
+				CE6E74AE27B40A8400E9B583 /* StandListVM.swift */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
+		A81E93E127ECA769004C47A7 /* Details */ = {
+			isa = PBXGroup;
+			children = (
+				CEE5C8D227CE734800A92F91 /* Map */,
+				A8654E2D27ECDAA900D03BA2 /* Form */,
+			);
+			path = Details;
+			sourceTree = "<group>";
+		};
+		A8654E2D27ECDAA900D03BA2 /* Form */ = {
+			isa = PBXGroup;
+			children = (
+				A81E93E227ECACD7004C47A7 /* StandDetailsView.swift */,
+				A81E93E427ECACF1004C47A7 /* StandDetailsVM.swift */,
+			);
+			path = Form;
+			sourceTree = "<group>";
+		};
 		CE0CB6C227CF834800AA2107 /* shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -132,7 +163,7 @@
 		CE6E749E27B3F12C00E9B583 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				CE6E749F27B3F12C00E9B583 /* StandDataService.swift */,
+				CE6E749F27B3F12C00E9B583 /* ApiDataService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -142,7 +173,6 @@
 			children = (
 				CE3B579127D1276300C778C0 /* styles */,
 				CE0CB6C227CF834800AA2107 /* shared */,
-				CEE5C8D227CE734800A92F91 /* Trees */,
 				CE6E74B027B40A8900E9B583 /* Stands */,
 			);
 			path = View;
@@ -160,19 +190,19 @@
 		CE6E74B027B40A8900E9B583 /* Stands */ = {
 			isa = PBXGroup;
 			children = (
-				CE6E74A327B3F12C00E9B583 /* StandListView.swift */,
-				CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */,
+				A81E93E127ECA769004C47A7 /* Details */,
+				A81E93E027ECA75D004C47A7 /* List */,
 			);
 			path = Stands;
 			sourceTree = "<group>";
 		};
-		CEE5C8D227CE734800A92F91 /* Trees */ = {
+		CEE5C8D227CE734800A92F91 /* Map */ = {
 			isa = PBXGroup;
 			children = (
 				CEF5EACC27C544BE0040CDD6 /* TreesMapView.swift */,
-				CEE5C8D327CE738100A92F91 /* TreesMapViewModel.swift */,
+				CEE5C8D327CE738100A92F91 /* TreesMapVM.swift */,
 			);
-			path = Trees;
+			path = Map;
 			sourceTree = "<group>";
 		};
 		CEE8A38F27B3D3970098628D = {
@@ -370,18 +400,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE6E74A527B3F12C00E9B583 /* StandDataService.swift in Sources */,
+				CE6E74A527B3F12C00E9B583 /* ApiDataService.swift in Sources */,
 				A8C101CF27EA2DCC004D31D5 /* DateParser.swift in Sources */,
 				CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */,
 				CEF5EACD27C544BE0040CDD6 /* TreesMapView.swift in Sources */,
 				CE0CB6C427CF836600AA2107 /* DocumentPicker.swift in Sources */,
-				CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */,
+				CE6E74AF27B40A8400E9B583 /* StandListVM.swift in Sources */,
 				CEA422F427C6817900D7FAFB /* TreeModel.swift in Sources */,
 				CE3B579327D1277E00C778C0 /* ButtonStyles.swift in Sources */,
 				A81E93DF27EC8C87004C47A7 /* NetworkingManager.swift in Sources */,
+				A81E93E527ECACF1004C47A7 /* StandDetailsVM.swift in Sources */,
 				CE6E74AB27B3F4BA00E9B583 /* StandModel.swift in Sources */,
-				CEE5C8D427CE738100A92F91 /* TreesMapViewModel.swift in Sources */,
+				CEE5C8D427CE738100A92F91 /* TreesMapVM.swift in Sources */,
 				CE6E74A827B3F12C00E9B583 /* StandListView.swift in Sources */,
+				A81E93E327ECACD7004C47A7 /* StandDetailsView.swift in Sources */,
 				CE6E74AD27B3F9B800E9B583 /* aliases.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
