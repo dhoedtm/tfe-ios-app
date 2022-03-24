@@ -7,17 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A81E93DF27EC8C87004C47A7 /* NetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81E93DE27EC8C87004C47A7 /* NetworkingManager.swift */; };
 		A8C101CF27EA2DCC004D31D5 /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C101CE27EA2DCC004D31D5 /* DateParser.swift */; };
 		CE0CB6C427CF836600AA2107 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CB6C327CF836600AA2107 /* DocumentPicker.swift */; };
 		CE3B579327D1277E00C778C0 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3B579227D1277E00C778C0 /* ButtonStyles.swift */; };
-		CE6E74A527B3F12C00E9B583 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E749F27B3F12C00E9B583 /* APIManager.swift */; };
-		CE6E74A627B3F12C00E9B583 /* MockAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74A027B3F12C00E9B583 /* MockAPIManager.swift */; };
-		CE6E74A727B3F12C00E9B583 /* APIManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74A127B3F12C00E9B583 /* APIManaging.swift */; };
+		CE6E74A527B3F12C00E9B583 /* StandDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E749F27B3F12C00E9B583 /* StandDataService.swift */; };
 		CE6E74A827B3F12C00E9B583 /* StandListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74A327B3F12C00E9B583 /* StandListView.swift */; };
-		CE6E74AB27B3F4BA00E9B583 /* Stand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AA27B3F4BA00E9B583 /* Stand.swift */; };
+		CE6E74AB27B3F4BA00E9B583 /* StandModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AA27B3F4BA00E9B583 /* StandModel.swift */; };
 		CE6E74AD27B3F9B800E9B583 /* aliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AC27B3F9B800E9B583 /* aliases.swift */; };
 		CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */; };
-		CEA422F427C6817900D7FAFB /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA422F327C6817900D7FAFB /* Tree.swift */; };
+		CEA422F427C6817900D7FAFB /* TreeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA422F327C6817900D7FAFB /* TreeModel.swift */; };
 		CEE5C8D427CE738100A92F91 /* TreesMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE5C8D327CE738100A92F91 /* TreesMapViewModel.swift */; };
 		CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8A39B27B3D3970098628D /* TFEApp.swift */; };
 		CEE8A3A027B3D39A0098628D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEE8A39F27B3D39A0098628D /* Assets.xcassets */; };
@@ -47,17 +46,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A81E93DE27EC8C87004C47A7 /* NetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingManager.swift; sourceTree = "<group>"; };
 		A8C101CE27EA2DCC004D31D5 /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
 		CE0CB6C327CF836600AA2107 /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
 		CE3B579227D1277E00C778C0 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
-		CE6E749F27B3F12C00E9B583 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
-		CE6E74A027B3F12C00E9B583 /* MockAPIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAPIManager.swift; sourceTree = "<group>"; };
-		CE6E74A127B3F12C00E9B583 /* APIManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManaging.swift; sourceTree = "<group>"; };
+		CE6E749F27B3F12C00E9B583 /* StandDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandDataService.swift; sourceTree = "<group>"; };
 		CE6E74A327B3F12C00E9B583 /* StandListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandListView.swift; sourceTree = "<group>"; };
-		CE6E74AA27B3F4BA00E9B583 /* Stand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stand.swift; sourceTree = "<group>"; };
+		CE6E74AA27B3F4BA00E9B583 /* StandModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandModel.swift; sourceTree = "<group>"; };
 		CE6E74AC27B3F9B800E9B583 /* aliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = aliases.swift; sourceTree = "<group>"; };
 		CE6E74AE27B40A8400E9B583 /* StandListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandListViewModel.swift; sourceTree = "<group>"; };
-		CEA422F327C6817900D7FAFB /* Tree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
+		CEA422F327C6817900D7FAFB /* TreeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeModel.swift; sourceTree = "<group>"; };
 		CEE5C8D327CE738100A92F91 /* TreesMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreesMapViewModel.swift; sourceTree = "<group>"; };
 		CEE8A39827B3D3970098628D /* TFE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE8A39B27B3D3970098628D /* TFEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFEApp.swift; sourceTree = "<group>"; };
@@ -97,6 +95,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A81E93DD27EC854D004C47A7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				CE6E749E27B3F12C00E9B583 /* API */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		CE0CB6C227CF834800AA2107 /* shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,9 +122,9 @@
 		CE6E749D27B3F12C00E9B583 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				CE6E749E27B3F12C00E9B583 /* API */,
 				CE6E74AC27B3F9B800E9B583 /* aliases.swift */,
 				A8C101CE27EA2DCC004D31D5 /* DateParser.swift */,
+				A81E93DE27EC8C87004C47A7 /* NetworkingManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -126,9 +132,7 @@
 		CE6E749E27B3F12C00E9B583 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				CE6E749F27B3F12C00E9B583 /* APIManager.swift */,
-				CE6E74A027B3F12C00E9B583 /* MockAPIManager.swift */,
-				CE6E74A127B3F12C00E9B583 /* APIManaging.swift */,
+				CE6E749F27B3F12C00E9B583 /* StandDataService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -147,8 +151,8 @@
 		CE6E74A927B3F4BA00E9B583 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				CE6E74AA27B3F4BA00E9B583 /* Stand.swift */,
-				CEA422F327C6817900D7FAFB /* Tree.swift */,
+				CE6E74AA27B3F4BA00E9B583 /* StandModel.swift */,
+				CEA422F327C6817900D7FAFB /* TreeModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -194,6 +198,7 @@
 		CEE8A39A27B3D3970098628D /* TFE */ = {
 			isa = PBXGroup;
 			children = (
+				A81E93DD27EC854D004C47A7 /* Services */,
 				CE6E74A927B3F4BA00E9B583 /* Model */,
 				CE6E749D27B3F12C00E9B583 /* Utils */,
 				CE6E74A227B3F12C00E9B583 /* View */,
@@ -365,17 +370,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE6E74A527B3F12C00E9B583 /* APIManager.swift in Sources */,
-				CE6E74A627B3F12C00E9B583 /* MockAPIManager.swift in Sources */,
+				CE6E74A527B3F12C00E9B583 /* StandDataService.swift in Sources */,
 				A8C101CF27EA2DCC004D31D5 /* DateParser.swift in Sources */,
 				CEE8A39C27B3D3970098628D /* TFEApp.swift in Sources */,
 				CEF5EACD27C544BE0040CDD6 /* TreesMapView.swift in Sources */,
 				CE0CB6C427CF836600AA2107 /* DocumentPicker.swift in Sources */,
 				CE6E74AF27B40A8400E9B583 /* StandListViewModel.swift in Sources */,
-				CEA422F427C6817900D7FAFB /* Tree.swift in Sources */,
+				CEA422F427C6817900D7FAFB /* TreeModel.swift in Sources */,
 				CE3B579327D1277E00C778C0 /* ButtonStyles.swift in Sources */,
-				CE6E74AB27B3F4BA00E9B583 /* Stand.swift in Sources */,
-				CE6E74A727B3F12C00E9B583 /* APIManaging.swift in Sources */,
+				A81E93DF27EC8C87004C47A7 /* NetworkingManager.swift in Sources */,
+				CE6E74AB27B3F4BA00E9B583 /* StandModel.swift in Sources */,
 				CEE5C8D427CE738100A92F91 /* TreesMapViewModel.swift in Sources */,
 				CE6E74A827B3F12C00E9B583 /* StandListView.swift in Sources */,
 				CE6E74AD27B3F9B800E9B583 /* aliases.swift in Sources */,

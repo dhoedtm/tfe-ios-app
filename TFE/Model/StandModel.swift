@@ -10,7 +10,7 @@ import Foundation
 // Identifiable is required in order to be used in a List in a View
 // items need to be uniquely identifiable, "id" could also be initiliazed with UUID()
 // MARK: - Stand
-struct Stand: Identifiable, Codable {
+struct StandModel: Identifiable, Codable {
     let id: Int
     let name: String
     let treeCount: Int

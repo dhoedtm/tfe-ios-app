@@ -8,44 +8,40 @@
 import Foundation
 import MapKit
 import SwiftUI
+import Combine
 
 class StandListViewModel : ObservableObject {
     
-    let api = container.resolve(APIManaging.self)!
+    private let api = StandDataService()
+    private var cancellables = Set<AnyCancellable>()
     
     @Published var isFetchingStands : Bool = false
     @Published var error : String? = nil
-    @Published var stands : [Stand] = [Stand]()
-    @Published var selectedStand : Stand?
+    
+    @Published var stands : [StandModel] = []
+    @Published var selectedStand : StandModel?
+    
+    init() {
+        addSubscribers()
+        api.getStands()
+        self.isFetchingStands = true
+    }
+    
+    func addSubscribers() {
+        api.$allStands
+            .sink { [weak self] (stands) in
+                self?.stands = stands
+                self?.isFetchingStands = false
+            }
+            .store(in: &cancellables)
+    }
     
     func uploadPointClouds(filePaths: [URL]) {
         for path in filePaths {
-            api.uploadPointCloud(filePath: path) { [weak self] (returnedResult) in
-                // TODO
-            }
+            print("uploading file : \(path)")
+//            api.uploadPointCloud(filePath: path) { [weak self] (returnedResult) in
+//                // TODO
+//            }
         }
-    }
-    
-    func getStands() {
-        self.isFetchingStands = true
-        api.getStands { (returnedResult) in
-            DispatchQueue.main.async { [weak self] in
-                if let data = returnedResult.data {
-                    guard let stands = try? JSONDecoder().decode([Stand].self, from: data) else {
-                        self?.error = "Could not decode JSON array"
-                        self?.isFetchingStands = false
-                        return
-                    }
-                    self?.stands = stands
-                } else {
-                    self?.error = returnedResult.error ?? "Unknown error occured"
-                }
-                self?.isFetchingStands = false
-            }
-        }
-    }
-    
-    init() {
-        self.getStands()
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 import MapKit
 import SwiftUI
+import Combine
 
 class TreesMapViewModel : ObservableObject {
     
@@ -16,19 +17,21 @@ class TreesMapViewModel : ObservableObject {
         return MKCoordinateSpan(latitudeDelta: mapZoomDelta, longitudeDelta: mapZoomDelta)
     }()
     
-    let api = container.resolve(APIManaging.self)!
+    private let api = StandDataService()
+    private var cancellables = Set<AnyCancellable>()
     
     @Published var error : String? = nil
     @Published var isFetchingTrees : Bool = false
-    @Published var selectedStand : Stand
-    @Published var trees : [Tree] = [Tree]() {
+    
+    @Published var selectedStand : StandModel
+    @Published var trees : [TreeModel] = [TreeModel]() {
         didSet {
             if (!self.trees.isEmpty) {
                 self.selectedTree = self.trees.first
             }
         }
     }
-    @Published var selectedTree : Tree? {
+    @Published var selectedTree : TreeModel? {
         didSet {
             // property observer, triggers after the variable "selectedTreeRegion" is set
             if (selectedTree == nil) {
@@ -41,10 +44,26 @@ class TreesMapViewModel : ObservableObject {
     // automatically updated via the "didSet" trigger on the variable "selectedTree"
     @Published var selectedTreeRegion : MKCoordinateRegion = MKCoordinateRegion() // blank initially
     
-    func getLocationFromCoordinates(tree:Tree) -> CLLocationCoordinate2D {
+    init(selectedStand: StandModel) {
+        self.selectedStand = selectedStand
+        addSubscribers()
+        api.getTreesForStand(idStand: self.selectedStand.id)
+        self.isFetchingTrees = true
+    }
+    
+    func addSubscribers() {
+        api.$treesForStands
+            .sink { [weak self] (trees) in
+                self?.trees = trees[(self?.selectedStand.id)!] ?? [TreeModel]()
+                self?.isFetchingTrees = false
+            }
+            .store(in: &cancellables)
+    }
+    
+    func getLocationFromCoordinates(tree:TreeModel) -> CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: tree.latitude, longitude: tree.longitude)
     }
-    func getRegionFromCoordinates(tree:Tree) -> MKCoordinateRegion {
+    func getRegionFromCoordinates(tree:TreeModel) -> MKCoordinateRegion {
         // TODO: retrieve lat, long from stand to center map in the middle of the stand
         return MKCoordinateRegion(
             center: getLocationFromCoordinates(tree: tree), // center of the map, focus
@@ -52,37 +71,10 @@ class TreesMapViewModel : ObservableObject {
         )
     }
     
-    private func updateMapRegion(tree: Tree) {
+    private func updateMapRegion(tree: TreeModel) {
         withAnimation(.easeInOut) {
             selectedTreeRegion = getRegionFromCoordinates(tree: tree)
         }
-    }
-    
-    func fetchTrees(idStand: Int) {
-        self.isFetchingTrees = true
-        api.getTreesFromStand(
-            idStand: selectedStand.id,
-            handler: {
-                [weak self] (returnedResult) in
-                if let data = returnedResult.data {
-                    guard let trees = try? JSONDecoder().decode([Tree].self, from: data) else {
-                        self?.error = "Could not decode JSON array"
-                        self?.isFetchingTrees = false
-                        return
-                    }
-                    self?.trees = trees
-                } else {
-                    self?.error = returnedResult.error ?? "Unknown error occured"
-                }
-                self?.isFetchingTrees = false
-            }
-        )
-    }
-    
-    init(selectedStand: Stand) {
-        self.selectedStand = selectedStand
-        // TODO: runs before even visiting the page as the VM is init from the stand list already
-        fetchTrees(idStand: self.selectedStand.id)
     }
 }
 

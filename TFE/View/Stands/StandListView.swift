@@ -19,7 +19,13 @@ struct StandListView: View {
         NavigationView {
             VStack {
                 if let error = vm.error { Text(error) }
-                if(vm.isFetchingStands) { ProgressView() } else {
+                if(vm.isFetchingStands) {
+                    Spacer()
+                    ProgressView("Downloading stands...")
+                        .scaleEffect(1.5)
+                        .font(.system(size: 8))
+                    Spacer()
+                } else {
                     standList
                         .navigationTitle("Stands")
                     // .navigationBarTitleDisplayMode(.inline)

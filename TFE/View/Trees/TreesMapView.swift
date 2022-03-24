@@ -33,7 +33,7 @@ struct StandMapView: View {
 }
 
 struct StandMapView_Previews: PreviewProvider {
-    static let stand : Stand = Stand(
+    static let stand : StandModel = StandModel(
         id: 1,
         name: "stand_1_braine",
         treeCount: 13,
