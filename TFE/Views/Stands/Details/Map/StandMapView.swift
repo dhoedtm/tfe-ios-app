@@ -64,7 +64,7 @@ extension StandMapView {
     private var header: some View {
         VStack {
             if let stand = vm.selectedStand {
-                Text(stand.name)
+                Text(DateParser.formatDateString(date: stand.captureDate) ?? "error displaying date")
                     .font(.title2)
                     .fontWeight(.black)
                     .foregroundColor(.primary)
@@ -74,9 +74,9 @@ extension StandMapView {
                 Text("no stand could be found")
             }
         }
-        .background(Color.gray)
+        .background(.ultraThinMaterial)
         .cornerRadius(10)
-        .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 15)
+        .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 15)
     }
 }
 

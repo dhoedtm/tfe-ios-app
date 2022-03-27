@@ -27,7 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A8EEB89527F0C0CE003C3778 /* fix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fix.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A8EEB89527F0C0CE003C3778 /* tfe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tfe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8EEB89C27F0C0CF003C3778 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8EEB89F27F0C0CF003C3778 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A8EEB8A727F0C13A003C3778 /* StandModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandModel.swift; sourceTree = "<group>"; };
@@ -58,10 +58,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A889B59527F0D5370007DE24 /* Form */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Form;
+			sourceTree = "<group>";
+		};
 		A8EEB88C27F0C0CE003C3778 = {
 			isa = PBXGroup;
 			children = (
-				A8EEB89727F0C0CE003C3778 /* fix */,
+				A8EEB89727F0C0CE003C3778 /* TFE */,
 				A8EEB89627F0C0CE003C3778 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -69,12 +76,12 @@
 		A8EEB89627F0C0CE003C3778 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A8EEB89527F0C0CE003C3778 /* fix.app */,
+				A8EEB89527F0C0CE003C3778 /* tfe.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A8EEB89727F0C0CE003C3778 /* fix */ = {
+		A8EEB89727F0C0CE003C3778 /* TFE */ = {
 			isa = PBXGroup;
 			children = (
 				A8EEB8B327F0C1DD003C3778 /* Utils */,
@@ -85,7 +92,7 @@
 				A8EEB89C27F0C0CF003C3778 /* Assets.xcassets */,
 				A8EEB89E27F0C0CF003C3778 /* Preview Content */,
 			);
-			path = fix;
+			path = TFE;
 			sourceTree = "<group>";
 		};
 		A8EEB89E27F0C0CF003C3778 /* Preview Content */ = {
@@ -178,6 +185,7 @@
 		A8EEB8C727F0C68E003C3778 /* Details */ = {
 			isa = PBXGroup;
 			children = (
+				A889B59527F0D5370007DE24 /* Form */,
 				A8EEB8CE27F0C9A3003C3778 /* Map */,
 				A8EEB8C827F0C69D003C3778 /* StandMasterView.swift */,
 				A8EEB8C927F0C69D003C3778 /* StandMasterVM.swift */,
@@ -211,7 +219,7 @@
 			);
 			name = fix;
 			productName = fix;
-			productReference = A8EEB89527F0C0CE003C3778 /* fix.app */;
+			productReference = A8EEB89527F0C0CE003C3778 /* tfe.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -229,7 +237,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A8EEB89027F0C0CE003C3778 /* Build configuration list for PBXProject "fix" */;
+			buildConfigurationList = A8EEB89027F0C0CE003C3778 /* Build configuration list for PBXProject "TFE" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -408,7 +416,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"fix/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"tfe/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -421,8 +429,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = be.uclouvain.student.fix;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = be.uclouvain.student.tfe;
+				PRODUCT_NAME = tfe;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -436,7 +444,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"fix/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"tfe/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -449,8 +457,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = be.uclouvain.student.fix;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = be.uclouvain.student.tfe;
+				PRODUCT_NAME = tfe;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -460,7 +468,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A8EEB89027F0C0CE003C3778 /* Build configuration list for PBXProject "fix" */ = {
+		A8EEB89027F0C0CE003C3778 /* Build configuration list for PBXProject "TFE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A8EEB8A127F0C0CF003C3778 /* Debug */,
