@@ -10,7 +10,7 @@ import Combine
 
 class NetworkingManager {
     
-    static let baseURL : URL = URL(string: "http://192.168.1.11:3000/api/")!
+    static let baseURL : URL = URL(string: "http://192.168.1.10:3000/api/")!
     
     enum HTTPMethods : String {
         case GET
@@ -20,6 +20,7 @@ class NetworkingManager {
     }
     
     static func download(url: URL) -> AnyPublisher<Data, Error> {
+        print("[NetworkingManager][download] \(url)")
         // Combine framework uses publishers and subscribers
         // publishers should run on background threads
         // dataTaskPublisher already takes care of that for us
@@ -32,6 +33,7 @@ class NetworkingManager {
     }
     
     static func sendData(url: URL, method: HTTPMethods, data: Data) -> AnyPublisher<Data, Error> {
+        print("[NetworkingManager][sendData] \(url) \(method.rawValue)")
         // Combine framework uses publishers and subscribers
         // publishers should run on background threads
         // dataTaskPublisher already takes care of that for us

@@ -22,8 +22,6 @@ struct StandListView: View {
                 if(vm.isFetchingStands) {
                     Spacer()
                     ProgressView("Downloading stands...")
-                        // .scaleEffect(1.5) // causes memory leak on xcode 13.2.1
-                        .font(.system(size: 8))
                     Spacer()
                 } else {
                     standList
@@ -44,9 +42,9 @@ extension StandListView {
         List(vm.stands) { stand in
             NavigationLink(
                 // selectedStand : stand
-                destination: StandMapView()
+                destination: StandMasterView()
                     .environmentObject(
-                        StandMasterView(selectedStand: stand)
+                        StandMasterVM(selectedStand: stand)
                     )
             ) {
                 Text("stand : \(stand.name)")

@@ -14,10 +14,11 @@ struct StandMasterView: View {
     var body: some View {
         TabView {
             StandMapView()
+                .environmentObject(StandMapVM(selectedStand: vm.selectedStand))
                 .tabItem {
                     Text("Map")
                 }
-            StandDetailsView()
+            Text("B")
                 .tabItem {
                     Text("Details")
                 }

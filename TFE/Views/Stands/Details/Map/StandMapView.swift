@@ -50,7 +50,7 @@ extension StandMapView {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 15, height: 15)
-                        .background(.green)
+                        .background(Color.green)
                         .foregroundColor(.green)
                 }
             }
@@ -74,7 +74,7 @@ extension StandMapView {
                 Text("no stand could be found")
             }
         }
-        .background(.thinMaterial)
+        .background(Color.gray)
         .cornerRadius(10)
         .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 15)
     }
