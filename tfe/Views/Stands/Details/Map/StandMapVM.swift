@@ -12,6 +12,8 @@ import Combine
 
 class StandMapVM : ObservableObject {
     
+    // MARK: VARIABLES
+    
     let mapSpan : MKCoordinateSpan = {
         let mapZoomDelta = 0.005
         return MKCoordinateSpan(latitudeDelta: mapZoomDelta, longitudeDelta: mapZoomDelta)
@@ -44,12 +46,16 @@ class StandMapVM : ObservableObject {
     // automatically updated via the "didSet" trigger on the variable "selectedTree"
     @Published var selectedTreeRegion : MKCoordinateRegion = MKCoordinateRegion() // blank initially
     
+    // MARK: INIT
+    
     init(selectedStand: StandModel) {
         self.selectedStand = selectedStand
         addSubscribers()
         api.getTreesForStand(idStand: self.selectedStand.id)
         self.isFetchingTrees = true
     }
+    
+    // MARK: FUNCTIONS
     
     func addSubscribers() {
         api.$treesForStands

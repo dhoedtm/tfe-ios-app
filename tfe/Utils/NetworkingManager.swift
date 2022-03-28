@@ -10,7 +10,7 @@ import Combine
 
 class NetworkingManager {
     
-    static let baseURL : URL = URL(string: "http://192.168.1.10:3000/api/")!
+    static let baseURL : URL = URL(string: "http://192.168.1.11:3000/api/")!
     
     enum HTTPMethods : String {
         case GET

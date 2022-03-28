@@ -74,7 +74,7 @@ extension StandMapView {
                 Text("no stand could be found")
             }
         }
-        .background(.ultraThinMaterial)
+        .background(Color.gray)
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 15)
     }

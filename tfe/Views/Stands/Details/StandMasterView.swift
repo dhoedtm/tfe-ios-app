@@ -18,7 +18,8 @@ struct StandMasterView: View {
                 .tabItem {
                     Text("Map")
                 }
-            Text("B")
+            StandFormView()
+                .environmentObject(StandFormVM(selectedStand: vm.selectedStand))
                 .tabItem {
                     Text("Details")
                 }
