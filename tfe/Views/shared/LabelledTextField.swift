@@ -25,7 +25,6 @@ struct LabelledTextField: View {
                 .font(.caption)
                 .foregroundColor(.accentColor)
                 .offset(y: 10)
-//                .fixedSize(horizontal: true, vertical: true)
             TextField(label, text: $value)
                 .disabled(isDisabled)
                 .foregroundColor(isDisabled ? .gray : .black)
@@ -37,7 +36,7 @@ struct LabelledTextField_Previews: PreviewProvider {
     @State static var value = "value"
     static var previews: some View {
         LabelledTextField(
-            "ddddddddddddddd",
+            "a very long label",
             $value,
             isDisabled: false
         )

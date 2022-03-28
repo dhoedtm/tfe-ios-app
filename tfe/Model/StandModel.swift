@@ -11,19 +11,19 @@ import Foundation
 // items need to be uniquely identifiable, "id" could also be initiliazed with UUID()
 // MARK: - Stand
 struct StandModel: Identifiable, Codable {
-    let id: Int
-    let name: String
-    let treeCount: Int
-    let basalArea: Double
-    let convexAreaMeter: Double
-    let convexAreaHectare: Double
-    let concaveAreaMeter: Double
-    let concaveAreaHectare: Double
-    let treeDensity: Double
-    let meanDbh: Double
-    let meanDistance: Int
-    let captureDate: String
-    let description: String
+    var id: Int
+    var name: String
+    var treeCount: Int
+    var basalArea: Double
+    var convexAreaMeter: Double
+    var convexAreaHectare: Double
+    var concaveAreaMeter: Double
+    var concaveAreaHectare: Double
+    var treeDensity: Double
+    var meanDbh: Double
+    var meanDistance: Int
+    var captureDate: String
+    var description: String
 }
     
     // Codable protocol implements these behind the scenes

@@ -26,29 +26,51 @@ struct StandFormView: View {
     
     var body: some View {
         VStack {
-            Text(vm.selectedStand.captureDate)
-            Form {
-                Section(header: Text("General")) {
-                    LabelledTextField("id", $id, isDisabled: true)
-                    LabelledTextField("name", $name, isDisabled: false)
-                    LabelledTextField("description", $description, isDisabled: false)
-                }
-                Section(header: Text("Metrics")) {
-                    LabelledTextField("treeCount", $treeCount, isDisabled: true)
-                    LabelledTextField("basalArea", $basalArea, isDisabled: true)
-                    LabelledTextField("minDbh", $meanDbh, isDisabled: true)
-                    LabelledTextField("minDistance", $meanDistance, isDisabled: true)
-                }
-                Section(header: Text("Areas")) {
-                    LabelledTextField("convexAreaMeter", $convexAreaMeter, isDisabled: true)
-                    LabelledTextField("convexAreaHectare", $convexAreaHectare, isDisabled: true)
-                    LabelledTextField("concaveAreaMeter", $concaveAreaMeter, isDisabled: true)
-                    LabelledTextField("concaveAreaHectare", $concaveAreaHectare, isDisabled: true)
-                }
-            }
-            Divider()
-            
+            captureDatePicker
+                .padding()
+            form
+//                Divider()
+//                LineChart()
             Button("Update", action: update)
+                .padding()
+            Group {
+                Text("COUCOU")
+                Text("COUCOU")
+                Text("COUCOU")
+                Text("COUCOU")
+                Text("COUCOU")
+                Text("COUCOU")
+                Text("COUCOU")
+                Text("COUCOU")
+            }
+        }
+    }
+}
+
+extension StandFormView {
+    var captureDatePicker: some View {
+        Text("CAPTURE DATE PICKER")
+    }
+    
+    var form: some View {
+        Form {
+            Section(header: Text("General")) {
+                LabelledTextField("id", $id, isDisabled: true)
+                LabelledTextField("name", $name, isDisabled: false)
+                LabelledTextField("description", $description, isDisabled: false)
+            }
+            Section(header: Text("Metrics")) {
+                LabelledTextField("treeCount", $treeCount, isDisabled: true)
+                LabelledTextField("basalArea", $basalArea, isDisabled: true)
+                LabelledTextField("minDbh", $meanDbh, isDisabled: true)
+                LabelledTextField("minDistance", $meanDistance, isDisabled: true)
+            }
+            Section(header: Text("Areas")) {
+                LabelledTextField("convexAreaMeter", $convexAreaMeter, isDisabled: true)
+                LabelledTextField("convexAreaHectare", $convexAreaHectare, isDisabled: true)
+                LabelledTextField("concaveAreaMeter", $concaveAreaMeter, isDisabled: true)
+                LabelledTextField("concaveAreaHectare", $concaveAreaHectare, isDisabled: true)
+            }
         }
         .onAppear(perform: populate)
     }
@@ -69,12 +91,17 @@ struct StandFormView: View {
     }
     
     func update() {
-        
+        // since the model is a struct, it creates a copy (leaves selectedStand intact)
+        var stand = vm.selectedStand
+        // TODO: check if valid changes
+        stand.name = name
+        stand.description = description
+        vm.updateStand(stand: stand)
     }
 }
 
-struct StandFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        StandFormView()
-    }
-}
+//struct StandFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StandFormView()
+//    }
+//}

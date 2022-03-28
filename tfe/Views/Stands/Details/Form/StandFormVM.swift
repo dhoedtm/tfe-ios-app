@@ -17,4 +17,9 @@ class StandFormVM : ObservableObject {
     init(selectedStand: StandModel) {
         self.selectedStand = selectedStand
     }
+    
+    func updateStand(stand: StandModel) {
+        print(stand.name)
+        print(selectedStand.name)
+    }
 }
