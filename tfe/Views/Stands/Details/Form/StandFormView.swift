@@ -25,25 +25,18 @@ struct StandFormView: View {
     @State private var concaveAreaHectare : String = ""
     
     var body: some View {
-        VStack {
+        ScrollView {
             captureDatePicker
-                .padding()
             form
 //                Divider()
 //                LineChart()
             Button("Update", action: update)
                 .padding()
             Group {
-                Text("COUCOU")
-                Text("COUCOU")
-                Text("COUCOU")
-                Text("COUCOU")
-                Text("COUCOU")
-                Text("COUCOU")
-                Text("COUCOU")
-                Text("COUCOU")
+                Text("GRAPH")
             }
         }
+        .padding()
     }
 }
 
@@ -53,25 +46,29 @@ extension StandFormView {
     }
     
     var form: some View {
-        Form {
-            Section(header: Text("General")) {
+        Group {
+            Group {
+                Text("General").bold().padding(.top)
                 LabelledTextField("id", $id, isDisabled: true)
                 LabelledTextField("name", $name, isDisabled: false)
                 LabelledTextField("description", $description, isDisabled: false)
             }
-            Section(header: Text("Metrics")) {
+            Group {
+                Text("Metrics").bold().padding(.top)
                 LabelledTextField("treeCount", $treeCount, isDisabled: true)
                 LabelledTextField("basalArea", $basalArea, isDisabled: true)
                 LabelledTextField("minDbh", $meanDbh, isDisabled: true)
                 LabelledTextField("minDistance", $meanDistance, isDisabled: true)
             }
-            Section(header: Text("Areas")) {
+            Group {
+                Text("Areas").bold().padding(.top)
                 LabelledTextField("convexAreaMeter", $convexAreaMeter, isDisabled: true)
                 LabelledTextField("convexAreaHectare", $convexAreaHectare, isDisabled: true)
                 LabelledTextField("concaveAreaMeter", $concaveAreaMeter, isDisabled: true)
                 LabelledTextField("concaveAreaHectare", $concaveAreaHectare, isDisabled: true)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear(perform: populate)
     }
     

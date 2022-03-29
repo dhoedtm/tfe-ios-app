@@ -12,6 +12,11 @@ import Combine
 
 class StandMapVM : ObservableObject {
     
+    enum StandMapError : Hashable {
+        case trees
+        case selectedTree
+    }
+    
     // MARK: VARIABLES
     
     let mapSpan : MKCoordinateSpan = {
@@ -21,26 +26,35 @@ class StandMapVM : ObservableObject {
     
     private let api = ApiDataService()
     private var cancellables = Set<AnyCancellable>()
+    private var errors : Dictionary<StandMapError, String> = Dictionary<StandMapError, String>() {
+        didSet{
+            errorList = Array(errors.values)
+        }
+    }
     
-    @Published var error : String? = nil
+    @Published var errorList : [String] = []
     @Published var isFetchingTrees : Bool = false
     
     @Published var selectedStand : StandModel
     @Published var trees : [TreeModel] = [TreeModel]() {
         didSet {
-            if (!self.trees.isEmpty) {
-                self.selectedTree = self.trees.first
+            guard let tree = self.trees.first else {
+                errors[.trees] = "this stand has no trees"
+                return
             }
+            self.selectedTree = tree
+            errors[.trees] = nil
         }
     }
     @Published var selectedTree : TreeModel? {
         didSet {
             // property observer, triggers after the variable "selectedTreeRegion" is set
-            if (selectedTree == nil) {
-                print("could not update map region, selected tree is nil")
+            guard let tree = selectedTree else {
+                errors[.selectedTree] = "could not update map region, selected tree is nil"
                 return
             }
-            updateMapRegion(tree: selectedTree!)
+            updateMapRegion(tree: tree)
+            errors[.selectedTree] = nil
         }
     }
     // automatically updated via the "didSet" trigger on the variable "selectedTree"
@@ -77,7 +91,7 @@ class StandMapVM : ObservableObject {
         )
     }
     
-    private func updateMapRegion(tree: TreeModel) {
+    func updateMapRegion(tree: TreeModel) {
         withAnimation(.easeInOut) {
             selectedTreeRegion = getRegionFromCoordinates(tree: tree)
         }

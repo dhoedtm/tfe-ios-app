@@ -13,18 +13,24 @@ struct StandMapView: View {
     @EnvironmentObject private var vm : StandMapVM
     
     var body: some View {
-        ZStack {
-            if let error = vm.error { Text(error) }
-            if (vm.isFetchingTrees) { ProgressView() } else {
-                if (vm.trees.isEmpty) {
-                    Text("stand is empty, no trees could be found")
-                        .bold()
-                } else {
+        if (vm.isFetchingTrees) {
+            ProgressView()
+        } else {
+            VStack {
+                // errors
+                ForEach(vm.errorList, id: \.self) {
+                    Text($0)
+                }
+                // body
+                ZStack {
                     treeMap
-                    VStack(spacing:0) {
+                    VStack() {
                         header
                             .padding()
                         Spacer()
+                        TreeDetailsPopOver()
+                            .environmentObject(vm)
+                            .padding()
                     }
                 }
             }
@@ -52,6 +58,9 @@ extension StandMapView {
                         .frame(width: 15, height: 15)
                         .background(Color.green)
                         .foregroundColor(.green)
+                        .onTapGesture {
+                            vm.selectedTree = tree
+                        }
                 }
             }
         )
@@ -74,7 +83,7 @@ extension StandMapView {
                 Text("no stand could be found")
             }
         }
-        .background(Color.gray)
+        .background(Color.white)
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 15)
     }
@@ -85,7 +94,9 @@ extension StandMapView {
 struct StandMapView_Previews: PreviewProvider {
     static let vm : StandMapVM = {
         let vm = StandMapVM(selectedStand: MockData.stands.first!)
-        vm.isFetchingTrees = false
+        // possible to tweak VM here :
+        // e.g. fetching trees
+        vm.errorList = ["SOMETHING BAD", "SONETHING WORSE"]
         return vm
     }()
     static var previews: some View {
