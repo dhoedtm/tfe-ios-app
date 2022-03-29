@@ -100,8 +100,9 @@ extension StandFormView {
     }
 }
 
-//struct StandFormView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        StandFormView()
-//    }
-//}
+struct StandFormView_Previews: PreviewProvider {
+    static var previews: some View {
+        StandFormView()
+            .environmentObject(StandFormVM(selectedStand: MockData.stands.first!))
+    }
+}

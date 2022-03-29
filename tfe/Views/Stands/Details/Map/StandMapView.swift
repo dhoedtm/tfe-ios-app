@@ -83,26 +83,13 @@ extension StandMapView {
 // MARK: PREVIEW
 
 struct StandMapView_Previews: PreviewProvider {
-    static let stand : StandModel = StandModel(
-        id: 1,
-        name: "stand_1_braine",
-        treeCount: 13,
-        basalArea: 23.2,
-        convexAreaMeter: 34,
-        convexAreaHectare: 23,
-        concaveAreaMeter: 45,
-        concaveAreaHectare: 33,
-        treeDensity: 5,
-        meanDbh: 2,
-        meanDistance: 898,
-        captureDate: "2022-03-11T15:24:22.102033",
-        description: "my 1st stand"
-    )
-    
+    static let vm : StandMapVM = {
+        let vm = StandMapVM(selectedStand: MockData.stands.first!)
+        vm.isFetchingTrees = false
+        return vm
+    }()
     static var previews: some View {
         StandMapView()
-            .environmentObject(
-                StandMapVM(selectedStand: stand)
-            )
+            .environmentObject(vm)
     }
 }

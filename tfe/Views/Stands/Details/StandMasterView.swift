@@ -30,5 +30,6 @@ struct StandMasterView: View {
 struct StandMasterView_Previews: PreviewProvider {
     static var previews: some View {
         StandMasterView()
+            .environmentObject(StandMasterVM(selectedStand: MockData.stands.first!))
     }
 }
