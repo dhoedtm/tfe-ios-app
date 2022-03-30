@@ -102,4 +102,17 @@ class MockData {
         22.80987701,
         18.09847701
     ]
+    
+    static let chartData : [ChartData] = [
+        ChartData(label: "16-11-2020",  value: 0.3048599073),
+        ChartData(label: "18-11-2020",  value: 0.2969587937),
+        ChartData(label: "20-11-2020",  value: 0.1809847701),
+        ChartData(label: "21-11-2020",  value: 0.2821024198),
+        ChartData(label: "25-11-2020",  value: 0.2553976090),
+        ChartData(label: "28-11-2020",  value: 0.1232980326),
+        ChartData(label: "4-12-2020",  value: 0.2378328396),
+        ChartData(label: "10-12-2020",  value: 0.2226622049),
+        ChartData(label: "19-12-2020",  value: 0.1481883507),
+        ChartData(label: "24-12-2020",  value: 0.2280987701)
+    ]
 }

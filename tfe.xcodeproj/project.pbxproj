@@ -41,6 +41,9 @@
 		A8DE5ADB27F4B07600C376F3 /* TreeCaptureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5ADA27F4B07600C376F3 /* TreeCaptureModel.swift */; };
 		A8DE5ADD27F4D72000C376F3 /* LineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5ADC27F4D72000C376F3 /* LineChart.swift */; };
 		A8DE5AE027F4F1DC00C376F3 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5ADF27F4F1DC00C376F3 /* Double.swift */; };
+		A8DE5AE227F4FDF000C376F3 /* BarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5AE127F4FDF000C376F3 /* BarChart.swift */; };
+		A8DE5AE527F50B6300C376F3 /* ChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5AE427F50B6300C376F3 /* ChartCell.swift */; };
+		A8DE5AE827F50C5800C376F3 /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5AE727F50C5800C376F3 /* Misc.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +83,9 @@
 		A8DE5ADA27F4B07600C376F3 /* TreeCaptureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeCaptureModel.swift; sourceTree = "<group>"; };
 		A8DE5ADC27F4D72000C376F3 /* LineChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChart.swift; sourceTree = "<group>"; };
 		A8DE5ADF27F4F1DC00C376F3 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
+		A8DE5AE127F4FDF000C376F3 /* BarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChart.swift; sourceTree = "<group>"; };
+		A8DE5AE427F50B6300C376F3 /* ChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCell.swift; sourceTree = "<group>"; };
+		A8DE5AE727F50C5800C376F3 /* Misc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,9 +154,9 @@
 		A81C896D27F1FAF100F5E0D0 /* shared */ = {
 			isa = PBXGroup;
 			children = (
+				A8DE5AE327F50B4D00C376F3 /* charts */,
 				A8DE5AD327F45B4D00C376F3 /* forms */,
 				A81C896E27F1FAF100F5E0D0 /* DocumentPicker.swift */,
-				A8DE5ADC27F4D72000C376F3 /* LineChart.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -239,6 +245,7 @@
 			children = (
 				A8DE5ACC27F3321400C376F3 /* Forms */,
 				A8DE5ACB27F3320D00C376F3 /* API */,
+				A8DE5AE727F50C5800C376F3 /* Misc.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -309,6 +316,16 @@
 				A8DE5ADF27F4F1DC00C376F3 /* Double.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A8DE5AE327F50B4D00C376F3 /* charts */ = {
+			isa = PBXGroup;
+			children = (
+				A8DE5ADC27F4D72000C376F3 /* LineChart.swift */,
+				A8DE5AE127F4FDF000C376F3 /* BarChart.swift */,
+				A8DE5AE427F50B6300C376F3 /* ChartCell.swift */,
+			);
+			path = charts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -393,13 +410,16 @@
 				A81C898927F1FAF100F5E0D0 /* DocumentPicker.swift in Sources */,
 				A81C898C27F1FAF100F5E0D0 /* StandFormVM.swift in Sources */,
 				A81C899827F1FAF100F5E0D0 /* StandModel.swift in Sources */,
+				A8DE5AE527F50B6300C376F3 /* ChartCell.swift in Sources */,
 				A8DE5ADD27F4D72000C376F3 /* LineChart.swift in Sources */,
 				A8DE5AD727F4819500C376F3 /* LabelledViewGeneric.swift in Sources */,
 				A8DE5ACA27F3314E00C376F3 /* TreeFormVM.swift in Sources */,
 				A81C898D27F1FAF100F5E0D0 /* StandFormView.swift in Sources */,
 				A8DE5AC127F316A000C376F3 /* LabelledNumberField.swift in Sources */,
+				A8DE5AE827F50C5800C376F3 /* Misc.swift in Sources */,
 				A8DE5ABD27F3073000C376F3 /* MockData.swift in Sources */,
 				A81C899427F1FAF100F5E0D0 /* aliases.swift in Sources */,
+				A8DE5AE227F4FDF000C376F3 /* BarChart.swift in Sources */,
 				A8DE5AC727F330E100C376F3 /* StateBindingViewModel.swift in Sources */,
 				A81C899927F1FAF100F5E0D0 /* TreeModel.swift in Sources */,
 				A81C898B27F1FAF100F5E0D0 /* StandMasterView.swift in Sources */,

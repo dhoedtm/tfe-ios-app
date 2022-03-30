@@ -25,12 +25,23 @@ class DateParser {
         return formatter
     }()
     
+    private static var sharedShortDateParser: DateFormatter = {
+        let formatter = DateFormatter()
+        let template = "dMyyyy"
+        let custom = DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: fr_BE)
+        formatter.dateFormat = custom
+        return formatter
+    }()
+    
     static func stringToDate(date: String) -> Date? {
         return sharedStringParser.date(from: date)
     }
     
     static func dateToString(date: Date) -> String {
         return sharedDateParser.string(from: date)
+    }
+    static func dateToShortString(date: Date) -> String {
+        return sharedShortDateParser.string(from: date)
     }
     
     static func formatDateString(date: String) -> String? {

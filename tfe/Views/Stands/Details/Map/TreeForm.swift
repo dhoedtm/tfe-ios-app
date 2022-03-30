@@ -43,11 +43,9 @@ extension TreeForm {
     }
     
     private var dbhChart: some View {
-        VStack {
-            Text("DBH")
-                .bold()
-            LineChart(data: MockData.dbhList)
-        }
+            BarChart(title: "DBH", legend: "meters", barColor: .green, data: MockData.chartData)
+                .frame(height: UIScreen.main.bounds.height / 3)
+                .padding()
     }
 }
 

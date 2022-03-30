@@ -18,7 +18,6 @@ struct StandFormView: View {
             Divider()
                 .padding()
             basalAreaChart
-                
         }
         .padding()
     }
@@ -73,11 +72,9 @@ extension StandFormView {
     }
     
     var basalAreaChart : some View {
-        VStack{
-            Text("BASAL AREA")
-                .bold()
-            LineChart(data: MockData.dbhList)
-        }
+        BarChart(title: "Basal area", legend: "meters", barColor: .green, data: MockData.chartData)
+            .frame(height: UIScreen.main.bounds.height / 3)
+            .padding()
     }
 }
 
