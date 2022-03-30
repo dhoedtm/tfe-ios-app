@@ -87,7 +87,7 @@ class StandMapVM : ObservableObject {
         // TODO: retrieve lat, long from stand to center map in the middle of the stand
         return MKCoordinateRegion(
             center: getLocationFromCoordinates(tree: tree), // center of the map, focus
-            span: mapSpan // how much zoomed on the center
+            span: self.selectedTreeRegion.span // how much zoomed on the center
         )
     }
     

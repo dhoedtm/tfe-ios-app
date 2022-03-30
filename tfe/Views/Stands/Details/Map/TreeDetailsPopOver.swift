@@ -12,12 +12,6 @@ struct TreeDetailsPopOver: View {
     @EnvironmentObject var vm : StandMapVM
     @State private var showSheet : Bool = false
     
-    @State private var id = ""
-    @State private var idStand = ""
-    @State private var latitude = ""
-    @State private var longitude = ""
-    @State private var description = ""
-    
     var body: some View {
         if let tree = vm.selectedTree {
             VStack {
@@ -25,10 +19,7 @@ struct TreeDetailsPopOver: View {
                     LabelledText("X", String(format: "%.5f", tree.latitude))
                     LabelledText("X", String(format: "%.5f", tree.longitude))
                     Button("More", action: { showSheet.toggle() })
-                        .padding(7)
-                        .foregroundColor(.white)
-                        .background(Color.accentColor)
-                        .cornerRadius(8)
+                        .buttonStyle(StandardButton())
                 }
                 LabelledText("description", tree.description)
             }

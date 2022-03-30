@@ -73,7 +73,7 @@ class ApiDataService {
         }
         
         standSubscription = NetworkingManager.sendData(url: url, method: .PUT, data: json)
-            .decode(type: [TreeModel].self, decoder: JSONDecoder())
+            .encode(encoder: JSONEncoder())
             // .replaceError(with: [])
             .sink(receiveCompletion: NetworkingManager.handleCompletion,
                   receiveValue: { [weak self] (returnedStand) in

@@ -11,9 +11,10 @@ import SwiftUI
 struct StandardButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(10)
-            .background(Color(red:0.9, green:0.9, blue:0.9))
-            .foregroundColor(.black)
-            .clipShape(Capsule())
+            .frame(maxWidth: .infinity)
+            .padding(8)
+            .foregroundColor(.white)
+            .background(Color.green)
+            .cornerRadius(8)
     }
 }

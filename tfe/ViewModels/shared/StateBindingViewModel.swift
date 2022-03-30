@@ -4,13 +4,15 @@
 //
 //  Created by martin d'hoedt on 3/29/22.
 //
+// thanks to : https://bocato.medium.com/improving-mvvm-forms-in-swiftui-14b032065095
 
 import Foundation
 import SwiftUI
 
 open class StateBindingViewModel<State: Equatable>: ObservableObject {
     /// Defines the state to be represented by the view.
-    @Published public private(set) var state: State
+    // used to have : private(set)
+    @Published public var state: State
 
     /// Initializes the ViewModel with the first / initial state for the flow.
     /// - Parameter initialState: the initial state of the flow.

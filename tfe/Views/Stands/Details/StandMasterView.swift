@@ -16,12 +16,24 @@ struct StandMasterView: View {
             StandMapView()
                 .environmentObject(StandMapVM(selectedStand: vm.selectedStand))
                 .tabItem {
-                    Text("Map")
+                    VStack {
+                        Image(systemName: "map")
+                            .resizable()
+                            .foregroundColor(.green)
+                        Text("Map")
+                    }
                 }
             StandFormView()
-                .environmentObject(StandFormVM(selectedStand: vm.selectedStand))
+                .environmentObject(
+                    StandFormVM(initialState: StandFormState(stand: vm.selectedStand))
+                )
                 .tabItem {
-                    Text("Details")
+                    VStack {
+                        Image(systemName: "chart.bar.doc.horizontal")
+                            .resizable()
+                            .foregroundColor(.green)
+                        Text("Details")
+                    }
                 }
         }
     }

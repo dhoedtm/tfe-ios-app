@@ -11,27 +11,12 @@ struct StandFormView: View {
     
     @EnvironmentObject private var vm : StandFormVM
     
-    @State private var id : String = ""
-    @State private var name: String = ""
-    @State private var description: String = ""
-    @State private var treeCount : String = ""
-    @State private var basalArea : String = ""
-    @State private var treeDensity : String = ""
-    @State private var meanDbh : String = ""
-    @State private var meanDistance : String = ""
-    @State private var convexAreaMeter : String = ""
-    @State private var convexAreaHectare : String = ""
-    @State private var concaveAreaMeter : String = ""
-    @State private var concaveAreaHectare : String = ""
-    
     var body: some View {
         ScrollView {
             captureDatePicker
             form
-//                Divider()
+            Divider()
 //                LineChart()
-            Button("Update", action: update)
-                .padding()
             Group {
                 Text("GRAPH")
             }
@@ -42,64 +27,58 @@ struct StandFormView: View {
 
 extension StandFormView {
     var captureDatePicker: some View {
-        Text("CAPTURE DATE PICKER")
+        Text("STAND CAPTURE DATE PICKER")
     }
     
     var form: some View {
         Group {
             Group {
                 Text("General").bold().padding(.top)
-                LabelledTextField("id", $id, isDisabled: true)
-                LabelledTextField("name", $name, isDisabled: false)
-                LabelledTextField("description", $description, isDisabled: false)
+                LabelledTextField("id", vm.binding(\.id), isDisabled: true)
+                LabelledTextField("name", vm.binding(\.name), isDisabled: false)
+                if let error = vm.state.nameError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+                LabelledTextField("description", vm.binding(\.description), isDisabled: false)
+                if let error = vm.state.descriptionError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
             }
             Group {
                 Text("Metrics").bold().padding(.top)
-                LabelledTextField("treeCount", $treeCount, isDisabled: true)
-                LabelledTextField("basalArea", $basalArea, isDisabled: true)
-                LabelledTextField("minDbh", $meanDbh, isDisabled: true)
-                LabelledTextField("minDistance", $meanDistance, isDisabled: true)
+                LabelledTextField("treeCount", vm.binding(\.treeCount), isDisabled: true)
+                LabelledTextField("basalArea", vm.binding(\.basalArea), isDisabled: true)
+                LabelledTextField("minDbh", vm.binding(\.meanDbh), isDisabled: true)
+                LabelledTextField("minDistance", vm.binding(\.meanDistance), isDisabled: true)
             }
             Group {
                 Text("Areas").bold().padding(.top)
-                LabelledTextField("convexAreaMeter", $convexAreaMeter, isDisabled: true)
-                LabelledTextField("convexAreaHectare", $convexAreaHectare, isDisabled: true)
-                LabelledTextField("concaveAreaMeter", $concaveAreaMeter, isDisabled: true)
-                LabelledTextField("concaveAreaHectare", $concaveAreaHectare, isDisabled: true)
+                LabelledTextField("convexAreaMeter", vm.binding(\.convexAreaMeter), isDisabled: true)
+                LabelledTextField("convexAreaHectare", vm.binding(\.convexAreaHectare), isDisabled: true)
+                LabelledTextField("concaveAreaMeter", vm.binding(\.concaveAreaMeter), isDisabled: true)
+                LabelledTextField("concaveAreaHectare", vm.binding(\.concaveAreaHectare), isDisabled: true)
             }
+            Button(
+                "Update",
+                action: vm.updateStand
+            )
+            .buttonStyle(StandardButton())
+            .frame(maxWidth: .infinity, alignment: .center)
+            .disabled(!vm.state.isUpdateButtonEnabled)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .onAppear(perform: populate)
-    }
-    
-    func populate() {
-        id = String(vm.selectedStand.id)
-        name = String(vm.selectedStand.name)
-        description = vm.selectedStand.description
-        treeCount = String(vm.selectedStand.treeCount)
-        basalArea = String(vm.selectedStand.basalArea)
-        treeDensity = String(vm.selectedStand.treeDensity)
-        meanDbh = String(vm.selectedStand.meanDbh)
-        meanDistance = String(vm.selectedStand.meanDistance)
-        convexAreaMeter = String(vm.selectedStand.convexAreaMeter)
-        convexAreaHectare = String(vm.selectedStand.convexAreaHectare)
-        concaveAreaMeter = String(vm.selectedStand.concaveAreaMeter)
-        concaveAreaHectare = String(vm.selectedStand.concaveAreaHectare)
-    }
-    
-    func update() {
-        // since the model is a struct, it creates a copy (leaves selectedStand intact)
-        var stand = vm.selectedStand
-        // TODO: check if valid changes
-        stand.name = name
-        stand.description = description
-        vm.updateStand(stand: stand)
     }
 }
 
 struct StandFormView_Previews: PreviewProvider {
     static var previews: some View {
         StandFormView()
-            .environmentObject(StandFormVM(selectedStand: MockData.stands.first!))
+            .environmentObject(
+                StandFormVM(initialState: StandFormState(stand: MockData.stands.first!))
+            )
     }
 }

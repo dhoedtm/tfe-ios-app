@@ -14,19 +14,20 @@ struct StandMapView: View {
     
     var body: some View {
         if (vm.isFetchingTrees) {
-            ProgressView()
+//            ProgressView()
         } else {
             VStack {
                 // errors
-                ForEach(vm.errorList, id: \.self) {
-                    Text($0)
-                }
+//                ForEach(vm.errorList, id: \.self) {
+//                    Text($0)
+//                }
                 // body
                 ZStack {
                     treeMap
                     VStack() {
                         header
                             .padding()
+                            .frame(alignment: .top)
                         Spacer()
                         TreeDetailsPopOver()
                             .environmentObject(vm)
@@ -52,20 +53,20 @@ extension StandMapView {
             annotationItems: vm.trees,
             annotationContent: { tree in
                 MapAnnotation(coordinate: vm.getLocationFromCoordinates(tree: tree)) {
-                    Image(systemName: "map.circle.fill")
+                    Image(systemName: "circle")
                         .resizable()
-                        .scaledToFit()
-                        .frame(width: 15, height: 15)
-                        .background(Color.green)
                         .foregroundColor(.green)
+                        .scaledToFit()
                         .onTapGesture {
-                            vm.selectedTree = tree
+                            withAnimation(.easeInOut) {
+                                vm.selectedTree = tree
+                            }
                         }
                 }
             }
         )
-            // default safe area add padding to very top and bottom of the screen (curved areas)
-            .ignoresSafeArea()
+        // default safe area add padding to very top and bottom of the screen (curved areas)
+        .ignoresSafeArea()
     }
 }
 

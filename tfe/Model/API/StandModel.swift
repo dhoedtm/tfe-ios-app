@@ -10,7 +10,7 @@ import Foundation
 // Identifiable is required in order to be used in a List in a View
 // items need to be uniquely identifiable, "id" could also be initiliazed with UUID()
 // MARK: - Stand
-struct StandModel: Identifiable, Codable {
+struct StandModel: Identifiable, Codable, Hashable {
     var id: Int
     var name: String
     var treeCount: Int
@@ -26,6 +26,29 @@ struct StandModel: Identifiable, Codable {
     var description: String
 }
     
+extension StandModel {
+    init(standFormState: StandFormState) {
+//        guard
+//            let id = ....
+//        else {
+//            // TODO: add throw ?
+//        }
+        id = Int(standFormState.id) ?? 0
+        name = String(standFormState.name)
+        treeCount = Int(standFormState.treeCount) ?? 0
+        basalArea = Double(standFormState.basalArea) ?? 0
+        convexAreaMeter = Double(standFormState.convexAreaMeter) ?? 0
+        convexAreaHectare = Double(standFormState.convexAreaHectare) ?? 0
+        concaveAreaMeter = Double(standFormState.concaveAreaMeter) ?? 0
+        concaveAreaHectare = Double(standFormState.concaveAreaHectare) ?? 0
+        treeDensity = Double(standFormState.treeDensity) ?? 0
+        meanDbh = Double(standFormState.meanDbh) ?? 0
+        meanDistance = Int(standFormState.meanDistance) ?? 0
+        captureDate = String(standFormState.captureDate)
+        description = String(standFormState.description)
+    }
+}
+
     // Codable protocol implements these behind the scenes
     // This would be needed had we implemented Codable, Decodable separately
     // Implementing Decodable might still be interesting for some special edge cases

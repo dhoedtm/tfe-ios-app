@@ -89,7 +89,8 @@ extension StandListView {
                 }
             )
             .buttonStyle(StandardButton())
-        }.padding(10)
+        }
+        .padding()
     }
 }
 

@@ -6,7 +6,6 @@
 //
 
 struct TreeFormState : Equatable {
-    // let id = UUID()
     var id : String
     var idStand : String
     var latitude : String
@@ -24,5 +23,10 @@ extension TreeFormState {
         latitude = String(tree.latitude)
         longitude = String(tree.longitude)
         description = String(tree.description)
+    }
+    
+    // used by Equatable
+    static func ==(lhs: TreeFormState, rhs: TreeFormState) -> Bool {
+        return lhs.id == rhs.id
     }
 }

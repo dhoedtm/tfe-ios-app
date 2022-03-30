@@ -10,7 +10,12 @@ import Foundation
 final class TreeFormVM: StateBindingViewModel<TreeFormState> {
     // MARK: - Public Methods
     func updateTree() {
-        // state.description ... check
+        if !isValidDescription() {
+            state.descriptionError = "cannot be empty"
+            return
+        }
+        
+        // api call
     }
 
     // MARK: - StateBindingViewModel Conformance
@@ -18,22 +23,26 @@ final class TreeFormVM: StateBindingViewModel<TreeFormState> {
         _ keyPath: PartialKeyPath<TreeFormState>,
         newValue: Value
     ) -> Bool where Value: Equatable {
-//        switch (keyPath, newValue) {
-//        case let (\TreeFormState.description, newValue as String):
-//            state.descriptionError = nil
-//            return newValue.count <= 12
-//        default:
-//            return true
-//        }
-        return true
+        switch (keyPath, newValue) {
+        case let (\TreeFormState.description, newValue as String):
+            state.descriptionError = nil
+            return newValue.count < 50
+        default:
+            return true
+        }
     }
 
     override func onStateChange(_ keyPath: PartialKeyPath<TreeFormState>) {
-//        state.isUpdateButtonEnabled = isValidForm()
+        state.isUpdateButtonEnabled = isValidForm()
     }
 
     // MARK: - Private Methods
-    private func isValidForm() -> Bool {
+    
+    private func isValidDescription() -> Bool {
         return !state.description.isEmpty
+    }
+    
+    private func isValidForm() -> Bool {
+        return isValidDescription()
     }
 }
