@@ -64,4 +64,13 @@ class MockData {
         TreeModel(id: 5, idStand: 1, latitude: 50.708251, longitude: 4.352862, description: "un arbre"),
         TreeModel(id: 6, idStand: 1, latitude: 50.708262, longitude: 4.3528879, description: "un arbre")
     ]
+    
+    
+    static let captures : [TreeCaptureModel] = [
+        TreeCaptureModel(id: 1, idTree: 1, dbh: 4.32, captureDate: "2022-01-04T11:14:06.102033", basalArea: 432),
+        TreeCaptureModel(id: 2, idTree: 1, dbh: 3.98, captureDate: "2022-02-06T10:09:11.102033", basalArea: 564),
+        TreeCaptureModel(id: 3, idTree: 1, dbh: 2.31, captureDate: "2022-05-06T09:16:12.102033", basalArea: 756),
+        TreeCaptureModel(id: 4, idTree: 1, dbh: 3.11, captureDate: "2022-07-07T15:13:33.102033", basalArea: 43),
+        TreeCaptureModel(id: 5, idTree: 1, dbh: 4.66, captureDate: "2022-09-11T16:18:23.102033", basalArea: 72)
+    ]
 }
