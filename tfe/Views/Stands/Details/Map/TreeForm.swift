@@ -14,7 +14,11 @@ struct TreeForm: View {
     var body: some View {
         ScrollView {
             form
+            Divider()
+                .padding()
+            dbhChart
         }
+        .padding()
     }
 }
 
@@ -36,7 +40,14 @@ extension TreeForm {
             .disabled(!vm.state.isUpdateButtonEnabled)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+    }
+    
+    private var dbhChart: some View {
+        VStack {
+            Text("DBH")
+                .bold()
+            LineChart(data: MockData.dbhList)
+        }
     }
 }
 

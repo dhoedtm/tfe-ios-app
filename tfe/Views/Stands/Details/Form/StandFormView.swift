@@ -16,10 +16,9 @@ struct StandFormView: View {
             captureDatePicker
             form
             Divider()
-//                LineChart()
-            Group {
-                Text("GRAPH")
-            }
+                .padding()
+            basalAreaChart
+                
         }
         .padding()
     }
@@ -71,6 +70,14 @@ extension StandFormView {
             .disabled(!vm.state.isUpdateButtonEnabled)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    var basalAreaChart : some View {
+        VStack{
+            Text("BASAL AREA")
+                .bold()
+            LineChart(data: MockData.dbhList)
+        }
     }
 }
 
