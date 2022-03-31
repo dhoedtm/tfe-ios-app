@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TreeDetailsPopOver: View {
     
-    @EnvironmentObject var vm : StandMapVM
+    @EnvironmentObject var vm : MapVM
     @State private var showSheet : Bool = false
     
     var body: some View {
@@ -42,6 +42,6 @@ struct TreeDetails_Previews: PreviewProvider {
     @State static var treeToEdit = MockData.trees.first!
     static var previews: some View {
         TreeDetailsPopOver()
-            .environmentObject(StandMapVM(selectedStand: MockData.stands.first!))
+            .environmentObject(MapVM(selectedStand: MockData.stands.first!))
     }
 }

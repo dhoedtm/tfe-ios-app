@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class StandMasterVM : ObservableObject {
+class MasterVM : ObservableObject {
     
     @Published var selectedStand : StandModel
     

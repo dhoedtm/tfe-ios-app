@@ -7,7 +7,13 @@
 
 import Foundation
 
-struct ChartData {
+struct ChartData : Comparable {
      var label: String
      var value: Double
+}
+
+extension ChartData {
+    static func < (lhs: ChartData, rhs: ChartData) -> Bool {
+        lhs.value < rhs.value
+    }
 }

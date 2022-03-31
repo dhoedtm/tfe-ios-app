@@ -8,31 +8,40 @@
 import SwiftUI
 import MapKit
 
-struct StandMapView: View {
+struct MapView: View {
     
-    @EnvironmentObject private var vm : StandMapVM
-    
+    @EnvironmentObject private var vm : MapVM
+    @Environment(\.presentationMode) var presentationMode
+     
     var body: some View {
+        Group {
         if (vm.isFetchingTrees) {
-//            ProgressView()
+            ProgressView()
         } else {
             VStack {
                 // errors
-//                ForEach(vm.errorList, id: \.self) {
-//                    Text($0)
-//                }
+                ForEach(vm.errorList, id: \.self) {
+                    Text($0)
+                }
                 // body
                 ZStack {
                     treeMap
                     VStack() {
                         header
-                            .padding()
-                            .frame(alignment: .top)
+                            .padding(.horizontal)
                         Spacer()
                         TreeDetailsPopOver()
                             .environmentObject(vm)
                             .padding()
                     }
+                }
+            }
+        }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Return to sender") {
+                    presentationMode.wrappedValue.dismiss() // this changes in iOS15
                 }
             }
         }
@@ -44,7 +53,7 @@ struct StandMapView: View {
 // in order to keep the main body of the view relatively short and thus readable,
 // it is good practice to create extensions of that view
 
-extension StandMapView {
+extension MapView {
     private var treeMap: some View {
         // "coordinateRegion" : for a set of long/lat points
         // could use "mapRect" to show zoom in on a specific area (a given stand bounding box)
@@ -70,7 +79,7 @@ extension StandMapView {
     }
 }
 
-extension StandMapView {
+extension MapView {
     private var header: some View {
         VStack {
             if let stand = vm.selectedStand {
@@ -78,8 +87,8 @@ extension StandMapView {
                     .font(.title2)
                     .fontWeight(.black)
                     .foregroundColor(.primary)
-                    .frame(height: 55)
-                .frame(maxWidth: .infinity)
+                    .padding()
+                    .frame(maxWidth: .infinity)
             } else {
                 Text("no stand could be found")
             }
@@ -93,15 +102,15 @@ extension StandMapView {
 // MARK: PREVIEW
 
 struct StandMapView_Previews: PreviewProvider {
-    static let vm : StandMapVM = {
-        let vm = StandMapVM(selectedStand: MockData.stands.first!)
+    static let vm : MapVM = {
+        let vm = MapVM(selectedStand: MockData.stands.first!)
         // possible to tweak VM here :
         // e.g. fetching trees
         vm.errorList = ["SOMETHING BAD", "SONETHING WORSE"]
         return vm
     }()
     static var previews: some View {
-        StandMapView()
+        MapView()
             .environmentObject(vm)
     }
 }

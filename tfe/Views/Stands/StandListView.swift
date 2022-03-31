@@ -26,7 +26,6 @@ struct StandListView: View {
                 } else {
                     standList
                         .navigationTitle("Stands")
-                    // .navigationBarTitleDisplayMode(.inline)
                 }
                 Spacer()
                 uploadStand
@@ -42,9 +41,9 @@ extension StandListView {
         List(vm.stands) { stand in
             NavigationLink(
                 // selectedStand : stand
-                destination: StandMasterView()
+                destination: MasterView()
                     .environmentObject(
-                        StandMasterVM(selectedStand: stand)
+                        MasterVM(selectedStand: stand)
                     )
             ) {
                 Text("stand : \(stand.name)")

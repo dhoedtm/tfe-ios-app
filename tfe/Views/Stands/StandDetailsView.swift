@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StandFormView: View {
+struct StandDetailsView: View {
     
     @EnvironmentObject private var vm : StandFormVM
     
@@ -23,7 +23,7 @@ struct StandFormView: View {
     }
 }
 
-extension StandFormView {
+extension StandDetailsView {
     var captureDatePicker: some View {
         Text("STAND CAPTURE DATE PICKER")
     }
@@ -72,15 +72,14 @@ extension StandFormView {
     }
     
     var basalAreaChart : some View {
-        BarChart(title: "Basal area", legend: "meters", barColor: .green, data: MockData.chartData)
+        BarChart(title: "Basal area history (meters)", data: MockData.chartData)
             .frame(height: UIScreen.main.bounds.height / 3)
-            .padding()
     }
 }
 
 struct StandFormView_Previews: PreviewProvider {
     static var previews: some View {
-        StandFormView()
+        StandDetailsView()
             .environmentObject(
                 StandFormVM(initialState: StandFormState(stand: MockData.stands.first!))
             )

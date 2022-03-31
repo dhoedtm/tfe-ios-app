@@ -10,7 +10,7 @@ import MapKit
 import SwiftUI
 import Combine
 
-class StandMapVM : ObservableObject {
+class MapVM : ObservableObject {
     
     enum StandMapError : Hashable {
         case trees

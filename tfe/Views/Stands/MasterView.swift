@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct StandMasterView: View {
+struct MasterView: View {
     
-    @EnvironmentObject private var vm : StandMasterVM
+    @EnvironmentObject private var vm : MasterVM
     
     var body: some View {
         TabView {
-            StandMapView()
-                .environmentObject(StandMapVM(selectedStand: vm.selectedStand))
+            MapView()
+                .environmentObject(MapVM(selectedStand: vm.selectedStand))
                 .tabItem {
                     VStack {
                         Image(systemName: "map")
@@ -23,7 +23,7 @@ struct StandMasterView: View {
                         Text("Map")
                     }
                 }
-            StandFormView()
+            StandDetailsView()
                 .environmentObject(
                     StandFormVM(initialState: StandFormState(stand: vm.selectedStand))
                 )
@@ -41,7 +41,7 @@ struct StandMasterView: View {
 
 struct StandMasterView_Previews: PreviewProvider {
     static var previews: some View {
-        StandMasterView()
-            .environmentObject(StandMasterVM(selectedStand: MockData.stands.first!))
+        MasterView()
+            .environmentObject(MasterVM(selectedStand: MockData.stands.first!))
     }
 }

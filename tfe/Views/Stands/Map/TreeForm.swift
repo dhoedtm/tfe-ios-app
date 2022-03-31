@@ -43,9 +43,8 @@ extension TreeForm {
     }
     
     private var dbhChart: some View {
-            BarChart(title: "DBH", legend: "meters", barColor: .green, data: MockData.chartData)
-                .frame(height: UIScreen.main.bounds.height / 3)
-                .padding()
+        BarChart(title: "DBH history (meters)", data: MockData.chartData)
+            .frame(height: UIScreen.main.bounds.height / 3)
     }
 }
 
