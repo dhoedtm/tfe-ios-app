@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-final class StandFormVM: StateBindingViewModel<StandFormState> {
+final class StandDetailsVM: StateBindingViewModel<StandFormState> {
     
     private let api = ApiDataService()
     private var cancellables = Set<AnyCancellable>()
@@ -42,7 +42,7 @@ final class StandFormVM: StateBindingViewModel<StandFormState> {
 
     override func onStateChange(_ keyPath: PartialKeyPath<StandFormState>) {
         state.nameError = isValidName() ? nil : "name cannot be empty or >30 characters"
-        state.nameError = isValidDescription() ? nil : "description cannot be empty"
+        state.descriptionError = isValidDescription() ? nil : "description cannot be empty"
         state.isUpdateButtonEnabled = isValidForm()
     }
 

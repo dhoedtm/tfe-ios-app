@@ -15,7 +15,8 @@ struct TreeModel : Identifiable, Codable, Hashable {
     var idStand : Int
     var latitude : Double
     var longitude : Double
-    var description : String
+    var description : String?
+    var deletedAt : String?
 }
 
 extension TreeModel {
@@ -34,5 +35,6 @@ extension TreeModel {
         latitude = Double(treeFormState.latitude) ?? 0
         longitude = Double(treeFormState.longitude) ?? 0
         description = treeFormState.description
+        deletedAt = treeFormState.deletedAt
     }
 }

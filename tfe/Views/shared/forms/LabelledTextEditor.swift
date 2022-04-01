@@ -25,7 +25,7 @@ struct LabelledTextEditor: View {
                 .foregroundColor(.accentColor)
                 .offset(y: 10)
             TextEditor(text: $value)
-                .padding(0)
+                .offset(x: -3)
                 .disabled(isDisabled)
                 .foregroundColor(isDisabled ? .gray : .black)
         }

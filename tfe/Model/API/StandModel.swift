@@ -21,9 +21,9 @@ struct StandModel: Identifiable, Codable, Hashable {
     var concaveAreaHectare: Double
     var treeDensity: Double
     var meanDbh: Double
-    var meanDistance: Int
-    var captureDate: String
-    var description: String
+    var meanDistance: Double
+    var capturedAt: String
+    var description: String?
 }
     
 extension StandModel {
@@ -43,8 +43,8 @@ extension StandModel {
         concaveAreaHectare = Double(standFormState.concaveAreaHectare) ?? 0
         treeDensity = Double(standFormState.treeDensity) ?? 0
         meanDbh = Double(standFormState.meanDbh) ?? 0
-        meanDistance = Int(standFormState.meanDistance) ?? 0
-        captureDate = String(standFormState.captureDate)
+        meanDistance = Double(standFormState.meanDistance) ?? 0
+        capturedAt = String(standFormState.capturedAt)
         description = String(standFormState.description)
     }
 }

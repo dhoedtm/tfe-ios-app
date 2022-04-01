@@ -15,6 +15,6 @@ struct StandardButton: ButtonStyle {
             .padding(8)
             .foregroundColor(.white)
             .background(Color.green)
-            .cornerRadius(8)
+            .cornerRadius(10)
     }
 }

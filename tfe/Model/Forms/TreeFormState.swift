@@ -14,6 +14,7 @@ struct TreeFormState : Equatable {
     // extra fields
     var descriptionError : String?
     var isUpdateButtonEnabled: Bool = true
+    var deletedAt : String
 }
 
 extension TreeFormState {
@@ -22,7 +23,8 @@ extension TreeFormState {
         idStand = String(tree.idStand)
         latitude = String(tree.latitude)
         longitude = String(tree.longitude)
-        description = String(tree.description)
+        description = String(tree.description ?? "")
+        deletedAt = tree.deletedAt ?? ""
     }
     
     // used by Equatable

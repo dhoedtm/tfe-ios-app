@@ -19,7 +19,7 @@ struct StandFormState : Equatable {
     var treeDensity: String
     var meanDbh: String
     var meanDistance: String
-    var captureDate: String
+    var capturedAt: String
     var description: String
     // extra fields
     var nameError : String?
@@ -40,8 +40,8 @@ extension StandFormState {
         treeDensity = String(stand.treeDensity)
         meanDbh = String(stand.meanDbh)
         meanDistance = String(stand.meanDistance)
-        captureDate = String(stand.captureDate)
-        description = String(stand.description)
+        capturedAt = String(stand.capturedAt)
+        description = String(stand.description ?? "")
     }
     
     // used by Equatable

@@ -14,6 +14,6 @@ struct TreeCaptureModel : Identifiable, Codable, Hashable {
     var id : Int
     var idTree : Int
     var dbh : Double
-    var captureDate : String
+    var capturedAt : String
     var basalArea : Double
 }

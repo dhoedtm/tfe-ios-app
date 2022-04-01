@@ -10,8 +10,8 @@ import Combine
 
 class NetworkingManager {
     
-    static let baseURL : URL = URL(string: "http://192.168.1.11:3000/api/")!
-//    static let baseURL : URL = URL(string: "http://tfe-dhoedt-castel.info.ucl.ac.be/api/")!
+//    static let baseURL : URL = URL(string: "http://192.168.1.11:3000/api/")!
+    static let baseURL : URL = URL(string: "http://tfe-dhoedt-castel.info.ucl.ac.be/api")!
     
     enum HTTPMethods : String {
         case GET
@@ -54,7 +54,7 @@ class NetworkingManager {
             case .finished:
                 print("[handleCompletion] finished downloading")
             case .failure(let error):
-                print("[handleCompletion] error downloading \(error.localizedDescription)")
+                print("[handleCompletion] error downloading \(error)")
             }
     }
     

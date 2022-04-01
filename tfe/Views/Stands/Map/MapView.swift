@@ -11,10 +11,12 @@ import MapKit
 struct MapView: View {
     
     @EnvironmentObject private var vm : MapVM
-    @Environment(\.presentationMode) var presentationMode
+    
+    init() {
+        print("------------------- MAP")
+    }
      
     var body: some View {
-        Group {
         if (vm.isFetchingTrees) {
             ProgressView()
         } else {
@@ -24,27 +26,36 @@ struct MapView: View {
                     Text($0)
                 }
                 // body
-                ZStack {
-                    treeMap
-                    VStack() {
-                        header
-                            .padding(.horizontal)
-                        Spacer()
-                        TreeDetailsPopOver()
-                            .environmentObject(vm)
-                            .padding()
+                if vm.selectedTree == nil {
+                    Text("There are no trees to display")
+                } else {
+                    ZStack {
+                        treeMap
+                        VStack() {
+                            header
+                                .padding(.horizontal)
+                            Spacer()
+                            ForEach(vm.trees, id: \.self) { tree in
+                                if (tree == vm.selectedTree) {
+                                    createPopOver(tree: tree)
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button("Return to sender") {
-                    presentationMode.wrappedValue.dismiss() // this changes in iOS15
-                }
-            }
-        }
+    }
+    
+    func createPopOver(tree: TreeModel) -> some View {
+        print("CREATED \(tree.id)")
+        return
+            TreePopOver()
+                .environmentObject(
+                    TreeDetailsVM(initialState:
+                                    TreeFormState.init(tree: tree))
+                )
+                .padding()
     }
 }
 
@@ -62,15 +73,18 @@ extension MapView {
             annotationItems: vm.trees,
             annotationContent: { tree in
                 MapAnnotation(coordinate: vm.getLocationFromCoordinates(tree: tree)) {
-                    Image(systemName: "circle")
+                    let isTreeSelected = vm.selectedTree == tree
+                    let isTreeDeleted = tree.deletedAt != nil
+                    Image(systemName: isTreeSelected ? "circle.fill" : "circle")
                         .resizable()
-                        .foregroundColor(.green)
+                        .foregroundColor(isTreeDeleted ? .red : .green)
                         .scaledToFit()
                         .onTapGesture {
                             withAnimation(.easeInOut) {
                                 vm.selectedTree = tree
                             }
                         }
+                    
                 }
             }
         )
@@ -83,7 +97,7 @@ extension MapView {
     private var header: some View {
         VStack {
             if let stand = vm.selectedStand {
-                Text(DateParser.formatDateString(date: stand.captureDate) ?? "error displaying date")
+                Text(DateParser.formatDateString(date: stand.capturedAt) ?? "error displaying date")
                     .font(.title2)
                     .fontWeight(.black)
                     .foregroundColor(.primary)

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StandDetailsView: View {
     
-    @EnvironmentObject private var vm : StandFormVM
+    @EnvironmentObject private var vm : StandDetailsVM
     
     var body: some View {
         ScrollView {
@@ -29,7 +29,7 @@ extension StandDetailsView {
     }
     
     var form: some View {
-        Group {
+        VStack(alignment: .leading) {
             Group {
                 Text("General").bold().padding(.top)
                 LabelledTextField("id", vm.binding(\.id), isDisabled: true)
@@ -68,7 +68,6 @@ extension StandDetailsView {
             .frame(maxWidth: .infinity, alignment: .center)
             .disabled(!vm.state.isUpdateButtonEnabled)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     var basalAreaChart : some View {
@@ -81,7 +80,7 @@ struct StandFormView_Previews: PreviewProvider {
     static var previews: some View {
         StandDetailsView()
             .environmentObject(
-                StandFormVM(initialState: StandFormState(stand: MockData.stands.first!))
+                StandDetailsVM(initialState: StandFormState(stand: MockData.stands.first!))
             )
     }
 }
