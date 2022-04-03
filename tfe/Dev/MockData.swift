@@ -65,14 +65,6 @@ class MockData {
         TreeModel(id: 6, idStand: 1, latitude: 50.708262, longitude: 4.3528879, description: "un arbre", deletedAt: nil)
     ]
     
-    static let captures : [TreeCaptureModel] = [
-        TreeCaptureModel(id: 1, idTree: 1, dbh: 4.32, capturedAt: "2022-01-04T11:14:06.102033", basalArea: 432),
-        TreeCaptureModel(id: 2, idTree: 1, dbh: 3.98, capturedAt: "2022-02-06T10:09:11.102033", basalArea: 564),
-        TreeCaptureModel(id: 3, idTree: 1, dbh: 2.31, capturedAt: "2022-05-06T09:16:12.102033", basalArea: 756),
-        TreeCaptureModel(id: 4, idTree: 1, dbh: 3.11, capturedAt: "2022-07-07T15:13:33.102033", basalArea: 43),
-        TreeCaptureModel(id: 5, idTree: 1, dbh: 4.66, capturedAt: "2022-09-11T16:18:23.102033", basalArea: 72)
-    ]
-    
     static let dbhList : [Double] = [
         0.1232980326,
         0.1481883507,
@@ -114,5 +106,93 @@ class MockData {
         ChartData(label: "10-12-2020",  value: 0.2226622049),
         ChartData(label: "19-12-2020",  value: 0.1481883507),
         ChartData(label: "24-12-2020",  value: 0.2280987701)
+    ]
+    
+    static let captures : [TreeCaptureModel] = [
+        TreeCaptureModel(
+            id: 1,
+            idTree: 4,
+            dbh: 0.182883991443278,
+            basalArea: 0.02626886233979008,
+            capturedAt: "2022-03-31T23:33:11.124122"
+        ),
+        TreeCaptureModel(
+            id: 2,
+            idTree: 4,
+            dbh: 0.19354394387593,
+            basalArea: 0.028202985493094,
+            capturedAt: "2022-04-05T09:13:33.124122"
+        ),
+        TreeCaptureModel(
+            id: 3,
+            idTree: 4,
+            dbh: 0.24857349587378,
+            basalArea: 0.034432376987956,
+            capturedAt: "2022-05-21T16:32:23.124122"
+        ),
+        TreeCaptureModel(
+            id: 4,
+            idTree: 4,
+            dbh: 0.29345938094345,
+            basalArea: 0.0394537234587,
+            capturedAt: "2022-06-11T13:25:01.124122"
+        )
+    ]
+    
+    static let diameters : [DiameterModel] = [
+        DiameterModel(
+            id: 1,
+            idTreeCapture: 1,
+            diameter: 0.257997475000044,
+            height: 0.14667731629393
+        ),
+        DiameterModel(
+            id: 2,
+            idTreeCapture: 1,
+            diameter: 0.200903481473946,
+            height: 0.37736568457539
+        ),
+        DiameterModel(
+            id: 3,
+            idTreeCapture: 1,
+            diameter: 0.21605843844643402,
+            height: 0.619337349397591
+        ),
+        DiameterModel(
+            id: 4,
+            idTreeCapture: 1,
+            diameter: 0.21233211980933803,
+            height: 0.86672131147541
+        ),
+        DiameterModel(
+            id: 5,
+            idTreeCapture: 1,
+            diameter: 0.246940719477388,
+            height: 1.11681818181818
+        ),
+        DiameterModel(
+            id: 6,
+            idTreeCapture: 1,
+            diameter: 0.21634379812961602,
+            height: 1.37325619834711
+        ),
+        DiameterModel(
+            id: 7,
+            idTreeCapture: 1,
+            diameter: 0.264198346078644,
+            height: 1.61860696517413
+        ),
+        DiameterModel(
+            id: 8,
+            idTreeCapture: 1,
+            diameter: 0.26128803631908804,
+            height: 1.85364464692483
+        ),
+        DiameterModel(
+            id: 9,
+            idTreeCapture: 1,
+            diameter: 0.20170099301050404,
+            height: 2.09502008032129
+        )
     ]
 }

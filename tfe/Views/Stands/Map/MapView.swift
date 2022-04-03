@@ -11,10 +11,6 @@ import MapKit
 struct MapView: View {
     
     @EnvironmentObject private var vm : MapVM
-    
-    init() {
-        print("------------------- MAP")
-    }
      
     var body: some View {
         if (vm.isFetchingTrees) {
@@ -48,7 +44,6 @@ struct MapView: View {
     }
     
     func createPopOver(tree: TreeModel) -> some View {
-        print("CREATED \(tree.id)")
         return
             TreePopOver()
                 .environmentObject(

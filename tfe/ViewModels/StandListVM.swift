@@ -38,7 +38,7 @@ class StandListVM : ObservableObject {
     
     func uploadPointClouds(filePaths: [URL]) {
         for path in filePaths {
-            print("uploading file : \(path)")
+            print("[uploadPointClouds] uploading file : \(path)")
 //            api.uploadPointCloud(filePath: path) { [weak self] (returnedResult) in
 //                // TODO
 //            }

@@ -7,6 +7,10 @@
 // thanks to : https://github.com/BLCKBIRDS/Bar-Chart-in-SwiftUI
 // https://www.youtube.com/watch?v=MX-eGceCotQ
 
+// TODO: bug computing "percentageScrolled" with the width of the scrollview
+// the amount scrolled never reaches the full scrollview width
+// "percentageScrolled" thus never reaches 1, ugly fix using 0.8 instead of 1
+
 import SwiftUI
 
 struct BarChart: View {
@@ -17,6 +21,8 @@ struct BarChart: View {
     let minValue : Double
     let maxValue : Double
     let color : Color = Color.green
+    
+    @State private var percentageScrolled: Double = 0
     
     private let maxHeight = UIScreen.main.bounds.height / 3
     
@@ -31,27 +37,40 @@ struct BarChart: View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.title)
-//                .padding(.vertical, 40)
-            ScrollView(.horizontal, showsIndicators: true) {
-                HStack(alignment: .bottom) {
-                    ForEach(data.indices, id: \.self) { index in
-                        let label = data[index].label
-                        let value = data[index].value
-                        let height = (value / maxValue) * Double(maxHeight) * 0.5
-                        
-                        Bar(value: value, label: label, height: height, color: color)
-                    }
-                }
-                .padding(.bottom)
+            ZStack {
+                chart
+                scrollHints
+                    .opacity(0.5)
             }
-            HStack() {
-                Image(systemName: "arrowtriangle.left.fill")
-                Spacer()
-                Image(systemName: "arrowtriangle.right.fill")
-            }
-            .padding(.horizontal)
         }
         .frame(maxHeight: maxHeight)
+    }
+}
+
+extension BarChart {
+    var chart : some View {
+        ScrollView(.horizontal, showsIndicators: true) {
+            HStack(alignment: .bottom) {
+                ForEach(data.indices, id: \.self) { index in
+                    let label = data[index].label
+                    let value = data[index].value
+                    let height = (value / maxValue) * Double(maxHeight) * 0.5
+                    Bar(value: value, label: label, height: height, color: color)
+                }
+            }
+            .padding(.bottom)
+        }
+    }
+    
+    var scrollHints : some View {
+        HStack() {
+            Image(systemName: "arrowtriangle.left.fill")
+                .font(.caption)
+            Spacer()
+            Image(systemName: "arrowtriangle.right.fill")
+                .font(.caption)
+        }
+        .padding(.horizontal, 2)
     }
 }
 
@@ -63,22 +82,19 @@ private struct Bar : View {
     
     var body : some View {
         VStack {
-            Text("\(value.rounded(toPlaces: 3))")
+            Text(String(value.rounded(toPlaces: 3)))
                 .font(.caption)
             Rectangle()
                 .fill(color)
                 .frame(width: 20, height: CGFloat(height))
-            Text("\(label)")
+            Text(label)
                 .font(.caption)
-//                .rotationEffect(Angle(degrees: -30))
         }
     }
 }
 
 struct BarChart_Previews: PreviewProvider {
-    static private let maxHeight = UIScreen.main.bounds.height / 4
     static var previews: some View {
         BarChart(title: "My chart", data: MockData.chartData)
-            .frame(maxHeight: maxHeight)
     }
 }

@@ -12,10 +12,6 @@ struct TreePopOver: View {
     @EnvironmentObject var vm : TreeDetailsVM
     @State private var showSheet : Bool = false
     
-    init() {
-        print("------------------- POP OVER")
-    }
-    
     var body: some View {
         VStack {
             HStack {
@@ -46,15 +42,16 @@ struct TreePopOver: View {
         .sheet(isPresented: $showSheet, content: {
             TreeCaptures()
                 .environmentObject(
-                    TreeCapturesVM(selectedTree: TreeModel(treeFormState: vm.state))
+                    TreeCapturesVM(
+                        selectedTree: TreeModel(treeFormState: vm.state),
+                        captures: MockData.captures,
+                        diameters: MockData.diameters
+                    )
                 )
         })
         .padding()
         .background(Color.white)
         .cornerRadius(10)
-        .onAppear {
-            print("\(vm.state.id)")
-        }
     }
 }
 

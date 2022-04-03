@@ -17,7 +17,7 @@ open class StateBindingViewModel<State: Equatable>: ObservableObject {
     /// Initializes the ViewModel with the first / initial state for the flow.
     /// - Parameter initialState: the initial state of the flow.
     public init(initialState: State) {
-        print("[\(String(describing: type(of: self)))] : \(initialState)")
+        // print("[\(String(describing: type(of: self)))] : \(initialState)")
         self.state = initialState
     }
 

@@ -48,7 +48,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
             parent.filePaths = urls
             
             for url in urls {
-                print("selected file : \(url.absoluteString)")
+                print("[documentPicker] selected file : \(url.absoluteString)")
             }
         }
     }
