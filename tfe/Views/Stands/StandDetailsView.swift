@@ -13,7 +13,11 @@ struct StandDetailsView: View {
     
     var body: some View {
         ScrollView {
-            captureDatePicker
+            if vm.histories.isEmpty {
+                Text("Stand has no history")
+            } else if let histories = vm.histories {
+                HistoryPicker(captures: histories, selectedHistory: $vm.selectedHistory)
+            }
             form
             Divider()
                 .padding()
@@ -23,10 +27,25 @@ struct StandDetailsView: View {
     }
 }
 
-extension StandDetailsView {
-    var captureDatePicker: some View {
-        Text("STAND CAPTURE DATE PICKER")
+private struct HistoryPicker : View {
+    
+    let captures : [StandHistoryModel]
+    @Binding var selectedHistory: StandHistoryModel
+    
+    var body: some View {
+        Picker("Capture date", selection: $selectedHistory) {
+            ForEach(captures, id: \.self) { capture in
+                Text(
+                    DateParser.formatDateString(date: capture.capturedAt) ?? "date error"
+                ).tag(capture)
+            }
+        }
+        .frame(height: 100)
+        .clipped()
     }
+}
+
+extension StandDetailsView {
     
     var form: some View {
         VStack(alignment: .leading) {

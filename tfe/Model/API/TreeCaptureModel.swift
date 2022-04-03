@@ -17,3 +17,13 @@ struct TreeCaptureModel : Identifiable, Codable, Hashable {
     var basalArea : Double
     var capturedAt : String
 }
+
+extension TreeCaptureModel {
+    init() {
+        self.id = 0
+        self.idTree = 0
+        self.dbh = 0
+        self.basalArea = 0
+        self.capturedAt = ""
+    }
+}

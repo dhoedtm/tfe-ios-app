@@ -10,19 +10,19 @@ import SwiftUI
 struct TreeCaptures: View {
     
     @EnvironmentObject var vm : TreeCapturesVM
-    @State var selectedCapture : TreeCaptureModel? = nil
     
     var body: some View {
         VStack(alignment: .leading) {
-            if selectedCapture == nil {
-                Text("Tree has no capture to display")
-            } else {
-                CapturePicker(captures: vm.captures, selectedCapture: $selectedCapture)
-            }
             treeDetails
                 .padding(.bottom, 2)
-            if let capture = selectedCapture {
-                CaptureProperties(capture: capture, diameters: vm.diameters)
+            if vm.captures.isEmpty {
+                Text("Tree has no capture to display")
+            } else {
+                Text("Capture")
+                    .font(.title2)
+                    .bold()
+                CapturePicker(captures: vm.captures, selectedCapture: $vm.selectedCapture)
+                CaptureProperties(capture: vm.selectedCapture, diameters: vm.diameters)
                 Divider()
                     .padding()
                 BarChart(title: "DBH history (meters)", data: MockData.chartData)
@@ -30,9 +30,6 @@ struct TreeCaptures: View {
             }
         }
         .padding()
-        .onAppear {
-            selectedCapture = vm.captures.first ?? nil
-        }
     }
 }
 
@@ -51,22 +48,26 @@ extension TreeCaptures {
 private struct CapturePicker : View {
     
     let captures : [TreeCaptureModel]
-    @Binding var selectedCapture: TreeCaptureModel?
+    @Binding var selectedCapture: TreeCaptureModel
     
     var body: some View {
-        Picker("Capture date", selection: $selectedCapture) {
-            ForEach(captures, id: \.self) { capture in
-                Text(
-                    DateParser.formatDateString(date: capture.capturedAt) ?? "date error"
-                ).tag(capture)
+        VStack {
+            Picker("Capture date", selection: $selectedCapture) {
+                ForEach(captures, id: \.self) { capture in
+                    Text(
+                        DateParser.formatDateString(date: capture.capturedAt) ?? "date error"
+                    )
+                    .font(.body)
+                    .tag(capture)
+                }
             }
+            .frame(height: 80)
+            .clipped()
         }
-        .frame(height: 100)
-        .clipped()
     }
 }
 
-struct CaptureProperties : View {
+private struct CaptureProperties : View {
     var capture : TreeCaptureModel
     var diameters : [DiameterModel]
 
@@ -82,18 +83,18 @@ struct CaptureProperties : View {
                 LabelledText("basal area", String(capture.dbh))
             }
             .padding(.bottom)
-            HStack {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Height :")
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("Diameter :")
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    HStack {
-                        ScrollView {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Height :")
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("Diameter :")
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                HStack {
+                    ZStack {
+                        ScrollView(showsIndicators: false) {
                             ForEach(diameters, id: \.self) { diameter in
                                 HStack {
                                     Text(String(diameter.height.rounded(toPlaces: 3)))
@@ -103,9 +104,20 @@ struct CaptureProperties : View {
                                 }
                             }
                         }
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Image(systemName: "arrowtriangle.up.fill")
+                                    .font(.caption)
+                                Spacer()
+                                Image(systemName: "arrowtriangle.down.fill")
+                                    .font(.caption)
+                            }
+                            .opacity(0.5)
+                        }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }

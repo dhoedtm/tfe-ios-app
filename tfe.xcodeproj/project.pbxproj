@@ -29,6 +29,7 @@
 		A84C556C27F20A9D004FD202 /* LabelledTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84C556B27F20A9D004FD202 /* LabelledTextField.swift */; };
 		A8A93C3E27F866D40031729E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A93C3D27F866D40031729E /* Extensions.swift */; };
 		A8A93C4027F86A5D0031729E /* DiameterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A93C3F27F86A5D0031729E /* DiameterModel.swift */; };
+		A8A93C4227FA1C2D0031729E /* StandHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A93C4127FA1C2D0031729E /* StandHistoryModel.swift */; };
 		A8DE5ABD27F3073000C376F3 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5ABC27F3073000C376F3 /* MockData.swift */; };
 		A8DE5ABF27F3117800C376F3 /* TreePopOver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5ABE27F3117800C376F3 /* TreePopOver.swift */; };
 		A8DE5AC127F316A000C376F3 /* LabelledNumberField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DE5AC027F316A000C376F3 /* LabelledNumberField.swift */; };
@@ -74,6 +75,7 @@
 		A84C556B27F20A9D004FD202 /* LabelledTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelledTextField.swift; sourceTree = "<group>"; };
 		A8A93C3D27F866D40031729E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A8A93C3F27F86A5D0031729E /* DiameterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiameterModel.swift; sourceTree = "<group>"; };
+		A8A93C4127FA1C2D0031729E /* StandHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandHistoryModel.swift; sourceTree = "<group>"; };
 		A8DE5ABC27F3073000C376F3 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		A8DE5ABE27F3117800C376F3 /* TreePopOver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreePopOver.swift; sourceTree = "<group>"; };
 		A8DE5AC027F316A000C376F3 /* LabelledNumberField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelledNumberField.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				A81C898827F1FAF100F5E0D0 /* TreeModel.swift */,
 				A8DE5ADA27F4B07600C376F3 /* TreeCaptureModel.swift */,
 				A8A93C3F27F86A5D0031729E /* DiameterModel.swift */,
+				A8A93C4127FA1C2D0031729E /* StandHistoryModel.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 				A8DE5AF027F630AB00C376F3 /* TreeCaptureFormState.swift in Sources */,
 				A8DE5AD027F35CEF00C376F3 /* LabelledText.swift in Sources */,
 				A84C556C27F20A9D004FD202 /* LabelledTextField.swift in Sources */,
+				A8A93C4227FA1C2D0031729E /* StandHistoryModel.swift in Sources */,
 				A81C899727F1FAF100F5E0D0 /* ApiDataService.swift in Sources */,
 				A8DE5AF227F6356D00C376F3 /* TreeDetailsVM.swift in Sources */,
 				A81C899327F1FAF100F5E0D0 /* TFEApp.swift in Sources */,
