@@ -55,7 +55,7 @@ private struct CapturePicker : View {
             Picker("Capture date", selection: $selectedCapture) {
                 ForEach(captures, id: \.self) { capture in
                     Text(
-                        DateParser.formatDateString(date: capture.capturedAt) ?? "date error"
+                        DateParser.formatDateString(dateString: capture.capturedAt) ?? "date error"
                     )
                     .font(.body)
                     .tag(capture)

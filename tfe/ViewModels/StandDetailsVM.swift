@@ -14,8 +14,10 @@ final class StandDetailsVM: StateBindingViewModel<StandFormState> {
     private let api = ApiDataService()
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var histories : [StandHistoryModel] = []
-    @Published var selectedHistory : StandHistoryModel = StandHistoryModel()
+    @Published var histories : [StandHistoryModel] = MockData.standHistories
+    @Published var selectedHistory : StandHistoryModel = MockData.standHistories.first!
+    
+    
     
     // MARK: HANDLES FORM
     

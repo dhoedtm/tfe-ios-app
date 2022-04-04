@@ -195,4 +195,52 @@ class MockData {
             height: 2.09502008032129
         )
     ]
+    
+    static let standHistories = [
+        StandHistoryModel(
+            id: 1,
+            name: "stand_1_braine",
+            treeCount: 13,
+            basalArea: 23.2,
+            convexAreaMeter: 34,
+            convexAreaHectare: 13,
+            concaveAreaMeter: 46,
+            concaveAreaHectare: 31,
+            treeDensity: 5.5,
+            meanDbh: 2.3,
+            meanDistance: 890,
+            capturedAt: "2022-03-11T15:24:22.102033",
+            description: "my 1st stand"
+        ),
+        StandHistoryModel(
+            id: 2,
+            name: "stand_2_one_tree",
+            treeCount: 14,
+            basalArea: 21.2,
+            convexAreaMeter: 31,
+            convexAreaHectare: 20,
+            concaveAreaMeter: 41,
+            concaveAreaHectare: 39,
+            treeDensity: 6.3,
+            meanDbh: 2.2,
+            meanDistance: 798,
+            capturedAt: "2022-01-12T14:14:33.102033",
+            description: "my 2nd stand"
+        ),
+        StandHistoryModel(
+            id: 3,
+            name: "stand_3_empty",
+            treeCount: 10,
+            basalArea: 4.3,
+            convexAreaMeter: 32.3,
+            convexAreaHectare: 19,
+            concaveAreaMeter: 44,
+            concaveAreaHectare: 29,
+            treeDensity: 3,
+            meanDbh: 5,
+            meanDistance: 812,
+            capturedAt: "2022-03-12T18:54:43.102033",
+            description: "my 3rd stand"
+        )
+    ]
 }

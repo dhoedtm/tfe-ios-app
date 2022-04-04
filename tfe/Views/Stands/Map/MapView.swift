@@ -92,7 +92,7 @@ extension MapView {
     private var header: some View {
         VStack {
             if let stand = vm.selectedStand {
-                Text(DateParser.formatDateString(date: stand.capturedAt) ?? "error displaying date")
+                Text(DateParser.formatDateString(dateString: stand.capturedAt) ?? "error displaying date")
                     .font(.title2)
                     .fontWeight(.black)
                     .foregroundColor(.primary)

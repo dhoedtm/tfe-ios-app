@@ -19,11 +19,42 @@ struct StandDetailsView: View {
                 HistoryPicker(captures: histories, selectedHistory: $vm.selectedHistory)
             }
             form
+            HistoryProperties(history: vm.selectedHistory)
             Divider()
                 .padding()
             basalAreaChart
         }
         .padding()
+    }
+}
+
+private struct HistoryProperties : View {
+    var history : StandHistoryModel
+
+    private let columns = [
+        GridItem(.fixed(100)),
+        GridItem(.flexible()),
+    ]
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("History").bold().padding(.top)
+            Group {
+//                Text("History").bold().padding(.top)
+                LabelledText("treeCount", String(history.treeCount))
+                LabelledText("basalArea", String(history.basalArea))
+                LabelledText("meanDbh", String(history.meanDbh))
+                LabelledText("meanDistance", String(history.meanDistance))
+            }
+            Group {
+//                Text("History").bold().padding(.top)
+                LabelledText("treeDensity", String(history.treeDensity))
+                LabelledText("convexAreaMeter", String(history.convexAreaMeter))
+                LabelledText("convexAreaHectare", String(history.convexAreaHectare))
+                LabelledText("concaveAreaMeter", String(history.concaveAreaMeter))
+                LabelledText("concaveAreaHectare", String(history.concaveAreaHectare))
+            }
+        }
     }
 }
 
@@ -36,7 +67,7 @@ private struct HistoryPicker : View {
         Picker("Capture date", selection: $selectedHistory) {
             ForEach(captures, id: \.self) { capture in
                 Text(
-                    DateParser.formatDateString(date: capture.capturedAt) ?? "date error"
+                    DateParser.formatDateString(dateString: capture.capturedAt) ?? "date error"
                 ).tag(capture)
             }
         }
@@ -50,8 +81,7 @@ extension StandDetailsView {
     var form: some View {
         VStack(alignment: .leading) {
             Group {
-                Text("General").bold().padding(.top)
-                LabelledTextField("id", vm.binding(\.id), isDisabled: true)
+                Text("Stand").bold().padding(.top)
                 LabelledTextField("name", vm.binding(\.name), isDisabled: false)
                 if let error = vm.state.nameError {
                     Text(error)
@@ -65,20 +95,6 @@ extension StandDetailsView {
                         .foregroundColor(.red)
                 }
             }
-            Group {
-                Text("Metrics").bold().padding(.top)
-                LabelledTextField("treeCount", vm.binding(\.treeCount), isDisabled: true)
-                LabelledTextField("basalArea", vm.binding(\.basalArea), isDisabled: true)
-                LabelledTextField("minDbh", vm.binding(\.meanDbh), isDisabled: true)
-                LabelledTextField("minDistance", vm.binding(\.meanDistance), isDisabled: true)
-            }
-            Group {
-                Text("Areas").bold().padding(.top)
-                LabelledTextField("convexAreaMeter", vm.binding(\.convexAreaMeter), isDisabled: true)
-                LabelledTextField("convexAreaHectare", vm.binding(\.convexAreaHectare), isDisabled: true)
-                LabelledTextField("concaveAreaMeter", vm.binding(\.concaveAreaMeter), isDisabled: true)
-                LabelledTextField("concaveAreaHectare", vm.binding(\.concaveAreaHectare), isDisabled: true)
-            }
             Button(
                 "Update",
                 action: vm.updateStand
@@ -90,8 +106,17 @@ extension StandDetailsView {
     }
     
     var basalAreaChart : some View {
-        BarChart(title: "Basal area history (meters)", data: MockData.chartData)
+        BarChart(title: "Basal area history (meters)", data: getBasalAreas())
             .frame(height: UIScreen.main.bounds.height / 3)
+    }
+    
+    func getBasalAreas() -> [ChartData] {
+        return vm.histories.map { history in
+            ChartData(
+                label: DateParser.shortenDateString(dateString: history.capturedAt) ?? "date error",
+                value: history.basalArea
+            )
+        }
     }
 }
 

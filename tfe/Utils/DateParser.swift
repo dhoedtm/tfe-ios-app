@@ -33,8 +33,8 @@ class DateParser {
         return formatter
     }()
     
-    static func stringToDate(date: String) -> Date? {
-        return sharedStringParser.date(from: date)
+    static func stringToDate(dateString: String) -> Date? {
+        return sharedStringParser.date(from: dateString)
     }
     
     static func dateToString(date: Date) -> String {
@@ -44,8 +44,12 @@ class DateParser {
         return sharedShortDateParser.string(from: date)
     }
     
-    static func formatDateString(date: String) -> String? {
-        guard let date = stringToDate(date: date) else { return nil }
+    static func formatDateString(dateString: String) -> String? {
+        guard let date = stringToDate(dateString: dateString) else { return nil }
         return dateToString(date: date)
+    }
+    static func shortenDateString(dateString: String) -> String? {
+        guard let date = stringToDate(dateString: dateString) else { return nil }
+        return dateToShortString(date: date)
     }
 }
