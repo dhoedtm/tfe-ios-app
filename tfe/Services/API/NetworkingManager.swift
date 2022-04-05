@@ -8,6 +8,47 @@
 import Foundation
 import Combine
 
+enum CustomError: Error {
+    case notFound
+    case unexpected(message: String)
+}
+
+//extension CustomError {
+//    var isFatal: Bool {
+//        if case CustomError.unexpected = self { return true }
+//        else { return false }
+//    }
+//}
+
+// For each error type return the appropriate description
+extension CustomError: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .notFound:
+            return "The specified item could not be found."
+        case .unexpected(_):
+            return "An unexpected error occurred."
+        }
+    }
+}
+
+extension CustomError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .notFound:
+            return NSLocalizedString(
+                "The specified item could not be found.",
+                comment: "Resource Not Found"
+            )
+        case .unexpected(_):
+            return NSLocalizedString(
+                "An unexpected error occurred.",
+                comment: "Unexpected Error"
+            )
+        }
+    }
+}
+
 class NetworkingManager {
     
 //    static let baseURL : URL = URL(string: "http://192.168.1.11:3000/api/")!

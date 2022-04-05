@@ -15,7 +15,7 @@ final class StandDetailsVM: StateBindingViewModel<StandFormState> {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var histories : [StandHistoryModel] = MockData.standHistories
-    @Published var selectedHistory : StandHistoryModel = MockData.standHistories.first!
+    @Published var selectedHistory : StandHistoryModel = MockData.standHistories.last!
     
     
     

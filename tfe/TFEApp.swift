@@ -34,9 +34,11 @@ struct TFEApp: App {
         // WindowGroup is used to hold potentially multiple windows that the user opens
         // throughout the use of the application
         WindowGroup {
-            // first screen
-            StandListView()
-                .environmentObject(standListVM)
+            NavigationView {
+                StandListView()
+                    .environmentObject(standListVM)
+//                    .navigationBarHidden(true)
+            }
         }
     }
 }

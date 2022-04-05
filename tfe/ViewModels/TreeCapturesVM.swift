@@ -18,6 +18,6 @@ final class TreeCapturesVM: ObservableObject {
         self.selectedTree = selectedTree
         self.captures = captures
         self.diameters = diameters
-        self.selectedCapture = captures.isEmpty ? TreeCaptureModel() : captures.first!
+        self.selectedCapture = captures.isEmpty ? TreeCaptureModel() : captures.last!
     }
 }

@@ -58,9 +58,9 @@ class MockData {
     
     static let trees : [TreeModel] = [
         TreeModel(id: 1, idStand: 1, latitude: 50.708228, longitude: 4.352911, description: "un arbre", deletedAt: "2022-01-04T11:14:06.102033"),
-        TreeModel(id: 2, idStand: 1, latitude: 50.708239, longitude: 4.35288, description: "un arbre", deletedAt: "2022-02-06T10:09:11.102033"),
+        TreeModel(id: 2, idStand: 1, latitude: 50.708239, longitude: 4.35288, description: "un arbre", deletedAt: nil),
         TreeModel(id: 3, idStand: 1, latitude: 50.708262, longitude: 4.352855, description: "un arbre", deletedAt: "2022-05-06T09:16:12.102033"),
-        TreeModel(id: 4, idStand: 1, latitude: 50.708251, longitude: 4.352834, description: "un arbre", deletedAt: "2022-07-07T15:13:33.102033"),
+        TreeModel(id: 4, idStand: 1, latitude: 50.708251, longitude: 4.352834, description: "un arbre", deletedAt: nil),
         TreeModel(id: 5, idStand: 1, latitude: 50.708251, longitude: 4.352862, description: "un arbre", deletedAt: "2022-09-11T16:18:23.102033"),
         TreeModel(id: 6, idStand: 1, latitude: 50.708262, longitude: 4.3528879, description: "un arbre", deletedAt: nil)
     ]

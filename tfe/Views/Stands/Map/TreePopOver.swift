@@ -28,6 +28,7 @@ struct TreePopOver: View {
                     }
                 }
             }
+            .animation(.none)
             HStack {
                 Button("More", action: { showSheet.toggle() })
                     .buttonStyle(StandardButton())

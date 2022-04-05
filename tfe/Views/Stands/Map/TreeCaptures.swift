@@ -12,21 +12,25 @@ struct TreeCaptures: View {
     @EnvironmentObject var vm : TreeCapturesVM
     
     var body: some View {
-        VStack(alignment: .leading) {
-            treeDetails
-                .padding(.bottom, 2)
-            if vm.captures.isEmpty {
-                Text("Tree has no capture to display")
-            } else {
-                Text("Capture")
-                    .font(.title2)
-                    .bold()
-                CapturePicker(captures: vm.captures, selectedCapture: $vm.selectedCapture)
-                CaptureProperties(capture: vm.selectedCapture, diameters: vm.diameters)
-                Divider()
-                    .padding()
-                BarChart(title: "DBH history (meters)", data: MockData.chartData)
-                    .frame(height: UIScreen.main.bounds.height / 3)
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading) {
+                treeDeletedWarning
+                    .padding(.bottom)
+                treeDetails
+                    .padding(.bottom, 2)
+                if vm.captures.isEmpty {
+                    Text("Tree has no capture to display")
+                } else {
+                    Text("Capture")
+                        .font(.title3)
+                        .bold()
+                    CapturePicker(captures: vm.captures, selectedCapture: $vm.selectedCapture)
+                    CaptureProperties(capture: vm.selectedCapture, diameters: vm.diameters)
+                    Divider()
+                        .padding()
+                    BarChart(title: "DBH history (meters)", data: MockData.chartData)
+                        .frame(height: UIScreen.main.bounds.height / 3)
+                }
             }
         }
         .padding()
@@ -34,6 +38,19 @@ struct TreeCaptures: View {
 }
 
 extension TreeCaptures {
+    @ViewBuilder var treeDeletedWarning : some View {
+        if let deletedDate = vm.selectedTree.deletedAt {
+            if !deletedDate.isEmpty {
+                Text("Tree no longer exists as of \(DateParser.shortenDateString(dateString: deletedDate) ?? "date error")")
+                    .padding(10)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.red)
+                    .background(Color.red.opacity(0.1))
+                    .cornerRadius(10)
+            }
+        }
+    }
+    
     @ViewBuilder var treeDetails : some View {
         HStack {
             LabelledText("longitude", String(vm.selectedTree.longitude))
@@ -93,8 +110,8 @@ private struct CaptureProperties : View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 HStack {
-                    ZStack {
-                        ScrollView(showsIndicators: false) {
+//                    ZStack {
+                        VStack {
                             ForEach(diameters, id: \.self) { diameter in
                                 HStack {
                                     Text(String(diameter.height.rounded(toPlaces: 3)))
@@ -104,18 +121,18 @@ private struct CaptureProperties : View {
                                 }
                             }
                         }
-                        HStack {
-                            Spacer()
-                            VStack {
-                                Image(systemName: "arrowtriangle.up.fill")
-                                    .font(.caption)
-                                Spacer()
-                                Image(systemName: "arrowtriangle.down.fill")
-                                    .font(.caption)
-                            }
-                            .opacity(0.5)
-                        }
-                    }
+//                        HStack {
+//                            Spacer()
+//                            VStack {
+//                                Image(systemName: "arrowtriangle.up.fill")
+//                                    .font(.caption)
+//                                Spacer()
+//                                Image(systemName: "arrowtriangle.down.fill")
+//                                    .font(.caption)
+//                            }
+//                            .opacity(0.5)
+//                        }
+//                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

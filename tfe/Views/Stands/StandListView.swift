@@ -16,20 +16,18 @@ struct StandListView: View {
     @State private var showDocumentPicker = false
     
     var body: some View {
-        NavigationView {
-            VStack {
-                if let error = vm.error { Text(error) }
-                if(vm.isFetchingStands) {
-                    Spacer()
-                    ProgressView("Downloading stands...")
-                    Spacer()
-                } else {
-                    standList
-                        .navigationTitle("Stands")
-                }
+        VStack {
+            if let error = vm.error { Text(error) }
+            if(vm.isFetchingStands) {
                 Spacer()
-                uploadStand
+                ProgressView("Downloading stands...")
+                Spacer()
+            } else {
+                standList
+                    .navigationTitle("Stands")
             }
+            Spacer()
+            uploadStand
         }
     }
 }

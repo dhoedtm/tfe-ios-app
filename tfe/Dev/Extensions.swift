@@ -29,12 +29,16 @@ extension View {
         #endif
     }
     
+    /// Adds a border to a given View
+    /// Default color is Color.red
     func debugBorder(_ color: Color = .red, width: CGFloat = 1) -> some View {
         debugModifier {
             $0.border(color, width: width)
         }
     }
-
+    
+    /// Adds a background to a given View
+    /// Default color is Color.red
     func debugBackground(_ color: Color = .red) -> some View {
         debugModifier {
             $0.background(color)
