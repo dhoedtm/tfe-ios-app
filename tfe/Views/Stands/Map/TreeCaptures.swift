@@ -25,10 +25,14 @@ struct TreeCaptures: View {
                         .font(.title3)
                         .bold()
                     CapturePicker(captures: vm.captures, selectedCapture: $vm.selectedCapture)
-                    CaptureProperties(capture: vm.selectedCapture, diameters: vm.diameters)
+                    CaptureProperties(
+                        capture: vm.selectedCapture,
+                        diameters: vm.diameters,
+                        isFetchingDiameter: vm.isFetchingDiameters
+                    )
                     Divider()
                         .padding()
-                    BarChart(title: "DBH history (meters)", data: MockData.chartData)
+                    BarChart(title: "DBH history (meters)", data: vm.chartData)
                         .frame(height: UIScreen.main.bounds.height / 3)
                 }
             }
@@ -87,6 +91,7 @@ private struct CapturePicker : View {
 private struct CaptureProperties : View {
     var capture : TreeCaptureModel
     var diameters : [DiameterModel]
+    var isFetchingDiameter : Bool
 
     private let columns = [
         GridItem(.fixed(100)),
@@ -96,45 +101,37 @@ private struct CaptureProperties : View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                LabelledText("dbh", String(capture.dbh))
-                LabelledText("basal area", String(capture.dbh))
+                LabelledText("dbh", capture.dbh.roundedToString(toPlaces: 3))
+                LabelledText("basal area", capture.basalArea.roundedToString(toPlaces: 3))
             }
             .padding(.bottom)
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Height :")
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("Diameter :")
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                HStack {
-//                    ZStack {
+            
+            if isFetchingDiameter {
+                ProgressView()
+            } else {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Height :")
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("Diameter :")
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    HStack {
                         VStack {
                             ForEach(diameters, id: \.self) { diameter in
                                 HStack {
-                                    Text(String(diameter.height.rounded(toPlaces: 3)))
+                                    Text(diameter.height.roundedToString(toPlaces: 3))
                                         .frame(maxWidth: .infinity, alignment: .leading)
-                                    Text(String(diameter.diameter.rounded(toPlaces: 3)))
+                                    Text(diameter.diameter.roundedToString(toPlaces: 3))
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                             }
                         }
-//                        HStack {
-//                            Spacer()
-//                            VStack {
-//                                Image(systemName: "arrowtriangle.up.fill")
-//                                    .font(.caption)
-//                                Spacer()
-//                                Image(systemName: "arrowtriangle.down.fill")
-//                                    .font(.caption)
-//                            }
-//                            .opacity(0.5)
-//                        }
-//                    }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }
@@ -144,11 +141,7 @@ struct TreeForm_Previews: PreviewProvider {
     static var previews: some View {
         TreeCaptures()
             .environmentObject(
-                TreeCapturesVM(
-                    selectedTree: MockData.trees.first!,
-                    captures: MockData.captures,
-                    diameters: MockData.diameters
-                )
+                TreeCapturesVM(selectedTree: MockData.trees.first!)
             )
     }
 }

@@ -82,7 +82,7 @@ private struct Bar : View {
     
     var body : some View {
         VStack {
-            Text(String(value.rounded(toPlaces: 3)))
+            Text(value.roundedToString(toPlaces: 3))
                 .font(.caption)
             Rectangle()
                 .fill(color)

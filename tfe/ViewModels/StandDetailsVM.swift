@@ -14,10 +14,35 @@ final class StandDetailsVM: StateBindingViewModel<StandFormState> {
     private let api = ApiDataService()
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var histories : [StandHistoryModel] = MockData.standHistories
-    @Published var selectedHistory : StandHistoryModel = MockData.standHistories.last!
+    @Published var isFetchingHistories : Bool = false
     
+    @Published var histories : [StandHistoryModel] = []
+    {
+        didSet {
+            if (!self.histories.isEmpty) {
+                self.selectedHistory = self.histories.last!
+            }
+        }
+    }
+    @Published var selectedHistory : StandHistoryModel = StandHistoryModel()
     
+    override init(initialState: StandFormState) {
+        super.init(initialState: initialState)
+        
+        self.isFetchingHistories = true
+        addSubscribers()
+        api.getHistoriesForStand(idStand: Int(state.id) ?? 0)
+    }
+    
+    func addSubscribers() {
+        api.$historiesForStands
+            .sink { [weak self] (stands) in
+                let id = (self?.state.id)!
+                self?.histories = stands[Int(id) ?? 0] ?? []
+                self?.isFetchingHistories = false
+            }
+            .store(in: &cancellables)
+    }
     
     // MARK: HANDLES FORM
     

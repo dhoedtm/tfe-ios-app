@@ -16,11 +16,20 @@ struct TreePopOver: View {
         VStack {
             HStack {
                 HStack {
-                    LabelledTextField("latitude", vm.binding(\.latitude), isDisabled: true) // String(format: "%.5f", vm.state.latitude)
-                    LabelledTextField("longitude", vm.binding(\.longitude), isDisabled: true)
+                    LabelledTextField(
+                        "latitude",
+                        vm.binding(\.latitude),
+                        isDisabled: true)
+                    LabelledTextField(
+                        "longitude",
+                        vm.binding(\.longitude),
+                        isDisabled: true)
                 }
                 VStack {
-                    LabelledTextField("description", vm.binding(\.description), isDisabled: false)
+                    LabelledTextField(
+                        "description",
+                        vm.binding(\.description),
+                        isDisabled: false)
                     if let error = vm.state.descriptionError {
                         Text(error)
                             .font(.caption)
@@ -43,11 +52,7 @@ struct TreePopOver: View {
         .sheet(isPresented: $showSheet, content: {
             TreeCaptures()
                 .environmentObject(
-                    TreeCapturesVM(
-                        selectedTree: TreeModel(treeFormState: vm.state),
-                        captures: MockData.captures,
-                        diameters: MockData.diameters
-                    )
+                    TreeCapturesVM(selectedTree: TreeModel(treeFormState: vm.state))
                 )
         })
         .padding()

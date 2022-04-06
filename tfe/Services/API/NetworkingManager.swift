@@ -62,7 +62,7 @@ class NetworkingManager {
     }
     
     static func download(url: URL) -> AnyPublisher<Data, Error> {
-        print("[NetworkingManager][download] \(url)")
+        print("[NetworkingManager][download] STARTED : \(url)")
         // Combine framework uses publishers and subscribers
         // publishers should run on background threads
         // dataTaskPublisher already takes care of that for us
@@ -71,6 +71,7 @@ class NetworkingManager {
             .receive(on: DispatchQueue.main)
             .tryMap({ try handleURLResponse(output: $0, url: url) })
             .eraseToAnyPublisher() // adds abstraction, now subscription is of type AnyPublisher<Data, Error>
+        print("[NetworkingManager][download] DONE : \(url)")
         return subscription
     }
     
@@ -91,6 +92,7 @@ class NetworkingManager {
     }
     
     static func handleCompletion(completion: Subscribers.Completion<Error>) {
+        print("[handleCompletion] started")
         switch completion {
             case .finished:
                 print("[handleCompletion] finished downloading")
@@ -103,9 +105,10 @@ class NetworkingManager {
         guard
             let response = output.response as? HTTPURLResponse,
             response.statusCode >= 200 && response.statusCode < 300 else {
-                print("[handleURLResponse] \(url)")
+                print("[handleURLResponse] KO : \(url)")
                 throw URLError(.badServerResponse)
             }
+        print("[handleURLResponse] OK : \(url)")
         return output.data
     }
 }

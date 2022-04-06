@@ -26,6 +26,7 @@ struct LabelledTextField: View {
                 .foregroundColor(.accentColor)
                 .offset(y: 10)
             TextField(label, text: $value)
+                .font(.subheadline)
                 .disabled(isDisabled)
                 .foregroundColor(isDisabled ? .gray : .black)
         }

@@ -73,8 +73,8 @@ class MapVM : ObservableObject {
     
     func addSubscribers() {
         api.$treesForStands
-            .sink { [weak self] (trees) in
-                self?.trees = trees[(self?.selectedStand.id)!] ?? [TreeModel]()
+            .sink { [weak self] (stands) in
+                self?.trees = stands[(self?.selectedStand.id)!] ?? [TreeModel]()
                 self?.isFetchingTrees = false
             }
             .store(in: &cancellables)

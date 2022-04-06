@@ -13,4 +13,9 @@ extension Double {
         let divisor = pow(10.0, Double(places))
         return (self * divisor).rounded() / divisor
     }
+    
+    /// Rounds the double to decimal places value and returns it as a String
+    func roundedToString(toPlaces places:Int) -> String {
+        return String(rounded(toPlaces: places))
+    }
 }

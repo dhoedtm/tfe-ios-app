@@ -27,9 +27,10 @@ struct MapView: View {
                 } else {
                     ZStack {
                         treeMap
-                        VStack() {
-                            header
-                                .padding(.horizontal)
+                        VStack {
+                            HStack {
+                                header
+                            }
                             Spacer()
                             ForEach(vm.trees, id: \.self) { tree in
                                 if (tree == vm.selectedTree) {
@@ -37,9 +38,11 @@ struct MapView: View {
                                 }
                             }
                         }
+                        .padding()
                     }
                 }
             }
+            .navigationBarHidden(true)
         }
     }
     
@@ -50,7 +53,6 @@ struct MapView: View {
                     TreeDetailsVM(initialState:
                                     TreeFormState.init(tree: tree))
                 )
-                .padding()
     }
 }
 
@@ -90,21 +92,28 @@ extension MapView {
 
 extension MapView {
     private var header: some View {
-        VStack {
+        HStack {
+            BackButton() {
+                Image(systemName: "arrowshape.turn.up.backward.circle")
+                    .scaledToFit()
+                    .scaleEffect(1.5)
+                    .foregroundColor(.black)
+            }
+            Spacer()
             if let stand = vm.selectedStand {
                 Text(DateParser.formatDateString(dateString: stand.capturedAt) ?? "error displaying date")
                     .font(.title2)
                     .fontWeight(.black)
-                    .foregroundColor(.primary)
-                    .padding()
-                    .frame(maxWidth: .infinity)
             } else {
                 Text("no stand could be found")
             }
+            Spacer()
         }
-        .background(Color.white)
-        .cornerRadius(10)
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color.green)
         .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 15)
+        .cornerRadius(10)
     }
 }
 

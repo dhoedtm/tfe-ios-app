@@ -13,18 +13,27 @@ struct StandDetailsView: View {
     
     var body: some View {
         ScrollView {
-            if vm.histories.isEmpty {
-                Text("Stand has no history")
-            } else if let histories = vm.histories {
-                HistoryPicker(captures: histories, selectedHistory: $vm.selectedHistory)
-            }
+            backButton
             form
-            HistoryProperties(history: vm.selectedHistory)
-            Divider()
-                .padding()
-            basalAreaChart
+            if vm.histories.isEmpty {
+                Text("Stand has no histories to display")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.yellow.opacity(0.5))
+                    .cornerRadius(10)
+                    .padding(.top)
+            } else {
+                Divider()
+                    .padding()
+                HistoryPicker(captures: vm.histories, selectedHistory: $vm.selectedHistory)
+                HistoryProperties(history: vm.selectedHistory)
+                Divider()
+                    .padding()
+                basalAreaChart
+            }
         }
         .padding()
+        .navigationBarHidden(true)
     }
 }
 
@@ -78,10 +87,31 @@ private struct HistoryPicker : View {
 
 extension StandDetailsView {
     
+    var backButton: some View {
+        BackButton() {
+            HStack {
+                Image(systemName: "arrowshape.turn.up.backward.circle")
+                    .scaledToFit()
+                    .scaleEffect(1.5)
+                    .foregroundColor(.black)
+                Spacer()
+                Text("back to the stand list")
+                    .foregroundColor(.black)
+                Spacer()
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.green)
+            .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 15)
+            .cornerRadius(10)
+        }
+        .padding(.vertical, 5)
+    }
+    
     var form: some View {
         VStack(alignment: .leading) {
             Group {
-                Text("Stand").bold().padding(.top)
+                Text("Stand").bold()
                 LabelledTextField("name", vm.binding(\.name), isDisabled: false)
                 if let error = vm.state.nameError {
                     Text(error)

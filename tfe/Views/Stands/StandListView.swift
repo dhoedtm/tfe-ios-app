@@ -44,7 +44,7 @@ extension StandListView {
                         MasterVM(selectedStand: stand)
                     )
             ) {
-                Text("stand : \(stand.name)")
+                Text(stand.name)
             }
         }
     }
