@@ -45,12 +45,10 @@ extension TreeCaptures {
     @ViewBuilder var treeDeletedWarning : some View {
         if let deletedDate = vm.selectedTree.deletedAt {
             if !deletedDate.isEmpty {
-                Text("Tree no longer exists as of \(DateParser.shortenDateString(dateString: deletedDate) ?? "date error")")
-                    .padding(10)
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.red)
-                    .background(Color.red.opacity(0.1))
-                    .cornerRadius(10)
+                Badge(
+                    type: .warning,
+                    text: "Tree no longer exists as of \(DateParser.shortenDateString(dateString: deletedDate) ?? "date error")"
+                )
             }
         }
     }
@@ -106,32 +104,28 @@ private struct CaptureProperties : View {
             }
             .padding(.bottom)
             
-            if isFetchingDiameter {
-                ProgressView()
-            } else {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Height :")
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("Diameter :")
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    HStack {
-                        VStack {
-                            ForEach(diameters, id: \.self) { diameter in
-                                HStack {
-                                    Text(diameter.height.roundedToString(toPlaces: 3))
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    Text(diameter.diameter.roundedToString(toPlaces: 3))
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                }
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Height :")
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("Diameter :")
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                HStack {
+                    VStack {
+                        ForEach(diameters, id: \.self) { diameter in
+                            HStack {
+                                Text(diameter.height.roundedToString(toPlaces: 3))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Text(diameter.diameter.roundedToString(toPlaces: 3))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }

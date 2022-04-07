@@ -58,7 +58,9 @@ final class StandDetailsVM: StateBindingViewModel<StandFormState> {
             return
         }
         
-        api.updateStandDetails(stand: StandModel(standFormState: state))
+        let standModel = StandModel(standFormState: state)
+        print("[updateTree] \(standModel)")
+        api.updateStandDetails(stand: standModel)
     }
 
     // MARK: - StateBindingViewModel Conformance
@@ -72,14 +74,14 @@ final class StandDetailsVM: StateBindingViewModel<StandFormState> {
 
     override func onStateChange(_ keyPath: PartialKeyPath<StandFormState>) {
         state.nameError = isValidName() ? nil : "name cannot be empty or >30 characters"
-        state.descriptionError = isValidDescription() ? nil : "description cannot be empty"
+//        state.descriptionError = isValidDescription() ? nil : "description cannot be empty"
         state.isUpdateButtonEnabled = isValidForm()
     }
 
     // MARK: - Private Methods
     
     private func isValidDescription() -> Bool {
-        return !state.description.isEmpty
+        return true // !state.description.isEmpty
     }
     private func isValidName() -> Bool {
         return !state.name.isEmpty && state.name.count < 30

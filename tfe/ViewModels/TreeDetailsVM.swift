@@ -9,6 +9,8 @@ import Foundation
 
 final class TreeDetailsVM : StateBindingViewModel<TreeFormState> {
     
+    let api : ApiDataService = ApiDataService()
+    
     // MARK: - Public Methods
     func updateTree() {
 //        if !isValidDescription() {
@@ -16,8 +18,9 @@ final class TreeDetailsVM : StateBindingViewModel<TreeFormState> {
 //            return
 //        }
         
-        // api call
-        print(state.id)
+        let treeModel = TreeModel(treeFormState: self.state)
+        print("[updateTree] \(treeModel)")
+        api.updateTreeDetails(tree: treeModel)
     }
 
     // MARK: - StateBindingViewModel Conformance

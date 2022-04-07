@@ -71,8 +71,17 @@ class MapVM : ObservableObject {
     
     // MARK: FUNCTIONS
     
+    func deleteTree(idTree: Int) {
+        api.deleteTree(idTree: idTree)
+        trees.removeAll { tree in
+            return tree.id == idTree
+        }
+    }
+    
     func addSubscribers() {
         api.$treesForStands
+            .debounce(for: 0.8, scheduler: DispatchQueue.main)
+            .removeDuplicates()
             .sink { [weak self] (stands) in
                 self?.trees = stands[(self?.selectedStand.id)!] ?? [TreeModel]()
                 self?.isFetchingTrees = false

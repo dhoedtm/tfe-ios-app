@@ -17,7 +17,9 @@ struct StandListView: View {
     
     var body: some View {
         VStack {
-            if let error = vm.error { Text(error) }
+            if let error = vm.error {
+                Badge(type: .error, text: error)
+            }
             if(vm.isFetchingStands) {
                 Spacer()
                 ProgressView("Downloading stands...")
@@ -25,6 +27,16 @@ struct StandListView: View {
             } else {
                 standList
                     .navigationTitle("Stands")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarItems(
+                        trailing:
+                            Button(action: {
+                                vm.reloadStandList()
+                            }, label: {
+                                Image(systemName: "arrow.clockwise")
+                                    .foregroundColor(.green)
+                            })
+                    )
             }
             Spacer()
             uploadStand
@@ -36,17 +48,21 @@ struct StandListView: View {
 
 extension StandListView {
     private var standList: some View {
-        List(vm.stands) { stand in
-            NavigationLink(
-                // selectedStand : stand
-                destination: MasterView()
-                    .environmentObject(
-                        MasterVM(selectedStand: stand)
-                    )
-            ) {
-                Text(stand.name)
+        List {
+            ForEach(vm.stands, id: \.id) { stand in
+                NavigationLink(
+                    destination: MasterView()
+                        .environmentObject(MasterVM(selectedStand: stand))
+                ) {
+                    Text(stand.name)
+                }
             }
+            .onDelete(perform: delete)
         }
+    }
+    
+    func delete(at offsets: IndexSet) {
+        vm.deleteStand(offsets: offsets)
     }
 }
 

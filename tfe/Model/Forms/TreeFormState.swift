@@ -10,6 +10,8 @@ struct TreeFormState : Equatable {
     var idStand : String
     var latitude : String
     var longitude : String
+    var x : String
+    var y : String
     var description : String
     // extra fields
     var descriptionError : String?
@@ -23,6 +25,8 @@ extension TreeFormState {
         idStand = String(tree.idStand)
         latitude = String(tree.latitude)
         longitude = String(tree.longitude)
+        x = String(tree.x)
+        y = String(tree.y)
         description = String(tree.description ?? "")
         deletedAt = tree.deletedAt ?? ""
     }

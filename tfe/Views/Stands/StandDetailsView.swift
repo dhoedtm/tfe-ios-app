@@ -16,12 +16,9 @@ struct StandDetailsView: View {
             backButton
             form
             if vm.histories.isEmpty {
-                Text("Stand has no histories to display")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.yellow.opacity(0.5))
-                    .cornerRadius(10)
-                    .padding(.top)
+                Badge(
+                    type: .warning,
+                    text: "Stand has no histories to display")
             } else {
                 Divider()
                     .padding()
@@ -96,6 +93,7 @@ extension StandDetailsView {
                     .foregroundColor(.black)
                 Spacer()
                 Text("back to the stand list")
+                    .fontWeight(.black)
                     .foregroundColor(.black)
                 Spacer()
             }

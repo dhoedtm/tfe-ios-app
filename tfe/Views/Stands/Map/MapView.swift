@@ -76,12 +76,18 @@ extension MapView {
                         .resizable()
                         .foregroundColor(isTreeDeleted ? .red : .green)
                         .scaledToFit()
+                        .scaleEffect()
                         .onTapGesture {
                             withAnimation(.easeInOut) {
                                 vm.selectedTree = tree
                             }
                         }
-                    
+                        .onLongPressGesture(
+                            minimumDuration: 1,
+                            perform: {
+                                vm.deleteTree(idTree: tree.id)
+                            }
+                        )
                 }
             }
         )
