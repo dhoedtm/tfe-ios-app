@@ -11,32 +11,26 @@ import MapKit
 struct MapView: View {
     
     @EnvironmentObject private var vm : MapVM
-     
+    
     var body: some View {
         if (vm.isFetchingTrees) {
-            ProgressView()
+            loader
         } else {
             VStack {
-                // errors
-                ForEach(vm.errorList, id: \.self) {
-                    Text($0)
-                }
                 // body
                 if vm.selectedTree == nil {
+                    backButton
+                    Spacer()
                     Text("There are no trees to display")
+                    refreshButton
+                    Spacer()
                 } else {
                     ZStack {
                         treeMap
                         VStack {
-                            HStack {
-                                header
-                            }
+                            header
                             Spacer()
-                            ForEach(vm.trees, id: \.self) { tree in
-                                if (tree == vm.selectedTree) {
-                                    createPopOver(tree: tree)
-                                }
-                            }
+                            treePopOver
                         }
                         .padding()
                     }
@@ -47,12 +41,9 @@ struct MapView: View {
     }
     
     func createPopOver(tree: TreeModel) -> some View {
-        return
-            TreePopOver()
-                .environmentObject(
-                    TreeDetailsVM(initialState:
-                                    TreeFormState.init(tree: tree))
-                )
+        let treeState = TreeFormState.init(tree: tree)
+        let vm = TreeDetailsVM(initialState: treeState)
+        return TreePopOver().environmentObject(vm)
     }
 }
 
@@ -62,9 +53,61 @@ struct MapView: View {
 // it is good practice to create extensions of that view
 
 extension MapView {
+    private var loader : some View {
+        VStack(alignment: .center) {
+            Spacer()
+            ProgressView("Downloading trees...")
+            HStack {
+                Spacer()
+                Button(
+                    "Cancel",
+                    action: vm.cancelTreesDownload
+                )
+                .buttonStyle(StandardButton())
+                .scaledToFit()
+                Spacer()
+            }
+            .padding()
+            Spacer()
+        }
+    }
+}
+extension MapView {
+    private var backButton : some View {
+        BackButton() {
+            HStack {
+                Image(systemName: "arrowshape.turn.up.backward.circle")
+                    .scaledToFit()
+                    .scaleEffect(1.5)
+                    .foregroundColor(.black)
+                Text("back to the stand list")
+                    .accentColor(.black)
+            }
+        }
+        .padding()
+        .background(Color.green)
+        .cornerRadius(10)
+    }
+}
+
+extension MapView {
+    private var refreshButton: some View {
+        Button(action: {
+            vm.reloadTrees()
+        }, label: {
+            Image(systemName: "arrow.clockwise")
+                .scaledToFit()
+                .scaleEffect(1.5)
+                .foregroundColor(.green)
+        })
+        .padding()
+    }
+}
+
+extension MapView {
     private var treeMap: some View {
         // "coordinateRegion" : for a set of long/lat points
-        // could use "mapRect" to show zoom in on a specific area (a given stand bounding box)
+        // could use "mapRect" to show zoom in on a specific area (e.g. stand bounding box)
         Map(
             coordinateRegion: $vm.selectedTreeRegion,
             annotationItems: vm.trees,
@@ -72,26 +115,30 @@ extension MapView {
                 MapAnnotation(coordinate: vm.getLocationFromCoordinates(tree: tree)) {
                     let isTreeSelected = vm.selectedTree == tree
                     let isTreeDeleted = tree.deletedAt != nil
-                    Image(systemName: isTreeSelected ? "circle.fill" : "circle")
-                        .resizable()
-                        .foregroundColor(isTreeDeleted ? .red : .green)
-                        .scaledToFit()
-                        .scaleEffect()
-                        .onTapGesture {
-                            withAnimation(.easeInOut) {
-                                vm.selectedTree = tree
+                    VStack {
+                        Image(systemName: isTreeSelected ? "circle.fill" : "circle")
+                            .resizable()
+                            .foregroundColor(isTreeDeleted ? .red : .green)
+                            .scaledToFit()
+                            .scaleEffect()
+                            .onTapGesture {
+                                withAnimation(.easeInOut) {
+                                    vm.selectedTree = tree
+                                }
                             }
-                        }
-                        .onLongPressGesture(
-                            minimumDuration: 1,
-                            perform: {
-                                vm.deleteTree(idTree: tree.id)
-                            }
-                        )
+                            .onLongPressGesture(
+                                minimumDuration: 1,
+                                perform: {
+                                    vm.deleteTree(idTree: tree.id)
+                                }
+                            )
+                        Text(String(tree.id))
+                            .font(.caption2)
+                            .accentColor(.black.opacity(0.7))
+                    }
                 }
             }
         )
-        // default safe area add padding to very top and bottom of the screen (curved areas)
         .ignoresSafeArea()
     }
 }
@@ -114,6 +161,14 @@ extension MapView {
                 Text("no stand could be found")
             }
             Spacer()
+            Button(action: {
+                vm.reloadTrees()
+            }, label: {
+                Image(systemName: "arrow.clockwise")
+                    .scaledToFit()
+                    .scaleEffect(1.5)
+                    .foregroundColor(.black)
+            })
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -123,18 +178,23 @@ extension MapView {
     }
 }
 
+extension MapView {
+    // TODO: this is a hack since changing the vm.selectedTree property alone
+    // wouldn't refresh the PopOver view and VM
+    private var treePopOver: some View {
+        ForEach(vm.trees, id: \.self) { tree in
+            if (tree == vm.selectedTree) {
+                createPopOver(tree: tree)
+            }
+        }
+    }
+}
+
 // MARK: PREVIEW
 
 struct StandMapView_Previews: PreviewProvider {
-    static let vm : MapVM = {
-        let vm = MapVM(selectedStand: MockData.stands.first!)
-        // possible to tweak VM here :
-        // e.g. fetching trees
-        vm.errorList = ["SOMETHING BAD", "SONETHING WORSE"]
-        return vm
-    }()
     static var previews: some View {
         MapView()
-            .environmentObject(vm)
+            .environmentObject(MapVM(selectedStand: MockData.stands.first!))
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 // Identifiable is required in order to be used in a List in a View
 // items need to be uniquely identifiable, "id" could also be initiliazed with UUID()
 // MARK: - Stand
-struct StandHistoryModel: Identifiable, Codable, Hashable {
+struct StandHistoryModel: Identifiable, Codable, Hashable, Comparable {
     var id: Int
     var name: String
     var treeCount: Int
@@ -41,5 +41,9 @@ extension StandHistoryModel {
         self.meanDistance = 0
         self.capturedAt = ""
         self.description = ""
+    }
+    
+    static func < (lhs: StandHistoryModel, rhs: StandHistoryModel) -> Bool {
+        lhs.id < rhs.id
     }
 }

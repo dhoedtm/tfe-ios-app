@@ -11,88 +11,58 @@ import SwiftUI
 import Combine
 
 class MapVM : ObservableObject {
-    
-    enum StandMapError : Hashable {
-        case trees
-        case selectedTree
-    }
-    
-    // MARK: VARIABLES
-    
-    let mapSpan : MKCoordinateSpan = {
-        let mapZoomDelta = 0.005
-        return MKCoordinateSpan(latitudeDelta: mapZoomDelta, longitudeDelta: mapZoomDelta)
-    }()
-    
+
+    // services
     private let api = ApiDataService()
-    private var cancellables = Set<AnyCancellable>()
-    private var errors : Dictionary<StandMapError, String> = Dictionary<StandMapError, String>() {
-        didSet{
-            errorList = Array(errors.values)
-        }
-    }
-    
-    @Published var errorList : [String] = []
+    private let dataStore = InMemoryDataStore()
+    private let notificationManager = NotificationManager.shared
+    private var cancellables: [AnyCancellable] = []
+        
+    // UI
     @Published var isFetchingTrees : Bool = false
     
+    // data
     @Published var selectedStand : StandModel
-    @Published var trees : [TreeModel] = [TreeModel]() {
+    @Published var trees : [TreeModel] = [] {
         didSet {
-            guard let tree = self.trees.first else {
-                errors[.trees] = "this stand has no trees"
-                return
+            if let tree = self.trees.first {
+                self.selectedTree = tree
             }
-            self.selectedTree = tree
-            errors[.trees] = nil
         }
     }
     @Published var selectedTree : TreeModel? {
         didSet {
-            // property observer, triggers after the variable "selectedTreeRegion" is set
-            guard let tree = selectedTree else {
-                errors[.selectedTree] = "could not update map region, selected tree is nil"
-                return
+            if let tree = selectedTree {
+                updateMapRegion(tree: tree)
             }
-            updateMapRegion(tree: tree)
-            errors[.selectedTree] = nil
         }
     }
     // automatically updated via the "didSet" trigger on the variable "selectedTree"
-    @Published var selectedTreeRegion : MKCoordinateRegion = MKCoordinateRegion() // blank initially
+    @Published var selectedTreeRegion : MKCoordinateRegion = MKCoordinateRegion()
     
-    // MARK: INIT
+    // MARK: init
     
     init(selectedStand: StandModel) {
         self.selectedStand = selectedStand
-        addSubscribers()
-        api.getTreesForStand(idStand: self.selectedStand.id)
         self.isFetchingTrees = true
+        self.subscribeToDataStore()
+        getTrees()
     }
     
-    // MARK: FUNCTIONS
+    // MARK: UI functions
     
-    func deleteTree(idTree: Int) {
-        api.deleteTree(idTree: idTree)
-        trees.removeAll { tree in
-            return tree.id == idTree
+    func reloadTrees() {
+        withAnimation {
+            self.isFetchingTrees = true
+            api.getTreesSubscription?.cancel()
+            getTrees()
         }
-    }
-    
-    func addSubscribers() {
-        api.$treesForStands
-            .debounce(for: 0.8, scheduler: DispatchQueue.main)
-            .removeDuplicates()
-            .sink { [weak self] (stands) in
-                self?.trees = stands[(self?.selectedStand.id)!] ?? [TreeModel]()
-                self?.isFetchingTrees = false
-            }
-            .store(in: &cancellables)
     }
     
     func getLocationFromCoordinates(tree:TreeModel) -> CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: tree.latitude, longitude: tree.longitude)
     }
-    func getRegionFromCoordinates(tree:TreeModel) -> MKCoordinateRegion {
+    private func getRegionFromCoordinates(tree:TreeModel) -> MKCoordinateRegion {
         // TODO: retrieve lat, long from stand to center map in the middle of the stand
         return MKCoordinateRegion(
             center: getLocationFromCoordinates(tree: tree), // center of the map, focus
@@ -104,6 +74,72 @@ class MapVM : ObservableObject {
         withAnimation(.easeInOut) {
             selectedTreeRegion = getRegionFromCoordinates(tree: tree)
         }
+    }
+    
+    // MARK: DATA STORE functions
+    
+    func subscribeToDataStore() {
+        dataStore.$treesForStands
+            .sink { [weak self] (treesForStands) in
+                let idStand = self?.selectedStand.id ?? 0
+                self?.trees = treesForStands[idStand] ?? []
+            }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: API functions
+    
+    func getTrees() {
+        api.getTreesSubscription = api.getTreesForStand(idStand: self.selectedStand.id)
+            .sink {  [weak self] (completion) in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                        message: "Trees couldn't be retrieved\n(\(error.localizedDescription))",
+                        type: .error
+                    )
+                    break
+                case .finished:
+                    break
+                }
+                self?.isFetchingTrees = false
+            } receiveValue: { [weak self] (trees) in
+                let id = self?.selectedStand.id ?? 0
+                self?.dataStore.treesForStands[id] = trees
+            }
+        
+    }
+    
+    func cancelTreesDownload() {
+        self.isFetchingTrees = false
+        api.getTreesSubscription?.cancel()
+    }
+    
+    func deleteTree(idTree: Int) {
+        api.deleteTree(idTree: idTree)
+            .sink { [weak self] (completion) in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                        message: "Tree couldn't be deleted\n(\(error.localizedDescription)",
+                        type: .error)
+                    break
+                case .finished:
+                    // TODO: only updates VM data, not dataStore
+                    self?.trees.removeAll { tree in
+                        return tree.id == idTree
+                    }
+                    // TODO: fix UI refresh based on dataStore selecting seemingly "random" trees
+                    // the array could be sorted before selecting the tree in the didSet handler
+                    // the dataStore could keep the array sorted at all times
+                    // should probably used another data structure to make such manipulations more efficient
+//                    if let tree = self?.selectedTree {
+//                        self?.dataStore.deleteTree(tree: tree)
+//                    }
+                    break
+                }
+            } receiveValue: { _ in }
+            .store(in: &cancellables)
     }
 }
 

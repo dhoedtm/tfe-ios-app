@@ -27,8 +27,7 @@ struct TFEApp: App {
     // VMs can be replaced with mocks for testing purposes
     // TODO: consider using Swinject also for this kind of DI (not only services)
     @StateObject private var standListVM = StandListVM()
-    
-    // init() {}
+    @StateObject private var notificationManager = NotificationManager.shared
     
     var body: some Scene {
         // WindowGroup is used to hold potentially multiple windows that the user opens
@@ -37,8 +36,12 @@ struct TFEApp: App {
             NavigationView {
                 StandListView()
                     .environmentObject(standListVM)
-//                    .navigationBarHidden(true)
             }
+            .toast(
+                message: notificationManager.notification?.message ?? "",
+                isShowing: $notificationManager.isShowingToast,
+                type: notificationManager.notification?.type ?? .info,
+                duration: Toast.short)
         }
     }
 }

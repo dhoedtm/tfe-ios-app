@@ -14,7 +14,7 @@ enum ApiError: Error {
 
 extension ApiError {
     var isFatal: Bool {
-        if case ApiError.invalidRequest = self { return true }
+        if case ApiError.unexpectedError = self { return true }
         else { return false }
     }
 }

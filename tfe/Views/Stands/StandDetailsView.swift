@@ -16,51 +16,17 @@ struct StandDetailsView: View {
             backButton
             form
             if vm.histories.isEmpty {
-                Badge(
-                    type: .warning,
-                    text: "Stand has no histories to display")
+                Badge(type: .warning, text: "Stand has no histories to display")
             } else {
-                Divider()
-                    .padding()
+                Divider().padding()
                 HistoryPicker(captures: vm.histories, selectedHistory: $vm.selectedHistory)
                 HistoryProperties(history: vm.selectedHistory)
-                Divider()
-                    .padding()
+                Divider().padding()
                 basalAreaChart
             }
         }
         .padding()
         .navigationBarHidden(true)
-    }
-}
-
-private struct HistoryProperties : View {
-    var history : StandHistoryModel
-
-    private let columns = [
-        GridItem(.fixed(100)),
-        GridItem(.flexible()),
-    ]
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text("History").bold().padding(.top)
-            Group {
-//                Text("History").bold().padding(.top)
-                LabelledText("treeCount", String(history.treeCount))
-                LabelledText("basalArea", String(history.basalArea))
-                LabelledText("meanDbh", String(history.meanDbh))
-                LabelledText("meanDistance", String(history.meanDistance))
-            }
-            Group {
-//                Text("History").bold().padding(.top)
-                LabelledText("treeDensity", String(history.treeDensity))
-                LabelledText("convexAreaMeter", String(history.convexAreaMeter))
-                LabelledText("convexAreaHectare", String(history.convexAreaHectare))
-                LabelledText("concaveAreaMeter", String(history.concaveAreaMeter))
-                LabelledText("concaveAreaHectare", String(history.concaveAreaHectare))
-            }
-        }
     }
 }
 
@@ -79,6 +45,34 @@ private struct HistoryPicker : View {
         }
         .frame(height: 100)
         .clipped()
+    }
+}
+
+private struct HistoryProperties : View {
+    var history : StandHistoryModel
+
+    private let columns = [
+        GridItem(.fixed(100)),
+        GridItem(.flexible()),
+    ]
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("History").bold().padding(.top)
+            Group {
+                LabelledText("treeCount", String(history.treeCount))
+                LabelledText("basalArea", String(history.basalArea))
+                LabelledText("meanDbh", String(history.meanDbh))
+                LabelledText("meanDistance", String(history.meanDistance))
+            }
+            Group {
+                LabelledText("treeDensity", String(history.treeDensity))
+                LabelledText("convexAreaMeter", String(history.convexAreaMeter))
+                LabelledText("convexAreaHectare", String(history.convexAreaHectare))
+                LabelledText("concaveAreaMeter", String(history.concaveAreaMeter))
+                LabelledText("concaveAreaHectare", String(history.concaveAreaHectare))
+            }
+        }
     }
 }
 
@@ -134,11 +128,11 @@ extension StandDetailsView {
     }
     
     var basalAreaChart : some View {
-        BarChart(title: "Basal area history (meters)", data: getBasalAreas())
+        BarChart(title: "Basal area history (meters)", data: getBasalAreaChartData())
             .frame(height: UIScreen.main.bounds.height / 3)
     }
     
-    func getBasalAreas() -> [ChartData] {
+    func getBasalAreaChartData() -> [ChartData] {
         return vm.histories.map { history in
             ChartData(
                 label: DateParser.shortenDateString(dateString: history.capturedAt) ?? "date error",

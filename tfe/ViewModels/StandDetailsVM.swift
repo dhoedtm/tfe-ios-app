@@ -11,11 +11,16 @@ import Combine
 
 final class StandDetailsVM: StateBindingViewModel<StandFormState> {
     
+    // services
     private let api = ApiDataService()
+    private let dataStore = InMemoryDataStore()
+    private let notificationManager = NotificationManager.shared
     private var cancellables = Set<AnyCancellable>()
     
+    // UI
     @Published var isFetchingHistories : Bool = false
     
+    // data
     @Published var histories : [StandHistoryModel] = []
     {
         didSet {
@@ -28,25 +33,42 @@ final class StandDetailsVM: StateBindingViewModel<StandFormState> {
     
     override init(initialState: StandFormState) {
         super.init(initialState: initialState)
-        
+        subscribeToDataStore()
+        getHistories()
         self.isFetchingHistories = true
-        addSubscribers()
-        api.getHistoriesForStand(idStand: Int(state.id) ?? 0)
     }
     
-    func addSubscribers() {
-        api.$historiesForStands
-            .sink { [weak self] (stands) in
-                let id = (self?.state.id)!
-                self?.histories = stands[Int(id) ?? 0] ?? []
-                self?.isFetchingHistories = false
+    // MARK: DATA STORE functions
+    
+    func subscribeToDataStore() {
+        dataStore.$historiesForStands
+            .sink { [weak self] (historiesForStands) in
+                let idStand = Int(self?.state.id ?? "") ?? 0
+                self?.histories = historiesForStands[idStand] ?? []
             }
             .store(in: &cancellables)
     }
     
-    // MARK: HANDLES FORM
+    // MARK: API functions
     
-    // MARK: - Public Methods
+    func getHistories() {
+        let idStand = Int(self.state.id) ?? 0
+        api.getHistoriesSubscription = api.getHistoriesForStand(idStand: idStand)
+                .sink {  [weak self] (completion) in
+                    switch completion {
+                    case .failure(let error):
+                        self?.notificationManager.notification = Notification(
+                            message: "Histories couldn't be retrieved\n(\(error.localizedDescription))",
+                            type: .error)
+                        break
+                    case .finished:
+                        break
+                    }
+                    self?.isFetchingHistories = false
+                } receiveValue: { [weak self] (histories) in
+                    self?.isFetchingHistories = false
+                }
+    }
     
     func updateStand() {
         if !isValidName() {
@@ -59,9 +81,23 @@ final class StandDetailsVM: StateBindingViewModel<StandFormState> {
         }
         
         let standModel = StandModel(standFormState: state)
-        print("[updateTree] \(standModel)")
         api.updateStandDetails(stand: standModel)
+            .sink { [weak self] (completion) in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                        message: "Stand couldn't be updated\n(\(error.localizedDescription)",
+                        type: .error)
+                    break
+                case .finished:
+                    self?.dataStore.allStands[standModel.id] = standModel
+                    break
+                }
+            } receiveValue: { _ in }
+            .store(in: &cancellables)
     }
+    
+    // MARK: HANDLES FORM
 
     // MARK: - StateBindingViewModel Conformance
     
@@ -74,7 +110,7 @@ final class StandDetailsVM: StateBindingViewModel<StandFormState> {
 
     override func onStateChange(_ keyPath: PartialKeyPath<StandFormState>) {
         state.nameError = isValidName() ? nil : "name cannot be empty or >30 characters"
-//        state.descriptionError = isValidDescription() ? nil : "description cannot be empty"
+        // state.descriptionError = isValidDescription() ? nil : "description cannot be empty"
         state.isUpdateButtonEnabled = isValidForm()
     }
 

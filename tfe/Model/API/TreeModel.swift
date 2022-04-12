@@ -9,7 +9,7 @@ import Foundation
 
 // Identifiable is required in order to be used in a List in a View
 // items need to be uniquely identifiable, "id" could also be initiliazed with UUID()
-struct TreeModel : Identifiable, Codable, Hashable {
+struct TreeModel : Identifiable, Codable, Hashable, Comparable {
     // let id = UUID()
     var id : Int
     var idStand : Int
@@ -22,6 +22,17 @@ struct TreeModel : Identifiable, Codable, Hashable {
 }
 
 extension TreeModel {
+    init() {
+        id = 0
+        idStand = 0
+        latitude = 0
+        longitude = 0
+        x = 0
+        y = 0
+        description = nil
+        deletedAt = nil
+    }
+    
     init(treeFormState: TreeFormState) {
 //        guard
 //            let id = Int(treeFormState.id),
@@ -40,5 +51,9 @@ extension TreeModel {
         y = Double(treeFormState.longitude) ?? 0
         description = treeFormState.description.isEmpty ? nil : treeFormState.description
         deletedAt = treeFormState.deletedAt.isEmpty ? nil : treeFormState.deletedAt
+    }
+    
+    static func < (lhs: TreeModel, rhs: TreeModel) -> Bool {
+        lhs.id < rhs.id
     }
 }

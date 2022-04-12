@@ -18,7 +18,9 @@ struct TreeCaptures: View {
                     .padding(.bottom)
                 treeDetails
                     .padding(.bottom, 2)
-                if vm.captures.isEmpty {
+                if (vm.isFetchingCaptures) {
+                    ProgressView("Downloading captures...")
+                } else if vm.captures.isEmpty {
                     Text("Tree has no capture to display")
                 } else {
                     Text("Capture")
@@ -104,28 +106,32 @@ private struct CaptureProperties : View {
             }
             .padding(.bottom)
             
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Height :")
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("Diameter :")
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                HStack {
-                    VStack {
-                        ForEach(diameters, id: \.self) { diameter in
-                            HStack {
-                                Text(diameter.height.roundedToString(toPlaces: 3))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                Text(diameter.diameter.roundedToString(toPlaces: 3))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+            if (isFetchingDiameter) {
+                ProgressView("Downloading diameters...")
+            } else {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Height :")
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("Diameter :")
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    HStack {
+                        VStack {
+                            ForEach(diameters, id: \.self) { diameter in
+                                HStack {
+                                    Text(diameter.height.roundedToString(toPlaces: 3))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Text(diameter.diameter.roundedToString(toPlaces: 3))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }

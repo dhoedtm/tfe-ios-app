@@ -9,21 +9,52 @@ import Foundation
 
 final class TreeDetailsVM : StateBindingViewModel<TreeFormState> {
     
+    // services
     let api : ApiDataService = ApiDataService()
+    let dataStore = InMemoryDataStore()
+    let notificationManager = NotificationManager.shared
     
-    // MARK: - Public Methods
+    // ui
+    @Published var isUpdating = false
+    
+    // MARK: API functions
+    
     func updateTree() {
-//        if !isValidDescription() {
-//            state.descriptionError = "cannot be empty"
-//            return
-//        }
-        
         let treeModel = TreeModel(treeFormState: self.state)
-        print("[updateTree] \(treeModel)")
-        api.updateTreeDetails(tree: treeModel)
+        self.isUpdating = true
+        api.updateTreeSubscription = api.updateTreeDetails(tree: treeModel)
+            .sink {  [weak self] (completion) in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                        message: "Tree couldn't be updated\n(\(error.localizedDescription))",
+                        type: .error)
+                    break
+                case .finished:
+                    self?.notificationManager.notification = Notification(
+                        message: "Tree updated",
+                        type: .success)
+                    break
+                }
+                self?.isUpdating = false
+            } receiveValue: { [weak self] (updatedTree) in
+                let idStand = Int(self?.state.idStand ?? "") ?? 0
+                let idTree = Int(self?.state.id ?? "") ?? 0
+                if var treesForStands = self?.dataStore.treesForStands[idStand] {
+                    treesForStands[idTree] = updatedTree
+                }
+            }
     }
+    
+    func cancelUpdate() {
+        api.updateTreeSubscription?.cancel()
+        self.isUpdating = false
+    }
+    
+    // MARK: HANDLES FORM
 
     // MARK: - StateBindingViewModel Conformance
+    
     override func stateWillChangeValue<Value>(
         _ keyPath: PartialKeyPath<TreeFormState>,
         newValue: Value
@@ -32,7 +63,7 @@ final class TreeDetailsVM : StateBindingViewModel<TreeFormState> {
     }
 
     override func onStateChange(_ keyPath: PartialKeyPath<TreeFormState>) {
-//        state.descriptionError = isValidDescription() ? nil : "description cannot be empty"
+        // state.descriptionError = isValidDescription() ? nil : "description cannot be empty"
         state.isUpdateButtonEnabled = isValidForm()
     }
 

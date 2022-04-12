@@ -8,7 +8,7 @@
 import Foundation
 
 class MockData {
-    static let stands : [StandModel] = [
+    static let stands: [StandModel] = [
         StandModel(
             id: 1,
             name: "stand_1_braine",
@@ -56,7 +56,7 @@ class MockData {
         )
     ]
     
-    static let trees : [TreeModel] = [
+    static let trees: [TreeModel] = [
         TreeModel(id: 1, idStand: 1, latitude: 50.708228, longitude: 4.352911, x: 50.708228, y: 4.352911, description: "un arbre", deletedAt: "2022-01-04T11:14:06.102033"),
         TreeModel(id: 2, idStand: 1, latitude: 50.708239, longitude: 4.35288, x: 50.708239, y: 4.35288, description: "un arbre", deletedAt: nil),
         TreeModel(id: 3, idStand: 1, latitude: 50.708262, longitude: 4.352855, x: 50.708262, y: 4.352855, description: "un arbre", deletedAt: "2022-05-06T09:16:12.102033"),
@@ -65,7 +65,7 @@ class MockData {
         TreeModel(id: 6, idStand: 1, latitude: 50.708262, longitude: 4.3528879, x: 50.708262, y: 4.3528879, description: "un arbre", deletedAt: nil)
     ]
     
-    static let dbhList : [Double] = [
+    static let dbhList: [Double] = [
         0.1232980326,
         0.1481883507,
         0.1809847701,
@@ -80,7 +80,7 @@ class MockData {
         0.3690479028
     ]
     
-    static let basalAreaList : [Double] = [
+    static let basalAreaList: [Double] = [
         23.78328396,
         36.90479028,
         14.81883507,
@@ -95,7 +95,7 @@ class MockData {
         18.09847701
     ]
     
-    static let chartData : [ChartData] = [
+    static let chartData: [ChartData] = [
         ChartData(label: "16-11-2020",  value: 0.3048599073),
         ChartData(label: "18-11-2020",  value: 0.2969587937),
         ChartData(label: "20-11-2020",  value: 0.1809847701),
@@ -108,7 +108,7 @@ class MockData {
         ChartData(label: "24-12-2020",  value: 0.2280987701)
     ]
     
-    static let captures : [TreeCaptureModel] = [
+    static let captures: [TreeCaptureModel] = [
         TreeCaptureModel(
             id: 1,
             idTree: 4,
@@ -139,7 +139,7 @@ class MockData {
         )
     ]
     
-    static let diameters : [DiameterModel] = [
+    static let diameters: [DiameterModel] = [
         DiameterModel(
             id: 1,
             idTreeCapture: 1,

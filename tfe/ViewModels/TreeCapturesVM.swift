@@ -10,13 +10,17 @@ import Combine
 
 final class TreeCapturesVM: ObservableObject {
     
+    // services
     private let api = ApiDataService()
-    private var cancellables = Set<AnyCancellable>()
+    private let dataStore = InMemoryDataStore()
+    private let notificationManager = NotificationManager.shared
+    private var cancellables: [AnyCancellable] = []
     
+    // ui
     @Published var isFetchingCaptures : Bool = false
     @Published var isFetchingDiameters : Bool = false
-    @Published var error : String? = nil
     
+    // data
     @Published var selectedTree : TreeModel
     @Published var captures : [TreeCaptureModel] = []
     {
@@ -33,42 +37,73 @@ final class TreeCapturesVM: ObservableObject {
     }
     @Published var chartData : [ChartData] = []
     @Published var selectedCapture : TreeCaptureModel = TreeCaptureModel()
-    {
-        didSet {
-            print("[selectedCapture] \(self.selectedCapture.id)")
-            if (self.selectedCapture.id > 0) {
-                self.isFetchingDiameters = true
-                print("[selectedCapture] getting diameters for capture \(self.selectedCapture.id)")
-                api.getDiametersForCapture(idCapture: self.selectedCapture.id)
-            }
-        }
-    }
     @Published var diameters : [DiameterModel]  = []
     
     init(selectedTree: TreeModel) {
         self.selectedTree = selectedTree
-
+        subscribeToDataStore()
+        getCaptures()
         self.isFetchingCaptures = true
-        
-        addSubscribers()
-        api.getCapturesForTree(idTree: self.selectedTree.id)
     }
     
-    func addSubscribers() {
-        api.$capturesForTrees
-            .sink { [weak self] (trees) in
-                self?.captures = trees[(self?.selectedTree.id)!] ?? []
-                self?.isFetchingCaptures = false
+    // MARK: DATA STORE functions
+    
+    func subscribeToDataStore() {
+        dataStore.$capturesForTrees
+            .sink { capturesForTrees in
+                self.captures = capturesForTrees[self.selectedTree.id] ?? []
             }
             .store(in: &cancellables)
         
-        api.$diametersForCaptures
-            .sink { [weak self] (captures) in
-                let id = (self?.selectedCapture.id)!
-                self?.diameters = captures[id] ?? []
-                print("[api.$diametersForCaptures] \(id) : \(self?.diameters)")
-                self?.isFetchingDiameters = false
+        dataStore.$diametersForCaptures
+            .sink { diametersForCaptures in
+                self.diameters = diametersForCaptures[self.selectedCapture.id] ?? []
             }
             .store(in: &cancellables)
+    }
+    
+    // MARK: API functions
+    
+    func getCaptures() {
+        self.isFetchingCaptures = true
+        api.getCapturesSubscription = api.getCapturesForTree(idTree: self.selectedTree.id)
+            .sink {  [weak self] (completion) in
+                switch completion {
+                case .failure(let error):
+                        self?.notificationManager.notification = Notification(
+                            message: "captures couldn't be retrieved\n(\(error.localizedDescription))",
+                            type: .error)
+                    break
+                case .finished:
+                    break
+                }
+                self?.isFetchingCaptures = false
+            } receiveValue: { [weak self] (captures) in
+                if let selectedTree = self?.selectedTree {
+                    self?.dataStore.capturesForTrees[selectedTree.id] = captures
+                }
+                self?.getDiameters()
+            }
+    }
+    
+    func getDiameters() {
+        self.isFetchingDiameters = true
+        api.getDiametersSubscription = api.getDiametersForCapture(idCapture: self.selectedCapture.id)
+            .sink {  [weak self] (completion) in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                            message: "diameters couldn't be retrieved\n(\(error.localizedDescription))",
+                            type: .error)
+                    break
+                case .finished:
+                    break
+                }
+                self?.isFetchingDiameters = false
+            } receiveValue: { [weak self] (diameters) in
+                if let treeCapture = self?.selectedCapture {
+                    self?.dataStore.diametersForCaptures[treeCapture.id] = diameters
+                }
+            }
     }
 }

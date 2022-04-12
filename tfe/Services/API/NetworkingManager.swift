@@ -27,7 +27,7 @@ class NetworkingManager {
             .receive(on: DispatchQueue.main)
             .tryMap({ try handleURLResponse(output: $0, url: url) })
             .eraseToAnyPublisher() // adds abstraction, now subscription is of type AnyPublisher<Data, Error>
-        print("[NetworkingManager][download] DONE : \(url)")
+//        print("[NetworkingManager][download] DONE : \(url)")
         return subscription
     }
     
@@ -47,12 +47,14 @@ class NetworkingManager {
     }
     
     static func handleCompletion(completion: Subscribers.Completion<Error>) {
-        print("[handleCompletion] started")
+//        print("[handleCompletion] started")
         switch completion {
             case .finished:
-                print("[handleCompletion] finished")
-            case .failure(let error):
-                print("[handleCompletion] error : \(error)")
+//                print("[handleCompletion] finished")
+                break
+        case .failure: // (let error):
+//                print("[handleCompletion] error : \(error)")
+                break
         }
     }
     
@@ -60,10 +62,10 @@ class NetworkingManager {
         guard
             let response = output.response as? HTTPURLResponse,
             response.statusCode >= 200 && response.statusCode < 300 else {
-                print("[handleURLResponse] KO : \(url)")
+//                print("[handleURLResponse] KO : \(url)")
                 throw URLError(.badServerResponse)
             }
-        print("[handleURLResponse] OK : \(url)")
+//        print("[handleURLResponse] OK : \(url)")
         return output.data
     }
 }

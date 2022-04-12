@@ -12,63 +12,98 @@ import Combine
 
 class StandListVM : ObservableObject {
     
+    // services
     private let api = ApiDataService()
+    private let dataStore = InMemoryDataStore()
+    private let notificationManager = NotificationManager.shared
     private var cancellables = Set<AnyCancellable>()
     
+    // UI
     @Published var isFetchingStands : Bool = false
-    @Published var error : String? = nil
     
+    // data
     @Published var stands : [StandModel] = []
     @Published var selectedStand : StandModel?
     
+    // MARK: init
+    
     init() {
-        addSubscribers()
-        api.getStands()
+        subscribeToDataStore()
+        getStands()
         self.isFetchingStands = true
     }
+    
+    // MARK: UI functions
     
     func reloadStandList() {
         withAnimation {
             self.isFetchingStands = true
-            api.getStands()
+            api.getStandsSubscription?.cancel()
+            getStands()
         }
     }
     
     func uploadPointClouds(filePaths: [URL]) {
         for path in filePaths {
             print("[StandListVM][uploadPointClouds] uploading file : \(path)")
-
-            api.uploadPointCloud(fileURL: path)
-                .receive(on: OperationQueue.main)
-                .sink(receiveCompletion: { completion in
-                    if case let .failure(error) = completion {
-                        print("ERROR : \(error)")
-                    }
-                }) { uploadResponse in
-                    switch uploadResponse {
-                    case let .progress(percentage):
-                        print("UPLOADING : \(percentage)")
-                    case let .response(data):
-                        print("RESPONDE : \(data)")
-                    }
-            }
         }
+    }
+    
+    // MARK: DATA STORE functions
+    
+    func subscribeToDataStore() {
+        dataStore.$allStands
+            .sink { stands in
+                self.stands = stands
+            }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: API functions
+    
+    func getStands() {
+        api.getStandsSubscription = api.getStands()
+            .eraseToAnyPublisher()
+            .sink(
+                receiveCompletion: { [weak self] (completion) in
+                    switch completion {
+                    case .failure(let error):
+                        self?.notificationManager.notification = Notification(
+                            message: "stands couldn't be retrieved\n(\(error.localizedDescription))",
+                            type: .error)
+                        break
+                    case .finished:
+                        break
+                    }
+                    self?.isFetchingStands = false
+                },
+                receiveValue: { [weak self] (stands) in
+                    self?.dataStore.allStands = stands
+                })
+    }
+    
+    func cancelStandDownload() {
+        api.getStandsSubscription?.cancel()
+        isFetchingStands = false
     }
     
     func deleteStand(offsets: IndexSet) {
         if let offset = offsets.first {
             let idStand = self.stands[offset].id
             api.deleteStand(idStand: idStand)
-            self.stands.remove(atOffsets: offsets)
+                .sink { [weak self] (completion) in
+                    switch completion {
+                    case .failure(let error):
+                        self?.notificationManager.notification = Notification(
+                            message: "Stand couldn't be deleted\n(\(error.localizedDescription)",
+                            type: .error)
+                        break
+                    case .finished:
+                        self?.stands.remove(atOffsets: offsets)
+                        break
+                    }
+                } receiveValue: { _ in }
+                .store(in: &cancellables)
         }
-    }
-    
-    func addSubscribers() {
-        api.$allStands
-            .sink { [weak self] (stands) in
-                self?.stands = stands
-                self?.isFetchingStands = false
-            }
-            .store(in: &cancellables)
     }
 }

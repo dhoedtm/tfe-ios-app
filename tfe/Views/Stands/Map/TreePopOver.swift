@@ -11,8 +11,23 @@ struct TreePopOver: View {
     
     @EnvironmentObject var vm : TreeDetailsVM
     @State private var showSheet : Bool = false
-    
+        
     var body: some View {
+        form
+            .sheet(isPresented: $showSheet, content: {
+                TreeCaptures()
+                    .environmentObject(
+                        TreeCapturesVM(selectedTree: TreeModel(treeFormState: vm.state))
+                    )
+            })
+            .padding()
+            .background(Color.white)
+            .cornerRadius(10)
+    }
+}
+
+extension TreePopOver {
+    private var form : some View {
         VStack {
             HStack {
                 HStack {
@@ -37,27 +52,26 @@ struct TreePopOver: View {
                     }
                 }
             }
-            .animation(.none)
             HStack {
                 Button("More", action: { showSheet.toggle() })
                     .buttonStyle(StandardButton())
-                Button(
-                    "Update",
-                    action: vm.updateTree
-                )
-                .buttonStyle(StandardButton())
-                .disabled(!vm.state.isUpdateButtonEnabled)
+                if vm.isUpdating {
+                    Button(
+                        "Cancel",
+                        action: vm.cancelUpdate    
+                    )
+                    .buttonStyle(StandardButton())
+                } else {
+                    Button(
+                        "Update",
+                        action: vm.updateTree
+                    )
+                    .buttonStyle(StandardButton())
+                    .disabled(!vm.state.isUpdateButtonEnabled)
+                }
             }
         }
-        .sheet(isPresented: $showSheet, content: {
-            TreeCaptures()
-                .environmentObject(
-                    TreeCapturesVM(selectedTree: TreeModel(treeFormState: vm.state))
-                )
-        })
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
+        .animation(.none)
     }
 }
 
@@ -65,6 +79,9 @@ struct TreeDetails_Previews: PreviewProvider {
     @State static var treeToEdit = MockData.trees.first!
     static var previews: some View {
         TreePopOver()
-            .environmentObject(MapVM(selectedStand: MockData.stands.first!))
+            .environmentObject(
+                TreeDetailsVM(initialState:
+                                TreeFormState.init(tree: MockData.trees.first!))
+            )
     }
 }

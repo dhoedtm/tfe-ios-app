@@ -17,13 +17,8 @@ struct StandListView: View {
     
     var body: some View {
         VStack {
-            if let error = vm.error {
-                Badge(type: .error, text: error)
-            }
             if(vm.isFetchingStands) {
-                Spacer()
-                ProgressView("Downloading stands...")
-                Spacer()
+                loader
             } else {
                 standList
                     .navigationTitle("Stands")
@@ -45,6 +40,27 @@ struct StandListView: View {
 }
 
 // MARK: EXTENSIONS
+
+extension StandListView {
+    private var loader : some View {
+        VStack(alignment: .center) {
+            Spacer()
+            ProgressView("Downloading stands...")
+            HStack {
+                Spacer()
+                Button(
+                    "Cancel",
+                    action: vm.cancelStandDownload
+                )
+                .buttonStyle(StandardButton())
+                .scaledToFit()
+                Spacer()
+            }
+            .padding()
+            Spacer()
+        }
+    }
+}
 
 extension StandListView {
     private var standList: some View {
@@ -85,7 +101,7 @@ extension StandListView {
                     showAlert = true
                 } else {
                     vm.uploadPointClouds(filePaths: filePaths)
-                    // TODO: only reset selection when upload is succesful
+                    // TODO: only reset selection when upload is successful
                     filePaths = [URL]()
                 }
             }, label: {
