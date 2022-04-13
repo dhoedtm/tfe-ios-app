@@ -12,15 +12,25 @@ class InMemoryDataStore : ObservableObject {
     private init() {}
     static let shared = InMemoryDataStore()
     
+    private let api = ApiDataService.shared
+    
     @Published var allStands: [StandModel] = []
     @Published var historiesForStands: Dictionary<Int, [StandHistoryModel]> = Dictionary<Int, [StandHistoryModel]>()
     @Published var treesForStands: Dictionary<Int, [TreeModel]> = Dictionary<Int, [TreeModel]>()
     @Published var capturesForTrees: Dictionary<Int, [TreeCaptureModel]> = Dictionary<Int, [TreeCaptureModel]>()
     @Published var diametersForCaptures: Dictionary<Int, [DiameterModel]> = Dictionary<Int, [DiameterModel]>()
     
-    func fetchAll() -> AnyPublisher<Bool, Never> {
-        return Just(true).eraseToAnyPublisher()
-    }
+//    func fetchAll() -> AnyPublisher<Bool, Error> {
+//        
+//    }
+    
+    // MARK: fetchers
+    
+//    func getStands() -> AnyPublisher<Bool, Error> {
+//        return api.getStands() ...
+//    }
+    
+    // MARK: modifiers
     
     func addStands(stands: [StandModel]) {
         allStands = stands.sorted()

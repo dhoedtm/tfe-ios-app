@@ -61,5 +61,7 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow access to your current location ? (needed to update map)</string>
 </dict>
 </plist>

@@ -11,6 +11,7 @@ import MapKit
 struct MapView: View {
     
     @EnvironmentObject private var vm : MapVM
+    @StateObject var locationManager = LocationManager.shared
     
     var body: some View {
         if (vm.isFetchingTrees) {
@@ -110,6 +111,9 @@ extension MapView {
         // could use "mapRect" to show zoom in on a specific area (e.g. stand bounding box)
         Map(
             coordinateRegion: $vm.selectedTreeRegion,
+            interactionModes: .all,
+            showsUserLocation: true,
+            userTrackingMode: .none,
             annotationItems: vm.trees,
             annotationContent: { tree in
                 MapAnnotation(coordinate: vm.getLocationFromCoordinates(tree: tree)) {

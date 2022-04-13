@@ -16,8 +16,8 @@ class AppVM : ObservableObject {
     var isLocalDataFetching = false
     
     init() {
-        isLocalDataFetching = true
-        dataStore
-            .fetchAll()
+//        isLocalDataFetching = true
+//        dataStore
+//            .fetchAll()
     }
 }

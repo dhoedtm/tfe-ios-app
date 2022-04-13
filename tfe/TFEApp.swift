@@ -35,10 +35,10 @@ struct TFEApp: App {
         WindowGroup {
             NavigationView {
                 if (appVM.isLocalDataFetching) {
+                    ProgressView("Fetching data...")
+                } else {
                     StandListView()
                         .environmentObject(StandListVM())
-                } else {
-                    ProgressView("Fetching data...")
                 }
             }
             .toast(
