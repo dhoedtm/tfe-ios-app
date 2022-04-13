@@ -9,17 +9,19 @@ import Foundation
 import MapKit
 import SwiftUI
 import Combine
+import Moya
 
 class StandListVM : ObservableObject {
     
     // services
-    private let api = ApiDataService()
-    private let dataStore = InMemoryDataStore()
+    private let api = ApiDataService.shared
+    private let dataStore = InMemoryDataStore.shared
     private let notificationManager = NotificationManager.shared
     private var cancellables = Set<AnyCancellable>()
     
     // UI
     @Published var isFetchingStands : Bool = false
+    @Published var cancellableUploads : [CancellableItem] = []
     
     // data
     @Published var stands : [StandModel] = []
@@ -40,12 +42,6 @@ class StandListVM : ObservableObject {
             self.isFetchingStands = true
             api.getStandsSubscription?.cancel()
             getStands()
-        }
-    }
-    
-    func uploadPointClouds(filePaths: [URL]) {
-        for path in filePaths {
-            print("[StandListVM][uploadPointClouds] uploading file : \(path)")
         }
     }
     
@@ -90,7 +86,7 @@ class StandListVM : ObservableObject {
     func deleteStand(offsets: IndexSet) {
         if let offset = offsets.first {
             let idStand = self.stands[offset].id
-            api.deleteStand(idStand: idStand)
+            api.deleteStandSubscription = api.deleteStand(idStand: idStand)
                 .sink { [weak self] (completion) in
                     switch completion {
                     case .failure(let error):
@@ -103,7 +99,36 @@ class StandListVM : ObservableObject {
                         break
                     }
                 } receiveValue: { _ in }
+        }
+    }
+    
+    func uploadPointClouds(filePaths: [URL]) {
+        for path in filePaths {
+            let subscription = api.uploadPointCloud(fileURL: path)
+                .sink(
+                    receiveCompletion: { [weak self] (completion) in
+                        switch completion {
+                        case .failure(let error):
+                            self?.notificationManager.notification = Notification(
+                                message: "stands couldn't be retrieved\n(\(error.localizedDescription))",
+                                type: .error)
+                            break
+                        case .finished:
+                            break
+                        }
+                        self?.isFetchingStands = false
+                    },
+                    receiveValue: { [weak self] (uploadResponse) in
+                        switch uploadResponse {
+                        case let .progress(percentage):
+                            print("progress : \(percentage)")
+                        case let .response(data):
+                            print("response OK [\(data?.count ?? 0)B]")
+                        }
+                    })
                 .store(in: &cancellables)
+            // TODO: make cancellable button list
+            
         }
     }
 }

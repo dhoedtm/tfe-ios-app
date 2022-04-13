@@ -26,16 +26,20 @@ struct TFEApp: App {
     
     // VMs can be replaced with mocks for testing purposes
     // TODO: consider using Swinject also for this kind of DI (not only services)
-    @StateObject private var standListVM = StandListVM()
     @StateObject private var notificationManager = NotificationManager.shared
+    @StateObject private var appVM = AppVM()
     
     var body: some Scene {
         // WindowGroup is used to hold potentially multiple windows that the user opens
         // throughout the use of the application
         WindowGroup {
             NavigationView {
-                StandListView()
-                    .environmentObject(standListVM)
+                if (appVM.isLocalDataFetching) {
+                    StandListView()
+                        .environmentObject(StandListVM())
+                } else {
+                    ProgressView("Fetching data...")
+                }
             }
             .toast(
                 message: notificationManager.notification?.message ?? "",

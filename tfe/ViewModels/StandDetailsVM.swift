@@ -12,8 +12,8 @@ import Combine
 final class StandDetailsVM: StateBindingViewModel<StandFormState> {
     
     // services
-    private let api = ApiDataService()
-    private let dataStore = InMemoryDataStore()
+    private let api = ApiDataService.shared
+    private let dataStore = InMemoryDataStore.shared
     private let notificationManager = NotificationManager.shared
     private var cancellables = Set<AnyCancellable>()
     

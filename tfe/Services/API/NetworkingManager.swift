@@ -68,4 +68,39 @@ class NetworkingManager {
 //        print("[handleURLResponse] OK : \(url)")
         return output.data
     }
+    
+//    MIME Multipart Media Encapsulation, Type: multipart/form-data, Boundary: "----WebKitFormBoundaryokd1wWWgC36ZxOIK"
+//        [Type: multipart/form-data]
+//        First boundary: ------WebKitFormBoundaryokd1wWWgC36ZxOIK\r\n
+//        Encapsulated multipart part:  (application/octet-stream)
+//            Content-Disposition: form-data; name="georeferenced"; filename="parcelle_test_precision_12_04_36.laz"\r\n
+//            Content-Type: application/octet-stream\r\n\r\n
+//            Data (19499823 bytes)
+//                Data: 4c415346000000000000000000000000000000000000000001026c69624c415300000000…
+//                [Length: 19499823]
+//        Last boundary: \r\n------WebKitFormBoundaryokd1wWWgC36ZxOIK--\r\n
+    static func createFormdataBodyData(data: Data, boundary: String, fileName: String) -> Data {
+        var fullData = Data()
+        
+        fullData.append(
+            "--\(boundary)\r\n".data(using: .utf8)!
+        )
+        fullData.append(
+            "Content-Disposition: form-data; name=\"georeferenced\"; filename=\"parcelle_test_precision_12_04_36.laz\"\r\n".data(using: .utf8)!
+        )
+        fullData.append(
+            "Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!
+        )
+        fullData.append(
+            data
+        )
+//        fullData.append(
+//            "\r\n".data(using: .utf8)!
+//        )
+        fullData.append(
+            "\r\n--\(boundary)--\r\n".data(using: .utf8)!
+        )
+        
+        return fullData
+    }
 }

@@ -10,8 +10,8 @@ import Foundation
 final class TreeDetailsVM : StateBindingViewModel<TreeFormState> {
     
     // services
-    let api : ApiDataService = ApiDataService()
-    let dataStore = InMemoryDataStore()
+    let api : ApiDataService = ApiDataService.shared
+    let dataStore = InMemoryDataStore.shared
     let notificationManager = NotificationManager.shared
     
     // ui

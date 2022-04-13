@@ -5,14 +5,15 @@
 //  Created by user on 09/02/2022.
 //
 
-// TODO: add siesta / alamofire support
-
 import Foundation
 import Combine
 
-class ApiDataService: NSObject {
+class ApiDataService {
     
-    static let baseURL : URL? = URL(string: "http://tfe-dhoedt-castel.info.ucl.ac.be/api")
+    private init() {}
+    static let shared = ApiDataService()
+    
+    private static let baseURL : URL? = URL(string: "http://tfe-dhoedt-castel.info.ucl.ac.be/api")
     
     // cancellables
     var getStandsSubscription: AnyCancellable?
@@ -26,13 +27,13 @@ class ApiDataService: NSObject {
     var deleteTreeSubscription: AnyCancellable?
     var deleteStandSubscription: AnyCancellable?
     
-    var uploadStandSubscription: AnyCancellable?
+    var uploadStandSubscriptions: Set<AnyCancellable>?
     
     func getStands() -> AnyPublisher<[StandModel], Error> {
         let resourceString = "stands"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         
         return NetworkingManager.download(url: url)
@@ -47,7 +48,7 @@ class ApiDataService: NSObject {
         let resourceString = "stands/\(idStand)/trees"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         
         return NetworkingManager.download(url: url)
@@ -62,7 +63,7 @@ class ApiDataService: NSObject {
         let resourceString = "trees/\(idTree)/tree_captures"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         
         return NetworkingManager.download(url: url)
@@ -77,7 +78,7 @@ class ApiDataService: NSObject {
         let resourceString = "stands/\(idStand)/histories"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         
         return NetworkingManager.download(url: url)
@@ -92,7 +93,7 @@ class ApiDataService: NSObject {
         let resourceString = "tree_captures/\(idCapture)/diameters"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         
         return NetworkingManager.download(url: url)
@@ -107,11 +108,11 @@ class ApiDataService: NSObject {
         let resourceString = "stands/\(stand.id)"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         guard let json = try? JSONEncoder().encode(stand) else {
             return Fail(error: ApiError.invalidRequest("JSON encoding error"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         
         return NetworkingManager.sendData(url: url, method: .PUT, data: json)
@@ -126,11 +127,11 @@ class ApiDataService: NSObject {
         let resourceString = "trees/\(tree.id)"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         guard let json = try? JSONEncoder().encode(tree) else {
             return Fail(error: ApiError.invalidRequest("JSON encoding error"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         
         return NetworkingManager.sendData(url: url, method: .PUT, data: json)
@@ -145,7 +146,7 @@ class ApiDataService: NSObject {
         let resourceString = "stands/\(idStand)"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         
         return NetworkingManager.sendData(url: url, method: .DELETE, data: nil)
@@ -162,7 +163,7 @@ class ApiDataService: NSObject {
         let resourceString = "trees/\(idTree)"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
-            .eraseToAnyPublisher()
+                .eraseToAnyPublisher()
         }
         return NetworkingManager.sendData(url: url, method: .DELETE, data: nil)
             .mapError { error -> Error in
@@ -173,9 +174,18 @@ class ApiDataService: NSObject {
             })
             .eraseToAnyPublisher()
     }
-
-    func uploadPointCloud(fileURL: URL) -> AnyPublisher<Bool, ApiError> {
-        return Fail(error: ApiError.invalidRequest("URL invalid"))
+    
+    func uploadPointCloud(fileURL: URL) -> AnyPublisher<UploadResponse, Error> {
+        let resourceString = "stands/pointcloud"
+        guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
+            return Fail(error: ApiError.invalidRequest("URL invalid"))
+                .eraseToAnyPublisher()
+        }
+        let subscription = FileUploader().upload(fileUrl: fileURL, apiUrl: url)
+        return subscription
+            .mapError { error -> Error in
+                ApiError.unexpectedError(error)
+            }
             .eraseToAnyPublisher()
     }
 }

@@ -32,6 +32,7 @@ struct StandListView: View {
                                     .foregroundColor(.green)
                             })
                     )
+                uploadList
             }
             Spacer()
             uploadStand
@@ -79,6 +80,21 @@ extension StandListView {
     
     func delete(at offsets: IndexSet) {
         vm.deleteStand(offsets: offsets)
+    }
+}
+
+extension StandListView {
+    private var uploadList : some View {
+        VStack {
+            ForEach(vm.cancellableUploads, id: \.self) { item in
+                Button(action: item.cancellable.cancel, label: {
+                    HStack {
+                        Image(systemName: "icloud.and.arrow.up")
+                        Text("cancel : \(item.label)")
+                    }
+                })
+            }
+        }
     }
 }
 

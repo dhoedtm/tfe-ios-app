@@ -13,8 +13,8 @@ import Combine
 class MapVM : ObservableObject {
 
     // services
-    private let api = ApiDataService()
-    private let dataStore = InMemoryDataStore()
+    private let api = ApiDataService.shared
+    private let dataStore = InMemoryDataStore.shared
     private let notificationManager = NotificationManager.shared
     private var cancellables: [AnyCancellable] = []
         
