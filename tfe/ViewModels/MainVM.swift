@@ -47,6 +47,7 @@ class MainVM : ObservableObject {
                 }
             } receiveValue: { [weak self] isOK in
                 print("[coreData.oneWayApiSync] sync status : \(isOK ? "OK" : "KO")")
+                self?.coreData.save()
                 self?.isSyncingWithApi = false
                 self?.wantsToSync = false
             }

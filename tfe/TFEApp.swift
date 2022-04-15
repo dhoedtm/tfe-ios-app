@@ -35,7 +35,7 @@ struct TFEApp: App {
             NavigationView {
                 MainView()
                     .environmentObject(MainVM())
-                    .environment(\.managedObjectContext, CoreDataManager.shared.context)
+//                    .environment(\.managedObjectContext, CoreDataManager.shared.context)
             }
             .toast(
                 message: notificationManager.notification?.message ?? "",

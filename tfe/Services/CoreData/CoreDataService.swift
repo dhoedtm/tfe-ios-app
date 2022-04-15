@@ -228,7 +228,12 @@ class CoreDataService: ObservableObject {
         let _ = updateOrCreateStandEntityFromModel(entity: entity, standModel: stand)
         save()
     }
-    func deleteStandById(id: Int32) {
+    func getStandEntityById(id: Int) -> StandEntity? {
+        return localStandEntities.first { entity in
+            entity.id == Int32(id)
+        }
+    }
+    func deleteStandById(id: Int) {
         guard let validEntity = getStandEntityById(id: id)
         else {
             print("[CoreDataVM][deleteStand] stand not found")
@@ -237,15 +242,10 @@ class CoreDataService: ObservableObject {
         manager.context.delete(validEntity)
         save()
     }
-    func getStandEntityById(id: Int32) -> StandEntity? {
-        return localStandEntities.first { entity in
-            entity.id == id
-        }
-    }
     
     // MARK: HISTORIES
     
-    func addHistoriesToStand(standId: Int32, histories: [StandHistoryModel]) {
+    func addHistoriesToStand(standId: Int, histories: [StandHistoryModel]) {
         guard let standEntity = getStandEntityById(id: standId)
         else {
             print("[CoreDataVM][addHistoriesToStand] stand not found")
@@ -253,7 +253,7 @@ class CoreDataService: ObservableObject {
         }
         for history in histories {
             let historyEntity  = StandHistoryEntity(context: manager.context)
-            mapStandHistoryModelToStandHistoryEntity(historyModel: history, entity: historyEntity)
+            let _ = mapStandHistoryModelToStandHistoryEntity(historyModel: history, entity: historyEntity)
             historyEntity.stand = standEntity
             standEntity.addToHistories(historyEntity)
         }
@@ -262,7 +262,7 @@ class CoreDataService: ObservableObject {
     
     // MARK: TREES
     
-    func addTreesToStand(standId: Int32, trees: [TreeModel]) {
+    func addTreesToStand(standId: Int, trees: [TreeModel]) {
         guard let standEntity = getStandEntityById(id: standId)
         else {
             print("[CoreDataVM][addTreesToStand] stand not found")
@@ -270,7 +270,7 @@ class CoreDataService: ObservableObject {
         }
         for tree in trees {
             let treeEntity  = TreeEntity(context: manager.context)
-            mapTreeModelToTreeEntity(treeModel: tree, entity: treeEntity)
+            let _ = mapTreeModelToTreeEntity(treeModel: tree, entity: treeEntity)
             standEntity.addToTrees(treeEntity)
             treeEntity.stand = standEntity
         }

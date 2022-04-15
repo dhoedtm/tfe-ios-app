@@ -47,7 +47,6 @@ extension MainView {
                 .padding(5)
                 .background(Color.green)
                 .accentColor(.white)
-                .overlay(vm.isSyncingWithApi ? Color.black.opacity(0.2) : Color.clear)
                 .cornerRadius(10)
                 
                 Button(action: { vm.wantsToSync = false }, label: {
@@ -63,8 +62,8 @@ extension MainView {
                 .accentColor(.white)
                 .overlay(vm.isSyncingWithApi ? Color.black.opacity(0.2) : Color.clear)
                 .cornerRadius(10)
+                .disabled(vm.isSyncingWithApi)
             }
-            .disabled(vm.isSyncingWithApi)
             Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .leading)

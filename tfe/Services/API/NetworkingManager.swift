@@ -18,7 +18,7 @@ class NetworkingManager {
     }
     
     static func download(url: URL) -> AnyPublisher<Data, Error> {
-//        print("[NetworkingManager][download] \(url)")
+        print("[NetworkingManager][download] \(url)")
         // Combine framework uses publishers and subscribers
         // publishers should run on background threads
         // dataTaskPublisher already takes care of that for us
@@ -32,7 +32,7 @@ class NetworkingManager {
     }
     
     static func sendData(url: URL, method: HTTPMethods, data: Data?) -> AnyPublisher<Data, Error> {
-//        print("[NetworkingManager][sendData][\(method.rawValue)] \(url)")
+        print("[NetworkingManager][sendData][\(method.rawValue)] \(url)")
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         if let data = data {
@@ -69,16 +69,6 @@ class NetworkingManager {
         return output.data
     }
     
-//    MIME Multipart Media Encapsulation, Type: multipart/form-data, Boundary: "----WebKitFormBoundaryokd1wWWgC36ZxOIK"
-//        [Type: multipart/form-data]
-//        First boundary: ------WebKitFormBoundaryokd1wWWgC36ZxOIK\r\n
-//        Encapsulated multipart part:  (application/octet-stream)
-//            Content-Disposition: form-data; name="georeferenced"; filename="parcelle_test_precision_12_04_36.laz"\r\n
-//            Content-Type: application/octet-stream\r\n\r\n
-//            Data (19499823 bytes)
-//                Data: 4c415346000000000000000000000000000000000000000001026c69624c415300000000…
-//                [Length: 19499823]
-//        Last boundary: \r\n------WebKitFormBoundaryokd1wWWgC36ZxOIK--\r\n
     static func createFormdataBodyData(data: Data, boundary: String, fileName: String) -> Data {
         var fullData = Data()
         

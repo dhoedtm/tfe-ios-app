@@ -27,7 +27,7 @@ class ApiDataService {
     var deleteTreeSubscription: AnyCancellable?
     var deleteStandSubscription: AnyCancellable?
     
-    var uploadStandSubscriptions: Set<AnyCancellable>?
+    @Published var uploadStandSubscriptions = Set<CancellableItem>()
     
     // TODO: add check for internet access and return error if not available
     
@@ -249,5 +249,23 @@ class ApiDataService {
                 ApiError.unexpectedError(error)
             }
             .eraseToAnyPublisher()
+    }
+    
+    func getCancellableUpload(id: String) -> CancellableItem? {
+        let itemFound = self.uploadStandSubscriptions.first { item in
+            return item.id == id
+        }
+        guard let item = itemFound else {
+            print("[cancelUploadStandSubscriptions] item not found")
+            return nil
+        }
+        return item
+    }
+    
+    func cancelUploadStandSubscriptions(id: String) {
+        if let item = self.getCancellableUpload(id: id) {
+            item.cancellable.cancel()
+            self.uploadStandSubscriptions.remove(item)
+        }
     }
 }

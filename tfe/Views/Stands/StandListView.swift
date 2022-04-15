@@ -10,14 +10,6 @@ import SwiftUI
 struct StandListView: View {
     
     @EnvironmentObject private var vm : StandListVM
-    @Environment(\.managedObjectContext) var managedObjectContext
-    
-    @FetchRequest(
-        entity: StandEntity.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \StandEntity.name, ascending: false)
-        ]
-    ) var stands: FetchedResults<StandEntity>
     
     @State var filePaths : [URL] = [URL]()
     @State var showAlert : Bool = false
@@ -25,30 +17,19 @@ struct StandListView: View {
     
     var body: some View {
         VStack {
-            if(vm.isFetchingStands) {
-                loader
-            } else {
-                standList
-                    .navigationTitle("Stands")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationBarItems(
-                        leading:
-                            Button(action: {
-                                vm.syncWithApi()
-                            }, label: {
-                                Image(systemName: "icloud.and.arrow.down")
-                                    .foregroundColor(.green)
-                            }),
-                        trailing:
-                            Button(action: {
-                                vm.reloadStandList()
-                            }, label: {
-                                Image(systemName: "arrow.clockwise")
-                                    .foregroundColor(.green)
-                            })
-                    )
-                uploadList
-            }
+            standList
+                .navigationTitle("Stands")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(
+                    leading:
+                        Button(action: {
+                            vm.syncWithApi()
+                        }, label: {
+                            Image(systemName: "icloud.and.arrow.down")
+                                .foregroundColor(.green)
+                        })
+                )
+            uploadList
             Spacer()
             uploadStand
         }
@@ -58,30 +39,9 @@ struct StandListView: View {
 // MARK: EXTENSIONS
 
 extension StandListView {
-    private var loader : some View {
-        VStack(alignment: .center) {
-            Spacer()
-            ProgressView("Downloading stands...")
-            HStack {
-                Spacer()
-                Button(
-                    "Cancel",
-                    action: vm.cancelStandDownload
-                )
-                .buttonStyle(StandardButton())
-                .scaledToFit()
-                Spacer()
-            }
-            .padding()
-            Spacer()
-        }
-    }
-}
-
-extension StandListView {
     private var standList: some View {
         List {
-            ForEach(stands, id: \.id) { stand in
+            ForEach(vm.stands, id: \.id) { stand in
                 NavigationLink(
                     destination: StandMasterView()
                         .environmentObject(StandMasterVM(selectedStand: stand))
@@ -101,13 +61,20 @@ extension StandListView {
 extension StandListView {
     private var uploadList : some View {
         VStack {
-            ForEach(vm.cancellableUploads, id: \.self) { item in
-                Button(action: item.cancellable.cancel, label: {
+            ForEach(vm.cancellableUploads, id: \.id) { item in
+                Button(action: { vm.cancelUpload(item: item) }, label: {
                     HStack {
-                        Image(systemName: "icloud.and.arrow.up")
-                        Text("cancel : \(item.label)")
+                        Image(systemName: "xmark")
+                        HStack {
+                            Text("Uploading :")
+                            Text(item.label)
+                                .lineLimit(1)
+                                .truncationMode(.head)
+                        }
                     }
                 })
+                .buttonStyle(StandardButton())
+                .padding(5)
             }
         }
     }

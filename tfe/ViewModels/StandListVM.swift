@@ -17,33 +17,34 @@ class StandListVM : ObservableObject {
     private let coreData = CoreDataService.shared
     private let notificationManager = NotificationManager.shared
     private var apiSyncCancellable : AnyCancellable?
-    private var cancellables = Set<AnyCancellable>()
+    private var cancellables : Set<AnyCancellable> = Set<AnyCancellable>()
     
     // UI
-    @Published var isFetchingStands : Bool = false
     @Published var isSyncingWithApi : Bool = false
     @Published var cancellableUploads : [CancellableItem] = []
     
     // data
-    @Published var stands : [StandModel] = []
+    @Published var stands : [StandEntity] = []
     @Published var selectedStand : StandModel?
     
     // MARK: init
     
     init() {
+        getStands()
+        subscribeToApiUploadCancellables()
     }
     
     // MARK: UI functions
     
-    func reloadStandList() {
-//        withAnimation {
-//            self.isFetchingStands = true
-//            api.getStandsSubscription?.cancel()
-//            getStands()
-//        }
-    }
-    
     // MARK: API functions
+    
+    func subscribeToApiUploadCancellables() {
+        self.api.$uploadStandSubscriptions
+            .sink { cancellableUploads in
+                self.cancellableUploads = Array(cancellableUploads)
+            }
+            .store(in: &cancellables)
+    }
         
     func syncWithApi() {
         self.isSyncingWithApi = true
@@ -63,7 +64,9 @@ class StandListVM : ObservableObject {
                 }
             } receiveValue: { [weak self] isOK in
                 print("[coreData.oneWayApiSync] sync status : \(isOK ? "OK" : "KO")")
-                self?.isSyncingWithApi = true
+                self?.coreData.save()
+                self?.getStands()
+                self?.isSyncingWithApi = false
             }
     }
     
@@ -73,34 +76,14 @@ class StandListVM : ObservableObject {
     }
     
     func getStands() {
-//        api.getStandsSubscription = api.getStands()
-//            .eraseToAnyPublisher()
-//            .sink(
-//                receiveCompletion: { [weak self] (completion) in
-//                    switch completion {
-//                    case .failure(let error):
-//                        self?.notificationManager.notification = Notification(
-//                            message: "stands couldn't be retrieved\n(\(error.localizedDescription))",
-//                            type: .error)
-//                        break
-//                    case .finished:
-//                        break
-//                    }
-//                    self?.isFetchingStands = false
-//                },
-//                receiveValue: { [weak self] (stands) in
-//                })
-    }
-    
-    func cancelStandDownload() {
-        api.getStandsSubscription?.cancel()
-        isFetchingStands = false
+        self.coreData.fetchLocalStands()
+        self.stands = self.coreData.localStandEntities
     }
     
     func deleteStand(offsets: IndexSet) {
         if let offset = offsets.first {
             let idStand = self.stands[offset].id
-            api.deleteStandSubscription = api.deleteStand(idStand: idStand)
+            api.deleteStandSubscription = api.deleteStand(idStand: Int(idStand))
                 .sink { [weak self] (completion) in
                     switch completion {
                     case .failure(let error):
@@ -110,6 +93,7 @@ class StandListVM : ObservableObject {
                         break
                     case .finished:
                         self?.stands.remove(atOffsets: offsets)
+                        self?.coreData.deleteStandById(id: Int(idStand))
                         break
                     }
                 } receiveValue: { _ in }
@@ -118,31 +102,50 @@ class StandListVM : ObservableObject {
     
     func uploadPointClouds(filePaths: [URL]) {
         for path in filePaths {
-            let subscription = api.uploadPointCloud(fileURL: path)
-                .sink(
-                    receiveCompletion: { [weak self] (completion) in
-                        switch completion {
-                        case .failure(let error):
-                            self?.notificationManager.notification = Notification(
-                                message: "stands couldn't be retrieved\n(\(error.localizedDescription))",
-                                type: .error)
-                            break
-                        case .finished:
-                            break
-                        }
-                        self?.isFetchingStands = false
-                    },
-                    receiveValue: { [weak self] (uploadResponse) in
-                        switch uploadResponse {
-                        case let .progress(percentage):
-                            print("progress : \(percentage)")
-                        case let .response(data):
-                            print("response OK [\(data?.count ?? 0)B]")
-                        }
-                    })
-                .store(in: &cancellables)
-            // TODO: make cancellable button list
-            
+            if (self.api.getCancellableUpload(id: path.absoluteString) != nil) {
+                notificationManager.notification = Notification(
+                    message: "already uploading file \(path.lastPathComponent)",
+                    type: .warning
+                )
+            } else {
+                self.uploadPointCloud(filePath: path)
+            }
         }
+    }
+    
+    func uploadPointCloud(filePath: URL) {
+        let subscription = api.uploadPointCloud(fileURL: filePath)
+            .sink(
+                receiveCompletion: { [weak self] (completion) in
+                    switch completion {
+                    case .failure(let error):
+                        self?.notificationManager.notification = Notification(
+                            message: "stands couldn't be retrieved\n(\(error.localizedDescription))",
+                            type: .error)
+                        break
+                    case .finished:
+                        break
+                    }
+                },
+                receiveValue: { uploadResponse in
+                    switch uploadResponse {
+                    case let .progress(percentage):
+                        print("progress : \(percentage)")
+                    case let .response(data):
+                        print("response OK [\(data?.count ?? 0)B]")
+                    }
+                })
+        
+        self.api.uploadStandSubscriptions.insert(
+            CancellableItem(
+                id: filePath.absoluteString,
+                cancellable: subscription,
+                label: filePath.lastPathComponent
+            )
+        )
+    }
+    
+    func cancelUpload(item: CancellableItem) {
+        self.api.cancelUploadStandSubscriptions(id: item.id)
     }
 }
