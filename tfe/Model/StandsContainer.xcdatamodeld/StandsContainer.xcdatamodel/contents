@@ -32,6 +32,7 @@
         <attribute name="convexAreaHectare" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="convexAreaMeter" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="idStand" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="meanDbh" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="meanDistance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -56,14 +57,16 @@
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="treeDescription" optional="YES" attributeType="String"/>
+        <attribute name="x" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="y" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="captures" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TreeCaptureEntity" inverseName="tree" inverseEntity="TreeCaptureEntity"/>
         <relationship name="stand" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="StandEntity" inverseName="trees" inverseEntity="StandEntity"/>
     </entity>
     <elements>
         <element name="DiameterEntity" positionX="-656.5399780273438" positionY="242.0355834960938" width="128" height="118"/>
         <element name="StandEntity" positionX="-327.6122436523438" positionY="-16.64254760742188" width="128" height="254"/>
-        <element name="StandHistoryEntity" positionX="-492.491943359375" positionY="-42.25245666503906" width="128" height="239"/>
+        <element name="StandHistoryEntity" positionX="-492.491943359375" positionY="-42.25245666503906" width="128" height="254"/>
         <element name="TreeCaptureEntity" positionX="-490.8781738281251" positionY="243.4884948730468" width="128" height="148"/>
-        <element name="TreeEntity" positionX="-300.9556884765626" positionY="290.9153137207031" width="128" height="149"/>
+        <element name="TreeEntity" positionX="-300.9556884765626" positionY="290.9153137207031" width="128" height="179"/>
     </elements>
 </model>

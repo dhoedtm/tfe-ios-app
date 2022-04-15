@@ -10,6 +10,14 @@ import SwiftUI
 struct StandListView: View {
     
     @EnvironmentObject private var vm : StandListVM
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
+    @FetchRequest(
+        entity: StandEntity.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \StandEntity.name, ascending: false)
+        ]
+    ) var stands: FetchedResults<StandEntity>
     
     @State var filePaths : [URL] = [URL]()
     @State var showAlert : Bool = false
@@ -24,6 +32,13 @@ struct StandListView: View {
                     .navigationTitle("Stands")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarItems(
+                        leading:
+                            Button(action: {
+                                vm.syncWithApi()
+                            }, label: {
+                                Image(systemName: "icloud.and.arrow.down")
+                                    .foregroundColor(.green)
+                            }),
                         trailing:
                             Button(action: {
                                 vm.reloadStandList()
@@ -66,12 +81,12 @@ extension StandListView {
 extension StandListView {
     private var standList: some View {
         List {
-            ForEach(vm.stands, id: \.id) { stand in
+            ForEach(stands, id: \.id) { stand in
                 NavigationLink(
-                    destination: MasterView()
-                        .environmentObject(MasterVM(selectedStand: stand))
+                    destination: StandMasterView()
+                        .environmentObject(StandMasterVM(selectedStand: stand))
                 ) {
-                    Text(stand.name)
+                    Text(stand.name ?? "")
                 }
             }
             .onDelete(perform: delete)

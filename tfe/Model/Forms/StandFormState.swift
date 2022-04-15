@@ -44,6 +44,22 @@ extension StandFormState {
         description = String(stand.description ?? "")
     }
     
+    init(standEntity: StandEntity) {
+        id = String(standEntity.id)
+        name = standEntity.name ?? ""
+        treeCount = String(standEntity.treeCount)
+        basalArea = String(standEntity.basalArea)
+        convexAreaMeter = String(standEntity.convexAreaMeter)
+        convexAreaHectare = String(standEntity.convexAreaHectare)
+        concaveAreaMeter = String(standEntity.concaveAreaMeter)
+        concaveAreaHectare = String(standEntity.concaveAreaHectare)
+        treeDensity = String(standEntity.treeDensity)
+        meanDbh = String(standEntity.meanDbh)
+        meanDistance = String(standEntity.meanDistance)
+        capturedAt = standEntity.capturedAt ?? ""
+        description = standEntity.standDescription ?? ""
+    }
+    
     // used by Equatable
     static func ==(lhs: StandFormState, rhs: StandFormState) -> Bool {
         return lhs.id == rhs.id

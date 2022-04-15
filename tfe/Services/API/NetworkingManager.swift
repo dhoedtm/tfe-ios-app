@@ -18,7 +18,7 @@ class NetworkingManager {
     }
     
     static func download(url: URL) -> AnyPublisher<Data, Error> {
-        print("[NetworkingManager][download] STARTED : \(url)")
+//        print("[NetworkingManager][download] \(url)")
         // Combine framework uses publishers and subscribers
         // publishers should run on background threads
         // dataTaskPublisher already takes care of that for us
@@ -32,7 +32,7 @@ class NetworkingManager {
     }
     
     static func sendData(url: URL, method: HTTPMethods, data: Data?) -> AnyPublisher<Data, Error> {
-        print("[NetworkingManager][sendData] \(url) \(method.rawValue)")
+//        print("[NetworkingManager][sendData][\(method.rawValue)] \(url)")
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         if let data = data {

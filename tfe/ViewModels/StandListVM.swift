@@ -9,18 +9,19 @@ import Foundation
 import MapKit
 import SwiftUI
 import Combine
-import Moya
 
 class StandListVM : ObservableObject {
     
     // services
     private let api = ApiDataService.shared
-    private let dataStore = InMemoryDataStore.shared
+    private let coreData = CoreDataService.shared
     private let notificationManager = NotificationManager.shared
+    private var apiSyncCancellable : AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
     
     // UI
     @Published var isFetchingStands : Bool = false
+    @Published var isSyncingWithApi : Bool = false
     @Published var cancellableUploads : [CancellableItem] = []
     
     // data
@@ -30,52 +31,65 @@ class StandListVM : ObservableObject {
     // MARK: init
     
     init() {
-        subscribeToDataStore()
-        getStands()
-        self.isFetchingStands = true
     }
     
     // MARK: UI functions
     
     func reloadStandList() {
-        withAnimation {
-            self.isFetchingStands = true
-            api.getStandsSubscription?.cancel()
-            getStands()
-        }
-    }
-    
-    // MARK: DATA STORE functions
-    
-    func subscribeToDataStore() {
-        dataStore.$allStands
-            .sink { stands in
-                self.stands = stands
-            }
-            .store(in: &cancellables)
+//        withAnimation {
+//            self.isFetchingStands = true
+//            api.getStandsSubscription?.cancel()
+//            getStands()
+//        }
     }
     
     // MARK: API functions
+        
+    func syncWithApi() {
+        self.isSyncingWithApi = true
+        self.apiSyncCancellable = coreData.oneWayApiSync()
+            .sink { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                        message: "An error occurred while fetching the data\n\(error)",
+                        type: .error)
+                    break
+                case .finished:
+                    self?.notificationManager.notification = Notification(
+                        message: "Sync was successful",
+                        type: .success)
+                    break
+                }
+            } receiveValue: { [weak self] isOK in
+                print("[coreData.oneWayApiSync] sync status : \(isOK ? "OK" : "KO")")
+                self?.isSyncingWithApi = true
+            }
+    }
+    
+    func cancelSync() {
+        self.apiSyncCancellable?.cancel()
+        self.isSyncingWithApi = false
+    }
     
     func getStands() {
-        api.getStandsSubscription = api.getStands()
-            .eraseToAnyPublisher()
-            .sink(
-                receiveCompletion: { [weak self] (completion) in
-                    switch completion {
-                    case .failure(let error):
-                        self?.notificationManager.notification = Notification(
-                            message: "stands couldn't be retrieved\n(\(error.localizedDescription))",
-                            type: .error)
-                        break
-                    case .finished:
-                        break
-                    }
-                    self?.isFetchingStands = false
-                },
-                receiveValue: { [weak self] (stands) in
-                    self?.dataStore.allStands = stands
-                })
+//        api.getStandsSubscription = api.getStands()
+//            .eraseToAnyPublisher()
+//            .sink(
+//                receiveCompletion: { [weak self] (completion) in
+//                    switch completion {
+//                    case .failure(let error):
+//                        self?.notificationManager.notification = Notification(
+//                            message: "stands couldn't be retrieved\n(\(error.localizedDescription))",
+//                            type: .error)
+//                        break
+//                    case .finished:
+//                        break
+//                    }
+//                    self?.isFetchingStands = false
+//                },
+//                receiveValue: { [weak self] (stands) in
+//                })
     }
     
     func cancelStandDownload() {

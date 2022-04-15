@@ -11,12 +11,12 @@
 		A81C896527F1FA9C00F5E0D0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A81C896427F1FA9C00F5E0D0 /* Preview Assets.xcassets */; };
 		A81C898927F1FAF100F5E0D0 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C896E27F1FAF100F5E0D0 /* DocumentPicker.swift */; };
 		A81C898A27F1FAF100F5E0D0 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897027F1FAF100F5E0D0 /* ButtonStyles.swift */; };
-		A81C898B27F1FAF100F5E0D0 /* MasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897327F1FAF100F5E0D0 /* MasterView.swift */; };
+		A81C898B27F1FAF100F5E0D0 /* StandMasterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897327F1FAF100F5E0D0 /* StandMasterView.swift */; };
 		A81C898C27F1FAF100F5E0D0 /* StandDetailsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897527F1FAF100F5E0D0 /* StandDetailsVM.swift */; };
 		A81C898D27F1FAF100F5E0D0 /* StandDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897627F1FAF100F5E0D0 /* StandDetailsView.swift */; };
-		A81C898E27F1FAF100F5E0D0 /* MasterVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897727F1FAF100F5E0D0 /* MasterVM.swift */; };
-		A81C898F27F1FAF100F5E0D0 /* MapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897927F1FAF100F5E0D0 /* MapVM.swift */; };
-		A81C899027F1FAF100F5E0D0 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897A27F1FAF100F5E0D0 /* MapView.swift */; };
+		A81C898E27F1FAF100F5E0D0 /* StandMasterVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897727F1FAF100F5E0D0 /* StandMasterVM.swift */; };
+		A81C898F27F1FAF100F5E0D0 /* StandMapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897927F1FAF100F5E0D0 /* StandMapVM.swift */; };
+		A81C899027F1FAF100F5E0D0 /* StandMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897A27F1FAF100F5E0D0 /* StandMapView.swift */; };
 		A81C899127F1FAF100F5E0D0 /* StandListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897C27F1FAF100F5E0D0 /* StandListView.swift */; };
 		A81C899227F1FAF100F5E0D0 /* StandListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897D27F1FAF100F5E0D0 /* StandListVM.swift */; };
 		A81C899327F1FAF100F5E0D0 /* TFEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C897E27F1FAF100F5E0D0 /* TFEApp.swift */; };
@@ -29,8 +29,11 @@
 		A84C556C27F20A9D004FD202 /* LabelledTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84C556B27F20A9D004FD202 /* LabelledTextField.swift */; };
 		A8A838672806BE3E00612AE5 /* FileUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A838662806BE3E00612AE5 /* FileUploader.swift */; };
 		A8A83869280710AC00612AE5 /* CancellableItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A83868280710AC00612AE5 /* CancellableItem.swift */; };
-		A8A8386B2807196A00612AE5 /* AppVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A8386A2807196A00612AE5 /* AppVM.swift */; };
+		A8A8386B2807196A00612AE5 /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A8386A2807196A00612AE5 /* MainVM.swift */; };
 		A8A8386D280752A200612AE5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A8386C280752A200612AE5 /* LocationManager.swift */; };
+		A8A8386F280828CE00612AE5 /* DataStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A8386E280828CE00612AE5 /* DataStoreError.swift */; };
+		A8A838712809D4F700612AE5 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A838702809D4F700612AE5 /* Reachability.swift */; };
+		A8A838732809D82B00612AE5 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A838722809D82B00612AE5 /* MainView.swift */; };
 		A8A93C3E27F866D40031729E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A93C3D27F866D40031729E /* Extensions.swift */; };
 		A8A93C4027F86A5D0031729E /* DiameterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A93C3F27F86A5D0031729E /* DiameterModel.swift */; };
 		A8A93C4227FA1C2D0031729E /* StandHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A93C4127FA1C2D0031729E /* StandHistoryModel.swift */; };
@@ -72,12 +75,12 @@
 		A81C896627F1FA9C00F5E0D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A81C896E27F1FAF100F5E0D0 /* DocumentPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
 		A81C897027F1FAF100F5E0D0 /* ButtonStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
-		A81C897327F1FAF100F5E0D0 /* MasterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterView.swift; sourceTree = "<group>"; };
+		A81C897327F1FAF100F5E0D0 /* StandMasterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandMasterView.swift; sourceTree = "<group>"; };
 		A81C897527F1FAF100F5E0D0 /* StandDetailsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandDetailsVM.swift; sourceTree = "<group>"; };
 		A81C897627F1FAF100F5E0D0 /* StandDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandDetailsView.swift; sourceTree = "<group>"; };
-		A81C897727F1FAF100F5E0D0 /* MasterVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterVM.swift; sourceTree = "<group>"; };
-		A81C897927F1FAF100F5E0D0 /* MapVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapVM.swift; sourceTree = "<group>"; };
-		A81C897A27F1FAF100F5E0D0 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		A81C897727F1FAF100F5E0D0 /* StandMasterVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandMasterVM.swift; sourceTree = "<group>"; };
+		A81C897927F1FAF100F5E0D0 /* StandMapVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandMapVM.swift; sourceTree = "<group>"; };
+		A81C897A27F1FAF100F5E0D0 /* StandMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandMapView.swift; sourceTree = "<group>"; };
 		A81C897C27F1FAF100F5E0D0 /* StandListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandListView.swift; sourceTree = "<group>"; };
 		A81C897D27F1FAF100F5E0D0 /* StandListVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandListVM.swift; sourceTree = "<group>"; };
 		A81C897E27F1FAF100F5E0D0 /* TFEApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TFEApp.swift; sourceTree = "<group>"; };
@@ -90,8 +93,11 @@
 		A84C556B27F20A9D004FD202 /* LabelledTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelledTextField.swift; sourceTree = "<group>"; };
 		A8A838662806BE3E00612AE5 /* FileUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploader.swift; sourceTree = "<group>"; };
 		A8A83868280710AC00612AE5 /* CancellableItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellableItem.swift; sourceTree = "<group>"; };
-		A8A8386A2807196A00612AE5 /* AppVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVM.swift; sourceTree = "<group>"; };
+		A8A8386A2807196A00612AE5 /* MainVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVM.swift; sourceTree = "<group>"; };
 		A8A8386C280752A200612AE5 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		A8A8386E280828CE00612AE5 /* DataStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStoreError.swift; sourceTree = "<group>"; };
+		A8A838702809D4F700612AE5 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		A8A838722809D82B00612AE5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		A8A93C3D27F866D40031729E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A8A93C3F27F86A5D0031729E /* DiameterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiameterModel.swift; sourceTree = "<group>"; };
 		A8A93C4127FA1C2D0031729E /* StandHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandHistoryModel.swift; sourceTree = "<group>"; };
@@ -168,7 +174,6 @@
 				A81C896627F1FA9C00F5E0D0 /* Info.plist */,
 				A81C896327F1FA9C00F5E0D0 /* Preview Content */,
 				A81C897E27F1FAF100F5E0D0 /* TFEApp.swift */,
-				A8A8386A2807196A00612AE5 /* AppVM.swift */,
 			);
 			path = tfe;
 			sourceTree = "<group>";
@@ -186,6 +191,7 @@
 			children = (
 				A81C896D27F1FAF100F5E0D0 /* shared */,
 				A81C896F27F1FAF100F5E0D0 /* styles */,
+				A8A838722809D82B00612AE5 /* MainView.swift */,
 				A81C897127F1FAF100F5E0D0 /* Stands */,
 			);
 			path = Views;
@@ -213,7 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				A81C897C27F1FAF100F5E0D0 /* StandListView.swift */,
-				A81C897327F1FAF100F5E0D0 /* MasterView.swift */,
+				A81C897327F1FAF100F5E0D0 /* StandMasterView.swift */,
 				A81C897827F1FAF100F5E0D0 /* Map */,
 				A81C897627F1FAF100F5E0D0 /* StandDetailsView.swift */,
 			);
@@ -223,7 +229,7 @@
 		A81C897827F1FAF100F5E0D0 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				A81C897A27F1FAF100F5E0D0 /* MapView.swift */,
+				A81C897A27F1FAF100F5E0D0 /* StandMapView.swift */,
 				A8DE5ABE27F3117800C376F3 /* TreePopOver.swift */,
 				A8DE5AC227F31CF300C376F3 /* TreeCaptures.swift */,
 			);
@@ -247,6 +253,7 @@
 				A8AA304A27FF555000E2731E /* InMemoryDataStore.swift */,
 				A8AA3051280082E600E2731E /* NotificationManager.swift */,
 				A8A8386C280752A200612AE5 /* LocationManager.swift */,
+				A8A838702809D4F700612AE5 /* Reachability.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -264,12 +271,20 @@
 		A81C898627F1FAF100F5E0D0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A8A838742809FCC900612AE5 /* CoreData */,
 				A8DE5ACC27F3321400C376F3 /* Forms */,
 				A8DE5ACB27F3320D00C376F3 /* API */,
 				A8AA304C27FF57C800E2731E /* Views */,
 				A8A93C4527FC89180031729E /* StandsContainer.xcdatamodeld */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		A8A838742809FCC900612AE5 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		A8A93C4A27FCDBFE0031729E /* CoreData */ = {
@@ -296,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				A8AA304327FF366100E2731E /* ApiError.swift */,
+				A8A8386E280828CE00612AE5 /* DataStoreError.swift */,
 			);
 			path = Errors;
 			sourceTree = "<group>";
@@ -323,9 +339,10 @@
 			isa = PBXGroup;
 			children = (
 				A8DE5AC527F330D400C376F3 /* shared */,
+				A8A8386A2807196A00612AE5 /* MainVM.swift */,
 				A81C897D27F1FAF100F5E0D0 /* StandListVM.swift */,
-				A81C897727F1FAF100F5E0D0 /* MasterVM.swift */,
-				A81C897927F1FAF100F5E0D0 /* MapVM.swift */,
+				A81C897727F1FAF100F5E0D0 /* StandMasterVM.swift */,
+				A81C897927F1FAF100F5E0D0 /* StandMapVM.swift */,
 				A81C897527F1FAF100F5E0D0 /* StandDetailsVM.swift */,
 				A8DE5AF127F6356D00C376F3 /* TreeDetailsVM.swift */,
 				A8DE5AC927F3314E00C376F3 /* TreeCapturesVM.swift */,
@@ -469,9 +486,9 @@
 			files = (
 				A8DE5AD227F45B2900C376F3 /* LabelledTextEditor.swift in Sources */,
 				A8A93C4427FC883D0031729E /* CoreDataService.swift in Sources */,
-				A81C899027F1FAF100F5E0D0 /* MapView.swift in Sources */,
+				A81C899027F1FAF100F5E0D0 /* StandMapView.swift in Sources */,
 				A8DE5AE027F4F1DC00C376F3 /* Double.swift in Sources */,
-				A81C898F27F1FAF100F5E0D0 /* MapVM.swift in Sources */,
+				A81C898F27F1FAF100F5E0D0 /* StandMapVM.swift in Sources */,
 				A8A93C4727FC89180031729E /* StandsContainer.xcdatamodeld in Sources */,
 				A81C899627F1FAF100F5E0D0 /* DateParser.swift in Sources */,
 				A8A838672806BE3E00612AE5 /* FileUploader.swift in Sources */,
@@ -481,8 +498,10 @@
 				A8DE5ACE27F3323B00C376F3 /* TreeFormState.swift in Sources */,
 				A8DE5AC327F31CF300C376F3 /* TreeCaptures.swift in Sources */,
 				A8A93C4927FCA4F60031729E /* CoreDataManager.swift in Sources */,
+				A8A838712809D4F700612AE5 /* Reachability.swift in Sources */,
 				A8AA303D27FDE6D400E2731E /* Badge.swift in Sources */,
 				A81C898927F1FAF100F5E0D0 /* DocumentPicker.swift in Sources */,
+				A8A8386F280828CE00612AE5 /* DataStoreError.swift in Sources */,
 				A81C898C27F1FAF100F5E0D0 /* StandDetailsVM.swift in Sources */,
 				A81C899827F1FAF100F5E0D0 /* StandModel.swift in Sources */,
 				A8DE5ADD27F4D72000C376F3 /* LineChart.swift in Sources */,
@@ -502,13 +521,14 @@
 				A8DE5AE227F4FDF000C376F3 /* BarChart.swift in Sources */,
 				A8DE5AC727F330E100C376F3 /* StateBindingViewModel.swift in Sources */,
 				A81C899927F1FAF100F5E0D0 /* TreeModel.swift in Sources */,
-				A81C898B27F1FAF100F5E0D0 /* MasterView.swift in Sources */,
+				A81C898B27F1FAF100F5E0D0 /* StandMasterView.swift in Sources */,
 				A81C899527F1FAF100F5E0D0 /* NetworkingManager.swift in Sources */,
 				A8DE5AD927F49C3900C376F3 /* StandFormState.swift in Sources */,
 				A81C899227F1FAF100F5E0D0 /* StandListVM.swift in Sources */,
 				A8DE5ADB27F4B07600C376F3 /* TreeCaptureModel.swift in Sources */,
 				A81C898A27F1FAF100F5E0D0 /* ButtonStyles.swift in Sources */,
-				A8A8386B2807196A00612AE5 /* AppVM.swift in Sources */,
+				A8A838732809D82B00612AE5 /* MainView.swift in Sources */,
+				A8A8386B2807196A00612AE5 /* MainVM.swift in Sources */,
 				A8DE5AF027F630AB00C376F3 /* TreeCaptureFormState.swift in Sources */,
 				A8DE5AD027F35CEF00C376F3 /* LabelledText.swift in Sources */,
 				A8AA304427FF366100E2731E /* ApiError.swift in Sources */,
@@ -519,7 +539,7 @@
 				A8DE5AF227F6356D00C376F3 /* TreeDetailsVM.swift in Sources */,
 				A81C899327F1FAF100F5E0D0 /* TFEApp.swift in Sources */,
 				A8AA305027FFA8D000E2731E /* Toast.swift in Sources */,
-				A81C898E27F1FAF100F5E0D0 /* MasterVM.swift in Sources */,
+				A81C898E27F1FAF100F5E0D0 /* StandMasterVM.swift in Sources */,
 				A8AA304827FF42A300E2731E /* Publisher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

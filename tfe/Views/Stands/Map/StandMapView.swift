@@ -8,9 +8,9 @@
 import SwiftUI
 import MapKit
 
-struct MapView: View {
+struct StandMapView: View {
     
-    @EnvironmentObject private var vm : MapVM
+    @EnvironmentObject private var vm : StandMapVM
     @StateObject var locationManager = LocationManager.shared
     
     var body: some View {
@@ -53,7 +53,7 @@ struct MapView: View {
 // in order to keep the main body of the view relatively short and thus readable,
 // it is good practice to create extensions of that view
 
-extension MapView {
+extension StandMapView {
     private var loader : some View {
         VStack(alignment: .center) {
             Spacer()
@@ -73,7 +73,7 @@ extension MapView {
         }
     }
 }
-extension MapView {
+extension StandMapView {
     private var backButton : some View {
         BackButton() {
             HStack {
@@ -91,7 +91,7 @@ extension MapView {
     }
 }
 
-extension MapView {
+extension StandMapView {
     private var refreshButton: some View {
         Button(action: {
             vm.reloadTrees()
@@ -105,7 +105,7 @@ extension MapView {
     }
 }
 
-extension MapView {
+extension StandMapView {
     private var treeMap: some View {
         // "coordinateRegion" : for a set of long/lat points
         // could use "mapRect" to show zoom in on a specific area (e.g. stand bounding box)
@@ -147,7 +147,7 @@ extension MapView {
     }
 }
 
-extension MapView {
+extension StandMapView {
     private var header: some View {
         HStack {
             BackButton() {
@@ -158,7 +158,7 @@ extension MapView {
             }
             Spacer()
             if let stand = vm.selectedStand {
-                Text(DateParser.formatDateString(dateString: stand.capturedAt) ?? "error displaying date")
+                Text(DateParser.formatDateString(dateString: stand.capturedAt ?? "") ?? "error displaying date")
                     .font(.title2)
                     .fontWeight(.black)
             } else {
@@ -182,7 +182,7 @@ extension MapView {
     }
 }
 
-extension MapView {
+extension StandMapView {
     // TODO: this is a hack since changing the vm.selectedTree property alone
     // wouldn't refresh the PopOver view and VM
     private var treePopOver: some View {
@@ -196,9 +196,9 @@ extension MapView {
 
 // MARK: PREVIEW
 
-struct StandMapView_Previews: PreviewProvider {
-    static var previews: some View {
-        MapView()
-            .environmentObject(MapVM(selectedStand: MockData.stands.first!))
-    }
-}
+//struct StandMapView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StandMapView()
+//            .environmentObject(StandMapVM(selectedStand: MockData.stands.first!))
+//    }
+//}

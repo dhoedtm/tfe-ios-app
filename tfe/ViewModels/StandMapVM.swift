@@ -10,7 +10,7 @@ import MapKit
 import SwiftUI
 import Combine
 
-class MapVM : ObservableObject {
+class StandMapVM : ObservableObject {
 
     // services
     private let api = ApiDataService.shared
@@ -22,7 +22,7 @@ class MapVM : ObservableObject {
     @Published var isFetchingTrees : Bool = false
     
     // data
-    @Published var selectedStand : StandModel
+    @Published var selectedStand : StandEntity
     @Published var trees : [TreeModel] = [] {
         didSet {
             if let tree = self.trees.first {
@@ -42,7 +42,7 @@ class MapVM : ObservableObject {
     
     // MARK: init
     
-    init(selectedStand: StandModel) {
+    init(selectedStand: StandEntity) {
         self.selectedStand = selectedStand
         self.isFetchingTrees = true
         self.subscribeToDataStore()
@@ -79,35 +79,34 @@ class MapVM : ObservableObject {
     // MARK: DATA STORE functions
     
     func subscribeToDataStore() {
-        dataStore.$treesForStands
-            .sink { [weak self] (treesForStands) in
-                let idStand = self?.selectedStand.id ?? 0
-                self?.trees = treesForStands[idStand] ?? []
-            }
-            .store(in: &cancellables)
+//        dataStore.$treesForStands
+//            .sink { [weak self] (treesForStands) in
+//                let idStand = self?.selectedStand.id ?? 0
+//                self?.trees = treesForStands[idStand] ?? []
+//            }
+//            .store(in: &cancellables)
     }
     
     // MARK: API functions
     
     func getTrees() {
-        api.getTreesSubscription = api.getTreesForStand(idStand: self.selectedStand.id)
-            .sink {  [weak self] (completion) in
-                switch completion {
-                case .failure(let error):
-                    self?.notificationManager.notification = Notification(
-                        message: "Trees couldn't be retrieved\n(\(error.localizedDescription))",
-                        type: .error
-                    )
-                    break
-                case .finished:
-                    break
-                }
-                self?.isFetchingTrees = false
-            } receiveValue: { [weak self] (trees) in
-                let id = self?.selectedStand.id ?? 0
-                self?.dataStore.treesForStands[id] = trees
-            }
-        
+//        api.getTreesSubscription = api.getTreesForStand(idStand: self.selectedStand.id)
+//            .sink {  [weak self] (completion) in
+//                switch completion {
+//                case .failure(let error):
+//                    self?.notificationManager.notification = Notification(
+//                        message: "Trees couldn't be retrieved\n(\(error.localizedDescription))",
+//                        type: .error
+//                    )
+//                    break
+//                case .finished:
+//                    break
+//                }
+//                self?.isFetchingTrees = false
+//            } receiveValue: { [weak self] (trees) in
+//                let id = self?.selectedStand.id ?? 0
+//                self?.dataStore.treesForStands[id] = trees
+//            }
     }
     
     func cancelTreesDownload() {

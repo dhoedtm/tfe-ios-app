@@ -8,11 +8,11 @@
 import Foundation
 import SwiftUI
 
-class MasterVM : ObservableObject {
+class StandMasterVM : ObservableObject {
     
-    @Published var selectedStand : StandModel
+    @Published var selectedStand : StandEntity
     
-    init(selectedStand: StandModel) {
+    init(selectedStand: StandEntity) {
         self.selectedStand = selectedStand
     }
 }

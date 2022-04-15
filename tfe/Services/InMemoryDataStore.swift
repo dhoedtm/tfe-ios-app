@@ -21,14 +21,24 @@ class InMemoryDataStore : ObservableObject {
     @Published var diametersForCaptures: Dictionary<Int, [DiameterModel]> = Dictionary<Int, [DiameterModel]>()
     
 //    func fetchAll() -> AnyPublisher<Bool, Error> {
-//        
+//        // fetches stands from API
+//        // upon reception of the stands, fetches trees for each stand
+//        // upon reception of the stands, fetches histories for each stand
+//        // upon reception of the trees, fetches captures for each tree
+//        // upon reception of the captures, fetches diameters for each tree
+//
 //    }
     
     // MARK: fetchers
     
-//    func getStands() -> AnyPublisher<Bool, Error> {
-//        return api.getStands() ...
-//    }
+    func getStands() -> AnyPublisher<Bool, Error> {
+        return api.getStands()
+            .flatMap { stands -> AnyPublisher<Bool, Error> in
+                self.allStands = stands.sorted()
+                return CurrentValueSubject<Bool, Error>(true).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
     
     // MARK: modifiers
     

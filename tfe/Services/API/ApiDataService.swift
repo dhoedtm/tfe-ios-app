@@ -29,6 +29,10 @@ class ApiDataService {
     
     var uploadStandSubscriptions: Set<AnyCancellable>?
     
+    // TODO: add check for internet access and return error if not available
+    
+    // MARK: bulk api calls
+    
     func getStands() -> AnyPublisher<[StandModel], Error> {
         let resourceString = "stands"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
@@ -43,6 +47,64 @@ class ApiDataService {
             .decode(type: [StandModel].self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
     }
+    func getTrees() -> AnyPublisher<[TreeModel], Error> {
+        let resourceString = "trees"
+        guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
+            return Fail(error: ApiError.invalidRequest("URL invalid"))
+                .eraseToAnyPublisher()
+        }
+        
+        return NetworkingManager.download(url: url)
+            .mapError { error -> Error in
+                return ApiError.unexpectedError(error)
+            }
+            .decode(type: [TreeModel].self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
+    }
+    func getHistories() -> AnyPublisher<[StandHistoryModel], Error> {
+        let resourceString = "stand_histories"
+        guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
+            return Fail(error: ApiError.invalidRequest("URL invalid"))
+                .eraseToAnyPublisher()
+        }
+        
+        return NetworkingManager.download(url: url)
+            .mapError { error -> Error in
+                return ApiError.unexpectedError(error)
+            }
+            .decode(type: [StandHistoryModel].self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
+    }
+    func getCaptures() -> AnyPublisher<[TreeCaptureModel], Error> {
+        let resourceString = "tree_captures"
+        guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
+            return Fail(error: ApiError.invalidRequest("URL invalid"))
+                .eraseToAnyPublisher()
+        }
+        
+        return NetworkingManager.download(url: url)
+            .mapError { error -> Error in
+                return ApiError.unexpectedError(error)
+            }
+            .decode(type: [TreeCaptureModel].self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
+    }
+    func getDiameters() -> AnyPublisher<[DiameterModel], Error> {
+        let resourceString = "diameters"
+        guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
+            return Fail(error: ApiError.invalidRequest("URL invalid"))
+                .eraseToAnyPublisher()
+        }
+        
+        return NetworkingManager.download(url: url)
+            .mapError { error -> Error in
+                return ApiError.unexpectedError(error)
+            }
+            .decode(type: [DiameterModel].self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: targeted resource api calls
     
     func getTreesForStand(idStand: Int) -> AnyPublisher<[TreeModel], Error> {
         let resourceString = "stands/\(idStand)/trees"
