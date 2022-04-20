@@ -41,7 +41,7 @@ struct StandMapView: View {
         }
     }
     
-    func createPopOver(tree: TreeModel) -> some View {
+    func createPopOver(tree: TreeEntity) -> some View {
         let treeState = TreeFormState.init(tree: tree)
         let vm = TreeDetailsVM(initialState: treeState)
         return TreePopOver().environmentObject(vm)
@@ -94,7 +94,7 @@ extension StandMapView {
 extension StandMapView {
     private var refreshButton: some View {
         Button(action: {
-            vm.reloadTrees()
+            vm.updateTrees()
         }, label: {
             Image(systemName: "arrow.clockwise")
                 .scaledToFit()
@@ -166,7 +166,7 @@ extension StandMapView {
             }
             Spacer()
             Button(action: {
-                vm.reloadTrees()
+                vm.updateTrees()
             }, label: {
                 Image(systemName: "arrow.clockwise")
                     .scaledToFit()

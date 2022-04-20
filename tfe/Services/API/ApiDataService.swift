@@ -29,8 +29,6 @@ class ApiDataService {
     
     @Published var uploadStandSubscriptions = Set<CancellableItem>()
     
-    // TODO: add check for internet access and return error if not available
-    
     // MARK: bulk api calls
     
     func getStands() -> AnyPublisher<[StandModel], Error> {
@@ -221,7 +219,7 @@ class ApiDataService {
             .eraseToAnyPublisher()
     }
     
-    func deleteTree(idTree: Int) -> AnyPublisher<Bool, Error> {
+    func deleteTree(idTree: Int32) -> AnyPublisher<Bool, Error> {
         let resourceString = "trees/\(idTree)"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
@@ -251,19 +249,17 @@ class ApiDataService {
             .eraseToAnyPublisher()
     }
     
+    // MARK: cancellables management
+    
     func getCancellableUpload(id: String) -> CancellableItem? {
         let itemFound = self.uploadStandSubscriptions.first { item in
             return item.id == id
         }
-        guard let item = itemFound else {
-            print("[cancelUploadStandSubscriptions] item not found")
-            return nil
-        }
-        return item
+        return itemFound
     }
     
-    func cancelUploadStandSubscriptions(id: String) {
-        if let item = self.getCancellableUpload(id: id) {
+    func cancelUploadStandSubscriptions(cancellableItemId: String) {
+        if let item = self.getCancellableUpload(id: cancellableItemId) {
             item.cancellable.cancel()
             self.uploadStandSubscriptions.remove(item)
         }

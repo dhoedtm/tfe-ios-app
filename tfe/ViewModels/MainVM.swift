@@ -13,7 +13,8 @@ class MainVM : ObservableObject {
     // services
     let notificationManager = NotificationManager.shared
     let coreData = CoreDataService.shared
-    var apiSyncCancellable : AnyCancellable?
+    private var apiSyncCancellable : AnyCancellable?
+    private var cancellables : Set<AnyCancellable> = Set<AnyCancellable>()
     
     // ui
     @Published var isSyncingWithApi = false
@@ -28,6 +29,16 @@ class MainVM : ObservableObject {
             )
         }
     }
+
+    // MARK: CORE DATA functions
+    
+//    private func subscribeToCoreDataResources() {
+//        self.coreData.$localStandEntities
+//            .sink { standEntities in
+//                self.stands = standEntities
+//            }
+//            .store(in: &cancellables)
+//    }
     
     func sync() {
         self.isSyncingWithApi = true
@@ -38,6 +49,8 @@ class MainVM : ObservableObject {
                     self?.notificationManager.notification = Notification(
                         message: "An error occurred while fetching the data\n\(error)",
                         type: .error)
+                    self?.isSyncingWithApi = false
+                    self?.wantsToSync = false
                     break
                 case .finished:
                     self?.notificationManager.notification = Notification(
@@ -46,8 +59,7 @@ class MainVM : ObservableObject {
                     break
                 }
             } receiveValue: { [weak self] isOK in
-                print("[coreData.oneWayApiSync] sync status : \(isOK ? "OK" : "KO")")
-                self?.coreData.save()
+                self?.coreData.saveAndRefresh()
                 self?.isSyncingWithApi = false
                 self?.wantsToSync = false
             }

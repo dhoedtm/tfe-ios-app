@@ -31,6 +31,17 @@ extension TreeFormState {
         deletedAt = tree.deletedAt ?? ""
     }
     
+    init(tree: TreeEntity) {
+        id = String(tree.id)
+        idStand = String(tree.idStand)
+        latitude = String(tree.latitude)
+        longitude = String(tree.longitude)
+        x = String(tree.x)
+        y = String(tree.y)
+        description = String(tree.treeDescription ?? "")
+        deletedAt = tree.deletedAt ?? ""
+    }
+    
     // used by Equatable
     static func ==(lhs: TreeFormState, rhs: TreeFormState) -> Bool {
         return lhs.id == rhs.id

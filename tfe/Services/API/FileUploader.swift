@@ -4,6 +4,7 @@
 //
 //  Created by martin d'hoedt on 4/13/22.
 //
+// thanks to : https://stackoverflow.com/a/59875552
 
 import Foundation
 import Combine
@@ -21,9 +22,10 @@ class FileUploader: NSObject {
     }()
     
     func upload(fileUrl: URL, apiUrl: URL) -> AnyPublisher<UploadResponse, Error> {
-        
-        let subject: PassthroughSubject<UploadResponse, Error> = .init()
-        let session = URLSession.shared
+        if (!Reachability.isConnectedToNetwork()) {
+            return Fail(error: ApiError.noInternetAccess(""))
+                .eraseToAnyPublisher()
+        }
         
         let pointcloudData : Data?
         do {
@@ -34,8 +36,8 @@ class FileUploader: NSObject {
         }
         
         let boundary = UUID().uuidString
-        let fileName = fileUrl.deletingPathExtension().lastPathComponent
-        let bodyData = NetworkingManager.createFormdataBodyData(data: pointcloudData!, boundary:boundary, fileName:fileName)
+        let fileName = fileUrl.lastPathComponent
+        let bodyData = FileUploader.createFormdataBodyData(data: pointcloudData!, boundary:boundary, fileName:fileName)
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "POST"
@@ -51,25 +53,28 @@ class FileUploader: NSObject {
             "application/json",
             forHTTPHeaderField: "Accept")
         request.setValue(
-            "\(bodyData)",
+            "\(bodyData.count)",
             forHTTPHeaderField: "Content-Length"
         )
+        
+        let subject: PassthroughSubject<UploadResponse, Error> = .init()
+        let session = URLSession.shared
         
         let task: URLSessionUploadTask = session.uploadTask(
             with: request,
             from: bodyData
         ) { data, response, error in
             if let error = error {
-                print("error : \(error)")
+                print("[URLSessionUploadTask] Error : \(error)")
                 subject.send(completion: .failure(error))
                 return
             }
             if (response as? HTTPURLResponse)?.statusCode == 200 {
-                print("response : \(response?.description ?? "")")
+                print("[URLSessionUploadTask] Response : \(response?.description ?? "")")
                 subject.send(.response(data: data))
                 return
             }
-            print("task continues")
+            print("[URLSessionUploadTask] task continues")
             subject.send(.response(data: nil))
         }
         task.resume()
@@ -77,9 +82,32 @@ class FileUploader: NSObject {
         return progress
             .filter{ $0.id == task.taskIdentifier }
             .setFailureType(to: Error.self)
+            .print("upload task :")
             .map { .progress(percentage: $0.progress) }
             .merge(with: subject)
             .eraseToAnyPublisher()
+    }
+    
+    static func createFormdataBodyData(data: Data, boundary: String, fileName: String) -> Data {
+        var fullData = Data()
+        
+        fullData.append(
+            "--\(boundary)\r\n".data(using: .utf8)!
+        )
+        fullData.append(
+            "Content-Disposition: form-data; name=\"georeferenced\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!
+        )
+        fullData.append(
+            "Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!
+        )
+        fullData.append(
+            data
+        )
+        fullData.append(
+            "\r\n--\(boundary)--\r\n".data(using: .utf8)!
+        )
+        
+        return fullData
     }
 }
 

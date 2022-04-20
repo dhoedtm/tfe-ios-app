@@ -54,7 +54,6 @@ class InMemoryDataStore : ObservableObject {
     
     func deleteTree(tree: TreeModel) {
         if treesForStands[tree.idStand] == nil {
-            print("[InMemoryDataStore][deleteTree] stand not found")
             return
         }
         treesForStands[tree.idStand]!.removeAll { treeStored in

@@ -30,7 +30,7 @@ extension Notification {
         case .warning:
             return Image(systemName: "exclamationmark.triangle")
         case .error:
-            return Image(systemName: "square.and.arrow.up.trianglebadge.exclamationmark")
+            return Image(systemName: "xmark.octagon")
         }
     }
     

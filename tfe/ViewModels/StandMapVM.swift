@@ -14,25 +14,30 @@ class StandMapVM : ObservableObject {
 
     // services
     private let api = ApiDataService.shared
-    private let dataStore = InMemoryDataStore.shared
+    private let coreData = CoreDataService.shared
     private let notificationManager = NotificationManager.shared
-    private var cancellables: [AnyCancellable] = []
+    private var cancellables : Set<AnyCancellable> = Set<AnyCancellable>()
         
     // UI
     @Published var isFetchingTrees : Bool = false
     
     // data
     @Published var selectedStand : StandEntity
-    @Published var trees : [TreeModel] = [] {
+    private let treeSortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+    @Published var trees : [TreeEntity] = [] {
         didSet {
             if let tree = self.trees.first {
-                self.selectedTree = tree
+                // auto select 1st tree the 1st time the map is populated
+                if (self.selectedTree == nil) {
+                    self.selectedTree = tree
+                }
             }
         }
     }
-    @Published var selectedTree : TreeModel? {
+    @Published var selectedTree : TreeEntity? {
         didSet {
-            if let tree = selectedTree {
+            print("SELECTED : \(self.selectedTree)")
+            if let tree = self.selectedTree {
                 updateMapRegion(tree: tree)
             }
         }
@@ -44,25 +49,15 @@ class StandMapVM : ObservableObject {
     
     init(selectedStand: StandEntity) {
         self.selectedStand = selectedStand
-        self.isFetchingTrees = true
-        self.subscribeToDataStore()
-        getTrees()
+        self.subscribeToCoreDataResources()
     }
     
     // MARK: UI functions
     
-    func reloadTrees() {
-        withAnimation {
-            self.isFetchingTrees = true
-            api.getTreesSubscription?.cancel()
-            getTrees()
-        }
-    }
-    
-    func getLocationFromCoordinates(tree:TreeModel) -> CLLocationCoordinate2D {
+    func getLocationFromCoordinates(tree: TreeEntity) -> CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: tree.latitude, longitude: tree.longitude)
     }
-    private func getRegionFromCoordinates(tree:TreeModel) -> MKCoordinateRegion {
+    private func getRegionFromCoordinates(tree: TreeEntity) -> MKCoordinateRegion {
         // TODO: retrieve lat, long from stand to center map in the middle of the stand
         return MKCoordinateRegion(
             center: getLocationFromCoordinates(tree: tree), // center of the map, focus
@@ -70,51 +65,60 @@ class StandMapVM : ObservableObject {
         )
     }
     
-    func updateMapRegion(tree: TreeModel) {
+    func updateMapRegion(tree: TreeEntity) {
         withAnimation(.easeInOut) {
             selectedTreeRegion = getRegionFromCoordinates(tree: tree)
         }
     }
     
-    // MARK: DATA STORE functions
+    // MARK: CORE DATA functions
     
-    func subscribeToDataStore() {
-//        dataStore.$treesForStands
-//            .sink { [weak self] (treesForStands) in
-//                let idStand = self?.selectedStand.id ?? 0
-//                self?.trees = treesForStands[idStand] ?? []
-//            }
-//            .store(in: &cancellables)
+    func subscribeToCoreDataResources() {
+        self.coreData.$localStandEntities
+            .sink { [weak self] (standEntities) in
+                self?.refreshTreesForStand(standEntities: standEntities)
+            }
+            .store(in: &cancellables)
     }
     
-    // MARK: API functions
+    func refreshTreesForStand(standEntities: [StandEntity]) {
+        for standEntity in standEntities {
+            if (standEntity.id == self.selectedStand.id) {
+                self.selectedStand = standEntity
+                var sortedTrees : [TreeEntity] = standEntity.trees?.allObjects as! [TreeEntity]
+                sortedTrees.sort(by: { tree1, tree2 in
+                    tree1.id < tree2.id
+                })
+                self.trees = sortedTrees
+            }
+        }
+    }
     
-    func getTrees() {
-//        api.getTreesSubscription = api.getTreesForStand(idStand: self.selectedStand.id)
-//            .sink {  [weak self] (completion) in
-//                switch completion {
-//                case .failure(let error):
-//                    self?.notificationManager.notification = Notification(
-//                        message: "Trees couldn't be retrieved\n(\(error.localizedDescription))",
-//                        type: .error
-//                    )
-//                    break
-//                case .finished:
-//                    break
-//                }
-//                self?.isFetchingTrees = false
-//            } receiveValue: { [weak self] (trees) in
-//                let id = self?.selectedStand.id ?? 0
-//                self?.dataStore.treesForStands[id] = trees
-//            }
+    func updateTrees() {
+        self.coreData.updateTreesForStand(id: self.selectedStand.id)
+                .sink { [weak self] (completion) in
+                    switch completion {
+                    case .failure(let error):
+                        self?.notificationManager.notification = Notification(
+                            message: "Trees couldn't be updated\n(\(error.localizedDescription)",
+                            type: .error)
+                        break
+                    case .finished:
+                        self?.refreshTreesForStand(standEntities: (self?.coreData.localStandEntities)!)
+                        self?.notificationManager.notification = Notification(
+                            message: "Trees inside this stand are now up to date",
+                            type: .success)
+                        break
+                    }
+                } receiveValue: { _ in }
+                .store(in: &cancellables)
     }
     
     func cancelTreesDownload() {
-        self.isFetchingTrees = false
-        api.getTreesSubscription?.cancel()
+        
     }
     
-    func deleteTree(idTree: Int) {
+    func deleteTree(idTree: Int32) {
         api.deleteTree(idTree: idTree)
             .sink { [weak self] (completion) in
                 switch completion {
@@ -124,17 +128,7 @@ class StandMapVM : ObservableObject {
                         type: .error)
                     break
                 case .finished:
-                    // TODO: only updates VM data, not dataStore
-                    self?.trees.removeAll { tree in
-                        return tree.id == idTree
-                    }
-                    // TODO: fix UI refresh based on dataStore selecting seemingly "random" trees
-                    // the array could be sorted before selecting the tree in the didSet handler
-                    // the dataStore could keep the array sorted at all times
-                    // should probably used another data structure to make such manipulations more efficient
-//                    if let tree = self?.selectedTree {
-//                        self?.dataStore.deleteTree(tree: tree)
-//                    }
+                    self?.coreData.deleteTreeById(id: idTree)
                     break
                 }
             } receiveValue: { _ in }
