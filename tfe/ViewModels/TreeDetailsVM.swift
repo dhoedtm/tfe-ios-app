@@ -7,73 +7,53 @@
 
 import Foundation
 
-final class TreeDetailsVM : StateBindingViewModel<TreeFormState> {
+final class TreeDetailsVM : ObservableObject {
     
     // services
     let api : ApiDataService = ApiDataService.shared
-    let dataStore = InMemoryDataStore.shared
+    let coreData = CoreDataService.shared
     let notificationManager = NotificationManager.shared
     
     // ui
     @Published var isUpdating = false
+    @Published var isUpdateButtonEnabled = false
+    @Published var descriptionError : String? = nil
     
-    // MARK: API functions
+    // data
+    // TODO: find a way to auto-bind coredata entity properties to textfields
+    var selectedTree : TreeEntity
+    @Published var id : String = ""
+    @Published var idStand : String = ""
+    @Published var latitude : String = ""
+    @Published var longitude : String = ""
+    @Published var x : String = ""
+    @Published var y : String = ""
+    @Published var description : String = ""
+    @Published var deletedAt : String = ""
     
-    func updateTree() {
-        let treeModel = TreeModel(treeFormState: self.state)
+    init(selectedTree: TreeEntity) {
+        self.selectedTree = selectedTree
+    }
+    
+    // MARK: HANDLES FORM
+
+    private func isValidDescription() -> Bool {
+        return !self.description.isEmpty
+    }
+    
+    private func isValidForm() -> Bool {
+        return isValidDescription()
+    }
+    
+    // MARK: CORE DATA functions
+    
+    func updateTreeDetails() {
         self.isUpdating = true
-        api.updateTreeSubscription = api.updateTreeDetails(tree: treeModel)
-            .sink {  [weak self] (completion) in
-                switch completion {
-                case .failure(let error):
-                    self?.notificationManager.notification = Notification(
-                        message: "Tree couldn't be updated\n(\(error.localizedDescription))",
-                        type: .error)
-                    break
-                case .finished:
-                    self?.notificationManager.notification = Notification(
-                        message: "Tree updated",
-                        type: .success)
-                    break
-                }
-                self?.isUpdating = false
-            } receiveValue: { [weak self] (updatedTree) in
-                let idStand = Int(self?.state.idStand ?? "") ?? 0
-                let idTree = Int(self?.state.id ?? "") ?? 0
-                if var treesForStands = self?.dataStore.treesForStands[idStand] {
-                    treesForStands[idTree] = updatedTree
-                }
-            }
+        print("TODO : [TreeDetailsVM][updateTreeDetails]")
     }
     
     func cancelUpdate() {
         api.updateTreeSubscription?.cancel()
         self.isUpdating = false
-    }
-    
-    // MARK: HANDLES FORM
-
-    // MARK: - StateBindingViewModel Conformance
-    
-    override func stateWillChangeValue<Value>(
-        _ keyPath: PartialKeyPath<TreeFormState>,
-        newValue: Value
-    ) -> Bool where Value: Equatable {
-        return true
-    }
-
-    override func onStateChange(_ keyPath: PartialKeyPath<TreeFormState>) {
-        // state.descriptionError = isValidDescription() ? nil : "description cannot be empty"
-        state.isUpdateButtonEnabled = isValidForm()
-    }
-
-    // MARK: - Private Methods
-    
-    private func isValidDescription() -> Bool {
-        return !state.description.isEmpty
-    }
-    
-    private func isValidForm() -> Bool {
-        return isValidDescription()
     }
 }

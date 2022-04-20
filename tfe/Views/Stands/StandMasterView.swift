@@ -25,7 +25,7 @@ struct StandMasterView: View {
                 }
             StandDetailsView()
                 .environmentObject(
-                    StandDetailsVM(initialState: StandFormState(standEntity: vm.selectedStand))
+                    StandDetailsVM(selectedStand: vm.selectedStand)
                 )
                 .tabItem {
                     VStack {

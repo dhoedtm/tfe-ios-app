@@ -60,7 +60,7 @@ extension TreeCaptures {
             LabelledText("longitude", String(vm.selectedTree.longitude))
             LabelledText("latitude", String(vm.selectedTree.latitude))
         }
-        if let description = vm.selectedTree.description {
+        if let description = vm.selectedTree.treeDescription {
             LabelledText("description", !description.isEmpty ? description : "/")
         }
     }
@@ -68,15 +68,15 @@ extension TreeCaptures {
 
 private struct CapturePicker : View {
     
-    let captures : [TreeCaptureModel]
-    @Binding var selectedCapture: TreeCaptureModel
+    let captures : [TreeCaptureEntity]
+    @Binding var selectedCapture: TreeCaptureEntity?
     
     var body: some View {
         VStack {
             Picker("Capture date", selection: $selectedCapture) {
                 ForEach(captures, id: \.self) { capture in
                     Text(
-                        DateParser.formatDateString(dateString: capture.capturedAt) ?? "date error"
+                        DateParser.formatDateString(dateString: capture.capturedAt ?? "") ?? "date error"
                     )
                     .font(.body)
                     .tag(capture)
@@ -89,8 +89,8 @@ private struct CapturePicker : View {
 }
 
 private struct CaptureProperties : View {
-    var capture : TreeCaptureModel
-    var diameters : [DiameterModel]
+    var capture : TreeCaptureEntity?
+    var diameters : [DiameterEntity]
     var isFetchingDiameter : Bool
 
     private let columns = [
@@ -100,11 +100,13 @@ private struct CaptureProperties : View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                LabelledText("dbh", capture.dbh.roundedToString(toPlaces: 3))
-                LabelledText("basal area", capture.basalArea.roundedToString(toPlaces: 3))
+            if let capture = capture {
+                HStack {
+                    LabelledText("dbh", capture.dbh.roundedToString(toPlaces: 3))
+                    LabelledText("basal area", capture.basalArea.roundedToString(toPlaces: 3))
+                }
+                .padding(.bottom)
             }
-            .padding(.bottom)
             
             if (isFetchingDiameter) {
                 ProgressView("Downloading diameters...")
@@ -137,11 +139,11 @@ private struct CaptureProperties : View {
     }
 }
 
-struct TreeForm_Previews: PreviewProvider {
-    static var previews: some View {
-        TreeCaptures()
-            .environmentObject(
-                TreeCapturesVM(selectedTree: MockData.trees.first!)
-            )
-    }
-}
+//struct TreeForm_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TreeCaptures()
+//            .environmentObject(
+//                TreeCapturesVM(selectedTree: MockData.trees.first!)
+//            )
+//    }
+//}

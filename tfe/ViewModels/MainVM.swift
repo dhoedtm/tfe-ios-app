@@ -59,7 +59,8 @@ class MainVM : ObservableObject {
                     break
                 }
             } receiveValue: { [weak self] isOK in
-                self?.coreData.saveAndRefresh()
+                self?.coreData.save()
+                self?.coreData.refreshLocalStands()
                 self?.isSyncingWithApi = false
                 self?.wantsToSync = false
             }

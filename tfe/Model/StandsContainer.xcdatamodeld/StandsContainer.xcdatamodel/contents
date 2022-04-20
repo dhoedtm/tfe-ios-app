@@ -63,7 +63,7 @@
         <relationship name="stand" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="StandEntity" inverseName="trees" inverseEntity="StandEntity"/>
     </entity>
     <elements>
-        <element name="DiameterEntity" positionX="-656.5399780273438" positionY="242.0355834960938" width="128" height="118"/>
+        <element name="DiameterEntity" positionX="-656.5399780273438" positionY="242.0355834960938" width="128" height="104"/>
         <element name="StandEntity" positionX="-327.6122436523438" positionY="-16.64254760742188" width="128" height="254"/>
         <element name="StandHistoryEntity" positionX="-492.491943359375" positionY="-42.25245666503906" width="128" height="254"/>
         <element name="TreeCaptureEntity" positionX="-490.8781738281251" positionY="243.4884948730468" width="128" height="148"/>

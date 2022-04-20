@@ -25,6 +25,14 @@ extension TreeCaptureFormState {
         basalArea = String(tree.basalArea)
     }
     
+    init(treeEntity: TreeCaptureEntity) {
+        id = String(treeEntity.id)
+        idTree = String(treeEntity.idTree)
+        dbh = String(treeEntity.dbh)
+        capturedAt = treeEntity.capturedAt ?? ""
+        basalArea = String(treeEntity.basalArea)
+    }
+    
     // used by Equatable
     static func ==(lhs: TreeCaptureFormState, rhs: TreeCaptureFormState) -> Bool {
         return lhs.id == rhs.id

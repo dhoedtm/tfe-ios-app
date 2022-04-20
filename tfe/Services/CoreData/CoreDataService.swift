@@ -23,21 +23,23 @@ class CoreDataService: ObservableObject {
     private var subscriptions : Set<AnyCancellable> = []
     
     @Published var localStandEntities: [StandEntity] = []
+    @Published var localHistoriesEntitiesForSelectedStand: [StandHistoryEntity] = []
+    @Published var localTreeEntitiesForSelectedStand: [TreeEntity] = []
+    @Published var localTreeCapturesForSelectedTree: [TreeCaptureEntity] = []
+    @Published var localDiametersForSelectedCapture: [DiameterEntity] = []
     
     static let shared = CoreDataService()
     private init() {
-        self.fetchLocalStands()
+        self.refreshLocalStands()
     }
     
-    func saveAndRefresh() {
+    func save() {
         manager.save()
-        fetchLocalStands()
     }
     
     // MARK: API SYNC
     
-    /// Purges local data, than fetches remote data from the API
-    ///
+    /// Fetches remote data from the API to update the local stand data along with its relationships
     /// Publisher cascade :
     ///
     /// ``` plaintext
@@ -62,7 +64,7 @@ class CoreDataService: ObservableObject {
                     .subtracting(standEntities)
                     .forEach({ stand in
                         self.manager.context.delete(stand)
-                })
+                    })
                 // query and insert relationship data into fetched stands
                 return Publishers
                     .MergeMany([
@@ -101,11 +103,11 @@ class CoreDataService: ObservableObject {
                 })
                 .map({ historyEntities -> Bool in
                     // remove histories that no longer exists on the remote server
-                    Set(self.getHistoriesForStand(id: standEntity.id))
+                    Set(self.fetchLocalHistoriesForStand(id: standEntity.id))
                         .subtracting(historyEntities)
                         .forEach({ history in
                             self.manager.context.delete(history)
-                    })
+                        })
                     // update local histories
                     standEntity.addToHistories(NSSet(array: historyEntities))
                     for historyEntity in historyEntities {
@@ -139,11 +141,11 @@ class CoreDataService: ObservableObject {
                 })
                 .flatMap({ treeEntities -> AnyPublisher<Bool, Error> in
                     // remove trees that no longer exists on the remote server
-                    Set(self.getTreesForStand(id: standEntity.id))
+                    Set(self.fetchLocalTreesForStand(id: standEntity.id))
                         .subtracting(treeEntities)
                         .forEach({ tree in
                             self.manager.context.delete(tree)
-                    })
+                        })
                     // update local trees
                     standEntity.addToTrees(NSSet(array: treeEntities))
                     for treeEntity in treeEntities {
@@ -153,7 +155,7 @@ class CoreDataService: ObservableObject {
                         .eraseToAnyPublisher()
                 })
                 .eraseToAnyPublisher()
-
+            
             publishers.append(publisher)
         }
         
@@ -178,11 +180,11 @@ class CoreDataService: ObservableObject {
                 })
                 .flatMap({ captureEntities -> AnyPublisher<Bool, Error> in
                     // remove captures that no longer exists on the remote server
-                    Set(self.getCapturesForTree(id: treeEntity.id))
+                    Set(self.fetchLocalCapturesForTree(id: treeEntity.id))
                         .subtracting(captureEntities)
                         .forEach({ capture in
                             self.manager.context.delete(capture)
-                    })
+                        })
                     // update local captures
                     treeEntity.addToCaptures(NSSet(array: captureEntities))
                     for captureEntity in captureEntities {
@@ -217,11 +219,11 @@ class CoreDataService: ObservableObject {
                 })
                 .map({ diameterEntities -> Bool in
                     // remove diameters that no longer exists on the remote server
-                    Set(self.getDiametersForCapture(id: captureEntity.id))
+                    Set(self.fetchLocalDiametersForCapture(id: captureEntity.id))
                         .subtracting(diameterEntities)
                         .forEach({ diameter in
                             self.manager.context.delete(diameter)
-                    })
+                        })
                     // update local diameters
                     captureEntity.addToDiameters(NSSet(array: diameterEntities))
                     for diameterEntity in diameterEntities {
@@ -252,107 +254,121 @@ class CoreDataService: ObservableObject {
         }
     }
     
-    func fetchLocalStands() {
+    func refreshLocalStands() {
         let nameSort = NSSortDescriptor(key:"name", ascending:true)
         let request = NSFetchRequest<StandEntity>(entityName: CoreDataEntities.StandEntity.rawValue)
         request.sortDescriptors = [nameSort]
         do {
-            localStandEntities = try manager.context.fetch(request)
+            self.localStandEntities = try self.manager.context.fetch(request)
         } catch (let error) {
-            print("[CoreDataVM][fetchStands] error : \(error)")
+            print("[CoreDataVM][fetchLocalStands] error : \(error)")
         }
     }
     
     // MARK: STANDS
     
-    func addStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
-        let standEntity = updateOrCreateStandEntityFromModel(standModel: stand)
-        
-        return Publishers
-            .MergeMany([
-                        self.populateStandHistories(standEntities: [standEntity]),
-                self.populateStandTrees(standEntities: [standEntity])
-            ])
-            .reduce(true, { accumulator, isCurrOk in
-                accumulator && isCurrOk
-            })
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-    }
-    func updateStand(entity: StandEntity, stand: StandModel) {
+//    func addStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
+//        let standEntity = updateOrCreateStandEntityFromModel(standModel: stand)
+//
+//        return Publishers
+//            .MergeMany([
+//                self.populateStandHistories(standEntities: [standEntity]),
+//                self.populateStandTrees(standEntities: [standEntity])
+//            ])
+//            .reduce(true, { accumulator, isCurrOk in
+//                accumulator && isCurrOk
+//            })
+//            .receive(on: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//    }
+    
+    func updateStandDetails(entity: StandEntity, stand: StandModel) {
         let _ = updateOrCreateStandEntityFromModel(entity: entity, standModel: stand)
-        saveAndRefresh()
+        self.save()
+        self.refreshLocalStands()
     }
-    func getStandEntityById(id: Int32) -> StandEntity? {
-        return localStandEntities.first { entity in
-            entity.id == id
+    
+    func fetchLocalStandEntity(id: Int32) -> StandEntity? {
+        let fetchRequest : NSFetchRequest<StandEntity> = StandEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "id = %d", id
+        )
+        do {
+            let standEntities = try self.manager.context.fetch(fetchRequest)
+            return standEntities.first
+        } catch(let error) {
+            print("[CoreDataEntities][getStandEntity] ERROR : \(error)")
         }
+        return nil
     }
-    func deleteStandById(id: Int32) {
-        guard let validEntity = getStandEntityById(id: id)
+    
+    func deleteLocalStandEntity(id: Int32) {
+        guard let validEntity = fetchLocalStandEntity(id: id)
         else {
             print("[CoreDataVM][deleteStand] stand not found")
             return
         }
-        manager.context.delete(validEntity)
-        saveAndRefresh()
+        self.manager.context.delete(validEntity)
+        self.save()
     }
     
     // MARK: HISTORIES
     
     func addHistoriesToStand(standId: Int32, histories: [StandHistoryModel]) {
-        guard let standEntity = getStandEntityById(id: standId)
+        guard let standEntity = fetchLocalStandEntity(id: standId)
         else {
             print("[CoreDataVM][addHistoriesToStand] stand not found")
             return
         }
         for history in histories {
-            let historyEntity  = StandHistoryEntity(context: manager.context)
+            let historyEntity  = StandHistoryEntity(context: self.manager.context)
             let _ = mapStandHistoryModelToStandHistoryEntity(historyModel: history, entity: historyEntity)
             historyEntity.stand = standEntity
             standEntity.addToHistories(historyEntity)
         }
-        saveAndRefresh()
     }
     
-    func getHistoriesForStand(id: Int32) -> [StandHistoryEntity] {
+    func fetchLocalHistoriesForStand(id: Int32) -> [StandHistoryEntity] {
         let fetchRequest : NSFetchRequest<StandHistoryEntity> = StandHistoryEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(
             format: "idStand = %d", id
         )
         do {
-            let historyEntities = try manager.context.fetch(fetchRequest)
+            let historyEntities = try self.manager.context.fetch(fetchRequest)
             return historyEntities
         } catch(let error) {
-            print("[CoreDataEntities][deleteTreeById] ERROR : \(error)")
+            print("[CoreDataEntities][getHistoriesForStand] ERROR : \(error)")
         }
         return []
+    }
+    
+    func refreshLocalHistoriesForStand(id: Int32) {
+        self.localHistoriesEntitiesForSelectedStand = fetchLocalHistoriesForStand(id: id)
     }
     
     // MARK: TREES
     
     func addTreesToStand(standId: Int32, trees: [TreeModel]) {
-        guard let standEntity = getStandEntityById(id: standId)
+        guard let standEntity = fetchLocalStandEntity(id: standId)
         else {
             print("[CoreDataVM][addTreesToStand] stand not found")
             return
         }
         for tree in trees {
-            let treeEntity  = TreeEntity(context: manager.context)
+            let treeEntity  = TreeEntity(context: self.manager.context)
             let _ = mapTreeModelToTreeEntity(treeModel: tree, entity: treeEntity)
             standEntity.addToTrees(treeEntity)
             treeEntity.stand = standEntity
         }
-        saveAndRefresh()
     }
     
-    func getTreeEntityById(id: Int32) -> TreeEntity? {
+    func fetchLocalTreeEntity(id: Int32) -> TreeEntity? {
         let fetchRequest : NSFetchRequest<TreeEntity> = TreeEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(
             format: "id = %d", id
         )
         do {
-            let treeEntities = try manager.context.fetch(fetchRequest)
+            let treeEntities = try self.manager.context.fetch(fetchRequest)
             return treeEntities.first
         } catch(let error) {
             print("[CoreDataEntities][getTreeEntityById] ERROR : \(error)")
@@ -360,13 +376,13 @@ class CoreDataService: ObservableObject {
         return nil
     }
     
-    func getTreesForStand(id: Int32) -> [TreeEntity] {
+    func fetchLocalTreesForStand(id: Int32) -> [TreeEntity] {
         let fetchRequest : NSFetchRequest<TreeEntity> = TreeEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(
             format: "idStand = %d", id
         )
         do {
-            let treeEntities = try manager.context.fetch(fetchRequest)
+            let treeEntities = try self.manager.context.fetch(fetchRequest)
             return treeEntities
         } catch(let error) {
             print("[CoreDataEntities][getTreesForStand] ERROR : \(error)")
@@ -374,19 +390,28 @@ class CoreDataService: ObservableObject {
         return []
     }
     
-    func updateTreesForStand(id: Int32) -> AnyPublisher<Bool, Error> {
-        guard let standEntity = getStandEntityById(id: id) else {
+    func refreshLocalTreesForStand(id: Int32) {
+        self.localTreeEntitiesForSelectedStand = self.fetchLocalTreesForStand(id: id)
+    }
+    
+    func updateLocalTreeDetails(treeModel: TreeModel) {
+        let fetchRequest : NSFetchRequest<TreeEntity> = TreeEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "id = %d", treeModel.id
+        )
+        do {
+            let treeEntity = try self.manager.context.fetch(fetchRequest).first
+            _ = self.updateOrCreateTreeEntityFromModel(entity: treeEntity, treeModel: treeModel)
+            self.save()
+        } catch(let error) {
+            print("[CoreDataEntities][updateTree] ERROR : \(error)")
+        }
+    }
+    
+    func fetchRemoteTreesForStand(id: Int32) -> AnyPublisher<Bool, Error> {
+        guard let standEntity = fetchLocalStandEntity(id: id) else {
             print("[CoreDataService][updateTreesForStand] stand not found")
             return createMissingEntityPublisher(message: "stand not found")
-        }
-        guard let trees = standEntity.trees else {
-            print("[CoreDataService][updateTreesForStand] no trees found")
-            return createMissingEntityPublisher(message: "no trees found")
-        }
-        
-        // purge tree data for stand
-        for tree in trees {
-            manager.context.delete(tree as! TreeEntity)
         }
         // populate tree data for stand
         return self.populateStandTrees(standEntities: [standEntity])
@@ -394,19 +419,50 @@ class CoreDataService: ObservableObject {
             .eraseToAnyPublisher()
     }
     
-    func deleteTreeById(id: Int32) { //}-> Bool {
-        saveAndRefresh()
+    func deleteLocalTree(id: Int32) {
+        if let treeEntity = self.fetchLocalTreeEntity(id: id) {
+            self.manager.context.delete(treeEntity)
+            self.localTreeEntitiesForSelectedStand.removeAll { entity in
+                entity.id == treeEntity.id
+            }
+            self.save()
+        }
     }
     
     // MARK: CAPTURES
     
-    func getCapturesForTree(id: Int32) -> [TreeCaptureEntity] {
+    func fetchLocalCaptureEntity(id: Int32) -> TreeCaptureEntity? {
+        let fetchRequest : NSFetchRequest<TreeCaptureEntity> = TreeCaptureEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "id = %d", id
+        )
+        do {
+            let captureEntities = try self.manager.context.fetch(fetchRequest)
+            return captureEntities.first
+        } catch(let error) {
+            print("[CoreDataEntities][fetchLocalCaptureEntity] ERROR : \(error)")
+        }
+        return nil
+    }
+    
+    func fetchRemoteCapturesForTree(id: Int32) -> AnyPublisher<Bool, Error> {
+        guard let treeEntity = self.fetchLocalTreeEntity(id: id) else {
+            print("[CoreDataService][updateTreesForStand] tree not found")
+            return createMissingEntityPublisher(message: "tree not found")
+        }
+        // populate tree data for stand
+        return self.populateTreeCaptures(treeEntities: [treeEntity])
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchLocalCapturesForTree(id: Int32) -> [TreeCaptureEntity] {
         let fetchRequest : NSFetchRequest<TreeCaptureEntity> = TreeCaptureEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(
             format: "idTree = %d", id
         )
         do {
-            let captureEntities = try manager.context.fetch(fetchRequest)
+            let captureEntities = try self.manager.context.fetch(fetchRequest)
             return captureEntities
         } catch(let error) {
             print("[CoreDataEntities][getCapturesForTree] ERROR : \(error)")
@@ -414,20 +470,39 @@ class CoreDataService: ObservableObject {
         return []
     }
     
+    func refreshLocalCaptureForTree(id: Int32) {
+        self.localTreeCapturesForSelectedTree = self.fetchLocalCapturesForTree(id: id)
+    }
+    
     // MARK: DIAMETERS
     
-    func getDiametersForCapture(id: Int32) -> [DiameterEntity] {
+    func fetchRemoteDiametersForCapture(id: Int32) -> AnyPublisher<Bool, Error> {
+        guard let captureEntity = self.fetchLocalCaptureEntity(id: id) else {
+            print("[CoreDataService][updateTreesForStand] capture not found")
+            return createMissingEntityPublisher(message: "capture not found")
+        }
+        // populate tree data for stand
+        return self.populateCaptureDiameters(captureEntities: [captureEntity])
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchLocalDiametersForCapture(id: Int32) -> [DiameterEntity] {
         let fetchRequest : NSFetchRequest<DiameterEntity> = DiameterEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(
             format: "idTreeCapture = %d", id
         )
         do {
-            let captureEntities = try manager.context.fetch(fetchRequest)
+            let captureEntities = try self.manager.context.fetch(fetchRequest)
             return captureEntities
         } catch(let error) {
             print("[CoreDataEntities][getDiametersForCapture] ERROR : \(error)")
         }
         return []
+    }
+    
+    func refreshLocalDiametersForCapture(id: Int32) {
+        self.localDiametersForSelectedCapture = self.fetchLocalDiametersForCapture(id: id)
     }
     
     // MARK: ENTITY CREATION
@@ -440,7 +515,7 @@ class CoreDataService: ObservableObject {
             if let entity : StandEntity = entity {
                 return entity
             }
-            return StandEntity(context: manager.context)
+            return StandEntity(context: self.manager.context)
         }()
         return mapStandModelToStandEntity(standModel: standModel, entity: localStandEntity)
     }
@@ -452,7 +527,7 @@ class CoreDataService: ObservableObject {
             if let entity : StandHistoryEntity = entity {
                 return entity
             }
-            return StandHistoryEntity(context: manager.context)
+            return StandHistoryEntity(context: self.manager.context)
         }()
         return mapStandHistoryModelToStandHistoryEntity(historyModel: history, entity: localHistoryEntity)
     }
@@ -464,7 +539,7 @@ class CoreDataService: ObservableObject {
             if let entity : TreeEntity = entity {
                 return entity
             }
-            return TreeEntity(context: manager.context)
+            return TreeEntity(context: self.manager.context)
         }()
         return mapTreeModelToTreeEntity(treeModel: treeModel, entity: localTreeEntity)
     }
@@ -476,7 +551,7 @@ class CoreDataService: ObservableObject {
             if let entity : TreeCaptureEntity = entity {
                 return entity
             }
-            return TreeCaptureEntity(context: manager.context)
+            return TreeCaptureEntity(context: self.manager.context)
         }()
         return mapCaptureModelToCaptureEntity(captureModel: captureModel, entity: localCaptureEntity)
     }
@@ -488,7 +563,7 @@ class CoreDataService: ObservableObject {
             if let entity : DiameterEntity = entity {
                 return entity
             }
-            return DiameterEntity(context: manager.context)
+            return DiameterEntity(context: self.manager.context)
         }()
         return mapDiameterModelToDiameterEntity(diameterModel: diameterModel, entity: localDiameterEntity)
     }
@@ -533,6 +608,7 @@ class CoreDataService: ObservableObject {
     -> TreeEntity
     {
         entity.id = Int32(treeModel.id)
+        entity.idStand = Int32(treeModel.idStand)
         entity.latitude = treeModel.latitude
         entity.longitude = treeModel.longitude
         entity.x = treeModel.x

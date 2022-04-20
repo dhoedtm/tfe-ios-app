@@ -26,7 +26,7 @@ class StandListVM : ObservableObject {
     
     // data
     @Published var stands : [StandEntity] = []
-    @Published var selectedStand : StandModel?
+    @Published var selectedStand : StandEntity?
     
     // MARK: init
     
@@ -68,13 +68,15 @@ class StandListVM : ObservableObject {
                     break
                 }
             } receiveValue: { [weak self] isOK in
-                self?.coreData.saveAndRefresh()
+                self?.coreData.save()
+                self?.coreData.refreshLocalStands()
                 self?.isSyncingWithApi = false
             }
     }
     
     func cancelSync() {
         self.apiSyncCancellable?.cancel()
+        self.coreData.refreshLocalStands()
         self.isSyncingWithApi = false
     }
     
@@ -90,8 +92,8 @@ class StandListVM : ObservableObject {
                             type: .error)
                         break
                     case .finished:
-//                        self?.stands.remove(atOffsets: offsets)
-                        self?.coreData.deleteStandById(id: idStand)
+                        self?.coreData.deleteLocalStandEntity(id: idStand)
+                        self?.coreData.refreshLocalStands()
                         break
                     }
                 } receiveValue: { _ in }
@@ -143,7 +145,6 @@ class StandListVM : ObservableObject {
                             type: .success)
                         self?.api.cancelUploadStandSubscriptions(cancellableItemId: cancellableItemId)
                         // print("response OK [\(data)B]")
-                        // self?.coreData.addStand(stand: T##StandModel)
                     }
                 })
         

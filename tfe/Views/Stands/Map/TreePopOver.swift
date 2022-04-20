@@ -17,7 +17,7 @@ struct TreePopOver: View {
             .sheet(isPresented: $showSheet, content: {
                 TreeCaptures()
                     .environmentObject(
-                        TreeCapturesVM(selectedTree: TreeModel(treeFormState: vm.state))
+                        TreeCapturesVM(selectedTree: vm.selectedTree)
                     )
             })
             .padding()
@@ -33,19 +33,19 @@ extension TreePopOver {
                 HStack {
                     LabelledTextField(
                         "latitude",
-                        vm.binding(\.latitude),
+                        $vm.latitude,
                         isDisabled: true)
                     LabelledTextField(
                         "longitude",
-                        vm.binding(\.longitude),
+                        $vm.longitude,
                         isDisabled: true)
                 }
                 VStack {
                     LabelledTextField(
                         "description",
-                        vm.binding(\.description),
+                        $vm.description,
                         isDisabled: false)
-                    if let error = vm.state.descriptionError {
+                    if let error = vm.descriptionError {
                         Text(error)
                             .font(.caption)
                             .foregroundColor(.red)
@@ -64,10 +64,10 @@ extension TreePopOver {
                 } else {
                     Button(
                         "Update",
-                        action: vm.updateTree
+                        action: vm.updateTreeDetails
                     )
                     .buttonStyle(StandardButton())
-                    .disabled(!vm.state.isUpdateButtonEnabled)
+                    .disabled(!vm.isUpdateButtonEnabled)
                 }
             }
         }
@@ -75,13 +75,13 @@ extension TreePopOver {
     }
 }
 
-struct TreeDetails_Previews: PreviewProvider {
-    @State static var treeToEdit = MockData.trees.first!
-    static var previews: some View {
-        TreePopOver()
-            .environmentObject(
-                TreeDetailsVM(initialState:
-                                TreeFormState.init(tree: MockData.trees.first!))
-            )
-    }
-}
+//struct TreeDetails_Previews: PreviewProvider {
+//    @State static var treeToEdit = MockData.trees.first!
+//    static var previews: some View {
+//        TreePopOver()
+//            .environmentObject(
+//                TreeDetailsVM(initialState:
+//                                TreeFormState.init(treeModel: MockData.trees.first!))
+//            )
+//    }
+//}

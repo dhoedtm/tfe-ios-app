@@ -32,14 +32,14 @@ struct StandDetailsView: View {
 
 private struct HistoryPicker : View {
     
-    let captures : [StandHistoryModel]
-    @Binding var selectedHistory: StandHistoryModel
+    let captures : [StandHistoryEntity]
+    @Binding var selectedHistory: StandHistoryEntity?
     
     var body: some View {
         Picker("Capture date", selection: $selectedHistory) {
             ForEach(captures, id: \.self) { capture in
                 Text(
-                    DateParser.formatDateString(dateString: capture.capturedAt) ?? "date error"
+                    DateParser.formatDateString(dateString: capture.capturedAt ?? "") ?? "date error"
                 ).tag(capture)
             }
         }
@@ -49,7 +49,7 @@ private struct HistoryPicker : View {
 }
 
 private struct HistoryProperties : View {
-    var history : StandHistoryModel
+    var history : StandHistoryEntity?
 
     private let columns = [
         GridItem(.fixed(100)),
@@ -59,18 +59,20 @@ private struct HistoryProperties : View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("History").bold().padding(.top)
-            Group {
-                LabelledText("treeCount", String(history.treeCount))
-                LabelledText("basalArea", String(history.basalArea))
-                LabelledText("meanDbh", String(history.meanDbh))
-                LabelledText("meanDistance", String(history.meanDistance))
-            }
-            Group {
-                LabelledText("treeDensity", String(history.treeDensity))
-                LabelledText("convexAreaMeter", String(history.convexAreaMeter))
-                LabelledText("convexAreaHectare", String(history.convexAreaHectare))
-                LabelledText("concaveAreaMeter", String(history.concaveAreaMeter))
-                LabelledText("concaveAreaHectare", String(history.concaveAreaHectare))
+            if let history = history {
+                Group {
+                    LabelledText("treeCount", String(history.treeCount))
+                    LabelledText("basalArea", String(history.basalArea))
+                    LabelledText("meanDbh", String(history.meanDbh))
+                    LabelledText("meanDistance", String(history.meanDistance))
+                }
+                Group {
+                    LabelledText("treeDensity", String(history.treeDensity))
+                    LabelledText("convexAreaMeter", String(history.convexAreaMeter))
+                    LabelledText("convexAreaHectare", String(history.convexAreaHectare))
+                    LabelledText("concaveAreaMeter", String(history.concaveAreaMeter))
+                    LabelledText("concaveAreaHectare", String(history.concaveAreaHectare))
+                }
             }
         }
     }
@@ -104,14 +106,14 @@ extension StandDetailsView {
         VStack(alignment: .leading) {
             Group {
                 Text("Stand").bold()
-                LabelledTextField("name", vm.binding(\.name), isDisabled: false)
-                if let error = vm.state.nameError {
+                LabelledTextField("name", $vm.name, isDisabled: false)
+                if let error = vm.nameError {
                     Text(error)
                         .font(.caption)
                         .foregroundColor(.red)
                 }
-                LabelledTextField("description", vm.binding(\.description), isDisabled: false)
-                if let error = vm.state.descriptionError {
+                LabelledTextField("description", $vm.description, isDisabled: false)
+                if let error = vm.descriptionError {
                     Text(error)
                         .font(.caption)
                         .foregroundColor(.red)
@@ -119,11 +121,11 @@ extension StandDetailsView {
             }
             Button(
                 "Update",
-                action: vm.updateStand
+                action: vm.updateStandDetails
             )
             .buttonStyle(StandardButton())
             .frame(maxWidth: .infinity, alignment: .center)
-            .disabled(!vm.state.isUpdateButtonEnabled)
+            .disabled(!vm.isUpdateButtonEnabled)
         }
     }
     
@@ -135,18 +137,18 @@ extension StandDetailsView {
     func getBasalAreaChartData() -> [ChartData] {
         return vm.histories.map { history in
             ChartData(
-                label: DateParser.shortenDateString(dateString: history.capturedAt) ?? "date error",
+                label: DateParser.shortenDateString(dateString: history.capturedAt ?? "") ?? "date error",
                 value: history.basalArea
             )
         }
     }
 }
 
-struct StandFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        StandDetailsView()
-            .environmentObject(
-                StandDetailsVM(initialState: StandFormState(stand: MockData.stands.first!))
-            )
-    }
-}
+//struct StandFormView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StandDetailsView()
+//            .environmentObject(
+//                StandDetailsVM(initialState: StandFormState(stand: MockData.stands.first!))
+//            )
+//    }
+//}

@@ -42,16 +42,12 @@ struct StandMapView: View {
     }
     
     func createPopOver(tree: TreeEntity) -> some View {
-        let treeState = TreeFormState.init(tree: tree)
-        let vm = TreeDetailsVM(initialState: treeState)
+        let vm = TreeDetailsVM(selectedTree: vm.selectedTree!)
         return TreePopOver().environmentObject(vm)
     }
 }
 
 // MARK: EXTENSIONS
-
-// in order to keep the main body of the view relatively short and thus readable,
-// it is good practice to create extensions of that view
 
 extension StandMapView {
     private var loader : some View {

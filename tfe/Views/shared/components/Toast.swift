@@ -75,6 +75,7 @@ extension Toast {
         .background(color)
         .cornerRadius(10)
 //        .border(Color.black.opacity(0.9))
+        .shadow(color: .black, radius: 5, x: 3.0, y: 3.0)
         .onTapGesture {
             isShowing = false
         }
