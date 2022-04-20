@@ -18,30 +18,33 @@ final class StandDetailsVM: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     // UI
-    @Published var isFetchingHistories : Bool = false
     @Published var isUpdateButtonEnabled : Bool = true
     @Published var nameError : String? = nil
     @Published var descriptionError : String? = nil
     
     // data
+    @Published var selectedStand : StandEntity
     @Published var histories : [StandHistoryEntity] = []
-    @Published var selectedHistory : StandHistoryEntity? = nil
+    @Published var selectedHistory : StandHistoryEntity = StandHistoryEntity()
     // TODO: find a way to auto-bind coredata entity properties to textfields
     @Published var name : String = ""
     @Published var description : String = ""
     
     init(selectedStand: StandEntity) {
+        self.selectedStand = selectedStand
         self.subscribeToCoreDataResources()
-        self.coreData.refreshLocalHistoriesForStand(id: selectedStand.id)
         self.name = selectedStand.name ?? ""
         self.description = selectedStand.standDescription ?? ""
+        self.coreData.refreshLocalHistoriesForStand(id: selectedStand.id)
     }
     
     // MARK: DATA STORE functions
     
     private func subscribeToCoreDataResources() {
         self.coreData.$localHistoriesEntitiesForSelectedStand
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .sink { historyEntities in
+                print("HISTORIES : \(historyEntities.count)")
                 self.histories = historyEntities
             }
             .store(in: &cancellables)
@@ -59,7 +62,30 @@ final class StandDetailsVM: ObservableObject {
             return
         }
         
-        print("[StandDetailsVM][updateStandDetails] TODO")
+        var standModel = StandModel(standEntity: self.selectedStand)
+        standModel.name = self.name
+        standModel.description = self.description
+        
+        api.updateTreeSubscription = self.api.updateStandDetails(stand: standModel)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                        message: "Stand couldn't be updated\n\(error.localizedDescription)",
+                        type: .error
+                    )
+                break
+                case .finished:
+                    self?.notificationManager.notification = Notification(
+                        message: "Stand has been updated",
+                        type: .success
+                    )
+                break
+                }
+            }, receiveValue: { [weak self] standModel in
+                self?.coreData.updateLocalStandDetails(standModel: standModel)
+                self?.coreData.refreshLocalStands()
+            })
     }
     
     // MARK: HANDLES FORM

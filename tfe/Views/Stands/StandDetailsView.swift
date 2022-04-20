@@ -33,7 +33,7 @@ struct StandDetailsView: View {
 private struct HistoryPicker : View {
     
     let captures : [StandHistoryEntity]
-    @Binding var selectedHistory: StandHistoryEntity?
+    @Binding var selectedHistory: StandHistoryEntity
     
     var body: some View {
         Picker("Capture date", selection: $selectedHistory) {
@@ -49,7 +49,7 @@ private struct HistoryPicker : View {
 }
 
 private struct HistoryProperties : View {
-    var history : StandHistoryEntity?
+    var history : StandHistoryEntity
 
     private let columns = [
         GridItem(.fixed(100)),
@@ -59,20 +59,18 @@ private struct HistoryProperties : View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("History").bold().padding(.top)
-            if let history = history {
-                Group {
-                    LabelledText("treeCount", String(history.treeCount))
-                    LabelledText("basalArea", String(history.basalArea))
-                    LabelledText("meanDbh", String(history.meanDbh))
-                    LabelledText("meanDistance", String(history.meanDistance))
-                }
-                Group {
-                    LabelledText("treeDensity", String(history.treeDensity))
-                    LabelledText("convexAreaMeter", String(history.convexAreaMeter))
-                    LabelledText("convexAreaHectare", String(history.convexAreaHectare))
-                    LabelledText("concaveAreaMeter", String(history.concaveAreaMeter))
-                    LabelledText("concaveAreaHectare", String(history.concaveAreaHectare))
-                }
+            Group {
+                LabelledText("treeCount", String(history.treeCount))
+                LabelledText("basalArea", String(history.basalArea))
+                LabelledText("meanDbh", String(history.meanDbh))
+                LabelledText("meanDistance", String(history.meanDistance))
+            }
+            Group {
+                LabelledText("treeDensity", String(history.treeDensity))
+                LabelledText("convexAreaMeter", String(history.convexAreaMeter))
+                LabelledText("convexAreaHectare", String(history.convexAreaHectare))
+                LabelledText("concaveAreaMeter", String(history.concaveAreaMeter))
+                LabelledText("concaveAreaHectare", String(history.concaveAreaHectare))
             }
         }
     }

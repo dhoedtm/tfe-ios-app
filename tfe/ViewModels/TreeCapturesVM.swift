@@ -35,7 +35,7 @@ final class TreeCapturesVM: ObservableObject {
         }
     }
     @Published var chartData : [ChartData] = []
-    @Published var selectedCapture : TreeCaptureEntity
+    @Published var selectedCapture : TreeCaptureEntity = TreeCaptureEntity()
     {
         didSet {
             self.coreData.refreshLocalDiametersForCapture(id: self.selectedCapture.id)
@@ -45,8 +45,7 @@ final class TreeCapturesVM: ObservableObject {
     
     init(selectedTree: TreeEntity) {
         self.selectedTree = selectedTree
-        self.selectedCapture = selectedTree.captures?.allObjects.first! as! TreeCaptureEntity
-        subscribeToCoreDataResources()
+        self.subscribeToCoreDataResources()
         self.coreData.refreshLocalCapturesForTree(id: selectedTree.id)
     }
     
@@ -54,6 +53,7 @@ final class TreeCapturesVM: ObservableObject {
     
     private func subscribeToCoreDataResources() {
         self.coreData.$localTreeCapturesForSelectedTree
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .sink { captureEntities in
                 let sortedCaptures = captureEntities.sorted { capture1, capture2 in
                     (capture1.capturedAt ?? "") < (capture2.capturedAt ?? "")

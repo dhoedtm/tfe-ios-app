@@ -37,6 +37,7 @@ class StandListVM : ObservableObject {
     
     private func subscribeToCoreDataResources() {
         self.coreData.$localStandEntities
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .sink { standEntities in
                 self.stands = standEntities
             }

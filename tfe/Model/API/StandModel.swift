@@ -48,6 +48,23 @@ extension StandModel {
         description = String(standFormState.description)
     }
     
+    
+    init(standEntity: StandEntity) {
+        id = Int(standEntity.id)
+        name = standEntity.name ?? ""
+        treeCount = Int(standEntity.treeCount)
+        basalArea = standEntity.basalArea
+        convexAreaMeter = standEntity.convexAreaMeter
+        convexAreaHectare = standEntity.convexAreaHectare
+        concaveAreaMeter = standEntity.concaveAreaMeter
+        concaveAreaHectare = standEntity.concaveAreaHectare
+        treeDensity = standEntity.treeDensity
+        meanDbh = standEntity.meanDbh
+        meanDistance = standEntity.meanDistance
+        capturedAt = standEntity.capturedAt ?? ""
+        description = standEntity.standDescription
+    }
+    
     static func < (lhs: StandModel, rhs: StandModel) -> Bool {
         lhs.id < rhs.id
     }

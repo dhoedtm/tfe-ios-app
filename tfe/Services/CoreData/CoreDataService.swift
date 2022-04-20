@@ -282,10 +282,19 @@ class CoreDataService: ObservableObject {
 //            .eraseToAnyPublisher()
 //    }
     
-    func updateStandDetails(entity: StandEntity, stand: StandModel) {
-        let _ = updateOrCreateStandEntityFromModel(entity: entity, standModel: stand)
-        self.save()
-        self.refreshLocalStands()
+    func updateLocalStandDetails(standModel: StandModel) {
+        let fetchRequest : NSFetchRequest<StandEntity> = StandEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "id = %d", standModel.id
+        )
+        do {
+            let standEntity = try self.manager.context.fetch(fetchRequest).first
+            standEntity?.name = standModel.name
+            standEntity?.standDescription = standModel.description
+            self.save()
+        } catch(let error) {
+            print("[CoreDataEntities][updateLocalStandDetails] ERROR : \(error)")
+        }
     }
     
     func fetchLocalStandEntity(id: Int32) -> StandEntity? {
@@ -331,7 +340,7 @@ class CoreDataService: ObservableObject {
     func fetchLocalHistoriesForStand(id: Int32) -> [StandHistoryEntity] {
         let fetchRequest : NSFetchRequest<StandHistoryEntity> = StandHistoryEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(
-            format: "idStand = %d", id
+            format: "id = %d", id
         )
         do {
             let historyEntities = try self.manager.context.fetch(fetchRequest)
@@ -422,9 +431,9 @@ class CoreDataService: ObservableObject {
     func deleteLocalTree(id: Int32) {
         if let treeEntity = self.fetchLocalTreeEntity(id: id) {
             self.manager.context.delete(treeEntity)
-            self.localTreeEntitiesForSelectedStand.removeAll { entity in
-                entity.id == treeEntity.id
-            }
+//            self.localTreeEntitiesForSelectedStand.removeAll { entity in
+//                entity.id == treeEntity.id
+//            }
             self.save()
         }
     }
