@@ -18,8 +18,6 @@ final class TreeCapturesVM: ObservableObject {
     private var cancellables: [AnyCancellable] = []
     
     // ui
-    @Published var isFetchingCaptures : Bool = false
-    @Published var isFetchingDiameters : Bool = false
     
     // data
     @Published var selectedTree : TreeEntity
@@ -37,14 +35,19 @@ final class TreeCapturesVM: ObservableObject {
         }
     }
     @Published var chartData : [ChartData] = []
-    @Published var selectedCapture : TreeCaptureEntity? = nil
+    @Published var selectedCapture : TreeCaptureEntity
+    {
+        didSet {
+            self.coreData.refreshLocalDiametersForCapture(id: self.selectedCapture.id)
+        }
+    }
     @Published var diameters : [DiameterEntity]  = []
     
     init(selectedTree: TreeEntity) {
         self.selectedTree = selectedTree
+        self.selectedCapture = selectedTree.captures?.allObjects.first! as! TreeCaptureEntity
         subscribeToCoreDataResources()
-        self.coreData.refreshLocalCaptureForTree(id: selectedTree.id)
-        self.isFetchingCaptures = true
+        self.coreData.refreshLocalCapturesForTree(id: selectedTree.id)
     }
     
     // MARK: DATA STORE functions
@@ -52,56 +55,20 @@ final class TreeCapturesVM: ObservableObject {
     private func subscribeToCoreDataResources() {
         self.coreData.$localTreeCapturesForSelectedTree
             .sink { captureEntities in
-                self.captures = captureEntities
+                let sortedCaptures = captureEntities.sorted { capture1, capture2 in
+                    (capture1.capturedAt ?? "") < (capture2.capturedAt ?? "")
+                }
+                self.captures = sortedCaptures
             }
             .store(in: &cancellables)
         
         self.coreData.$localDiametersForSelectedCapture
             .sink { diameterEntities in
-                self.diameters = diameterEntities
+                let sortedDiameters = diameterEntities.sorted { diam1, diam2 in
+                    diam1.height < diam2.height
+                }
+                self.diameters = sortedDiameters
             }
-            .store(in: &cancellables)
-    }
-    
-    // MARK: API functions
-    
-    func getCaptures() {
-        self.isFetchingCaptures = true
-        self.coreData.fetchRemoteCapturesForTree(id: self.selectedTree.id)
-            .sink { [weak self] (completion) in
-                switch completion {
-                case .failure(let error):
-                    self?.notificationManager.notification = Notification(
-                        message: "Captures couldn't be updated\n(\(error.localizedDescription)",
-                        type: .error)
-                    break
-                case .finished:
-                    self?.coreData.refreshLocalCaptureForTree(id: self?.selectedTree.id ?? 0)
-                    self?.coreData.save()
-                    self?.isFetchingCaptures = false
-                    break
-                }
-            } receiveValue: { _ in }
-            .store(in: &cancellables)
-    }
-    
-    func getDiameters() {
-        self.isFetchingDiameters = true
-        self.coreData.fetchRemoteTreesForStand(id: self.selectedTree.id)
-            .sink { [weak self] (completion) in
-                switch completion {
-                case .failure(let error):
-                    self?.notificationManager.notification = Notification(
-                        message: "Diameters couldn't be updated\n(\(error.localizedDescription)",
-                        type: .error)
-                    break
-                case .finished:
-                    self?.coreData.refreshLocalDiametersForCapture(id: (self?.selectedCapture!.id)!)
-                    self?.coreData.save()
-                    self?.isFetchingDiameters = false
-                    break
-                }
-            } receiveValue: { _ in }
             .store(in: &cancellables)
     }
 }

@@ -15,24 +15,22 @@ final class TreeDetailsVM : ObservableObject {
     let notificationManager = NotificationManager.shared
     
     // ui
-    @Published var isUpdating = false
-    @Published var isUpdateButtonEnabled = false
+    @Published var isUpdating : Bool = false
+    @Published var isUpdateButtonEnabled : Bool = true
     @Published var descriptionError : String? = nil
     
     // data
     // TODO: find a way to auto-bind coredata entity properties to textfields
     var selectedTree : TreeEntity
-    @Published var id : String = ""
-    @Published var idStand : String = ""
     @Published var latitude : String = ""
     @Published var longitude : String = ""
-    @Published var x : String = ""
-    @Published var y : String = ""
     @Published var description : String = ""
-    @Published var deletedAt : String = ""
     
     init(selectedTree: TreeEntity) {
         self.selectedTree = selectedTree
+        self.latitude = String(selectedTree.latitude)
+        self.longitude = String(selectedTree.longitude)
+        self.description = selectedTree.treeDescription ?? ""
     }
     
     // MARK: HANDLES FORM
@@ -49,7 +47,30 @@ final class TreeDetailsVM : ObservableObject {
     
     func updateTreeDetails() {
         self.isUpdating = true
-        print("TODO : [TreeDetailsVM][updateTreeDetails]")
+        var treeModel = TreeModel(treeEntity: self.selectedTree)
+        treeModel.description = self.description
+        
+        api.updateTreeSubscription = self.api.updateTreeDetails(tree: treeModel)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                        message: "Tree couldn't be updated\n\(error.localizedDescription)",
+                        type: .error
+                    )
+                break
+                case .finished:
+                    self?.notificationManager.notification = Notification(
+                        message: "Tree has been updated",
+                        type: .success
+                    )
+                break
+                }
+            }, receiveValue: { [weak self] treeModel in
+                self?.coreData.updateLocalTreeDetails(treeModel: treeModel)
+                self?.coreData.refreshLocalTreesForStand(id: (self?.selectedTree.idStand)!)
+                self?.isUpdating = false
+            })
     }
     
     func cancelUpdate() {

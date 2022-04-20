@@ -401,7 +401,7 @@ class CoreDataService: ObservableObject {
         )
         do {
             let treeEntity = try self.manager.context.fetch(fetchRequest).first
-            _ = self.updateOrCreateTreeEntityFromModel(entity: treeEntity, treeModel: treeModel)
+            treeEntity?.treeDescription = treeModel.description
             self.save()
         } catch(let error) {
             print("[CoreDataEntities][updateTree] ERROR : \(error)")
@@ -470,7 +470,7 @@ class CoreDataService: ObservableObject {
         return []
     }
     
-    func refreshLocalCaptureForTree(id: Int32) {
+    func refreshLocalCapturesForTree(id: Int32) {
         self.localTreeCapturesForSelectedTree = self.fetchLocalCapturesForTree(id: id)
     }
     

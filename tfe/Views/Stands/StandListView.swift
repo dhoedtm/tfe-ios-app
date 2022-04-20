@@ -22,12 +22,17 @@ struct StandListView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(
                     leading:
-                        Button(action: {
-                            vm.syncWithApi()
-                        }, label: {
-                            Image(systemName: "icloud.and.arrow.down")
-                                .foregroundColor(.green)
-                        })
+                        Image(systemName: "icloud.and.arrow.down")
+                            .foregroundColor(.green)
+                            .onTapGesture {
+                                vm.syncWithApi()
+                            }
+                            .onLongPressGesture(
+                                minimumDuration: 2,
+                                perform: {
+                                    vm.hardSyncWithApi()
+                                }
+                            )
                 )
             uploadList
             Spacer()

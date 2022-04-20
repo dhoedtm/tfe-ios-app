@@ -13,6 +13,10 @@ struct StandMapView: View {
     @EnvironmentObject private var vm : StandMapVM
     @StateObject var locationManager = LocationManager.shared
     
+    @State var filePaths : [URL] = [URL]()
+    @State var showAlert : Bool = false
+    @State private var showDocumentPicker = false
+    
     var body: some View {
         if (vm.isFetchingTrees) {
             loader
@@ -47,7 +51,7 @@ struct StandMapView: View {
     }
 }
 
-// MARK: EXTENSIONS
+// MARK: LOADER
 
 extension StandMapView {
     private var loader : some View {
@@ -69,6 +73,9 @@ extension StandMapView {
         }
     }
 }
+
+// MARK: BACK BUTTON
+
 extension StandMapView {
     private var backButton : some View {
         BackButton() {
@@ -87,6 +94,8 @@ extension StandMapView {
     }
 }
 
+// MARK: REFRESH BUTTON
+
 extension StandMapView {
     private var refreshButton: some View {
         Button(action: {
@@ -100,6 +109,8 @@ extension StandMapView {
         .padding()
     }
 }
+
+// MARK: TREE MAP
 
 extension StandMapView {
     private var treeMap: some View {
@@ -143,32 +154,23 @@ extension StandMapView {
     }
 }
 
+// MARK: HEADER
+
 extension StandMapView {
     private var header: some View {
         HStack {
-            BackButton() {
-                Image(systemName: "arrowshape.turn.up.backward.circle")
-                    .scaledToFit()
-                    .scaleEffect(1.5)
-                    .foregroundColor(.black)
-            }
+            header_backButton
             Spacer()
-            if let stand = vm.selectedStand {
-                Text(DateParser.formatDateString(dateString: stand.capturedAt ?? "") ?? "error displaying date")
-                    .font(.title2)
-                    .fontWeight(.black)
-            } else {
-                Text("no stand could be found")
-            }
+            header_date
             Spacer()
-            Button(action: {
-                vm.updateTrees()
-            }, label: {
-                Image(systemName: "arrow.clockwise")
-                    .scaledToFit()
-                    .scaleEffect(1.5)
-                    .foregroundColor(.black)
-            })
+            VStack {
+                header_updateStandFilePicker
+                    .padding(.top, 5)
+                header_updateStandSubmit
+                    .padding(.horizontal, 5)
+                header_fetchRemoteTrees
+                    .padding(.bottom, 5)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -177,6 +179,77 @@ extension StandMapView {
         .cornerRadius(10)
     }
 }
+
+extension StandMapView {
+    private var header_backButton: some View {
+        BackButton() {
+            Image(systemName: "arrowshape.turn.up.backward.circle")
+                .scaledToFit()
+                .scaleEffect(1.5)
+                .foregroundColor(.black)
+        }
+    }
+}
+extension StandMapView {
+    private var header_date: some View {
+        Text(DateParser.formatDateString(dateString: vm.selectedStand.capturedAt ?? "") ?? "error displaying date")
+            .font(.title2)
+            .fontWeight(.black)
+    }
+}
+extension StandMapView {
+    private var header_fetchRemoteTrees: some View {
+        Button(action: {
+            vm.updateTrees()
+        }, label: {
+            Image(systemName: "arrow.clockwise")
+                .scaledToFit()
+                .foregroundColor(.black)
+        })
+    }
+}
+extension StandMapView {
+    private var header_updateStandFilePicker: some View {
+        Button(action: {
+            showDocumentPicker = true
+        }, label: {
+            Image(systemName: "folder")
+                .scaledToFit()
+                .foregroundColor(.black)
+        })
+        .sheet(isPresented: self.$showDocumentPicker) {
+            DocumentPicker(filePaths: $filePaths)
+        }
+    }
+}
+extension StandMapView {
+    private var header_updateStandSubmit: some View {
+        Button(action: {
+            if (filePaths.isEmpty) {
+                showAlert = true
+            } else {
+                vm.uploadPointClouds(filePaths: filePaths)
+                // TODO: only reset selection when upload is successful
+                filePaths = [URL]()
+            }
+        }, label: {
+            Image(systemName: "icloud.and.arrow.up")
+                .scaledToFit()
+                .foregroundColor(.black)
+        })
+        .alert(
+            isPresented: $showAlert,
+            content: {
+                Alert(
+                    title: Text("Upload error"),
+                    message: Text("please select a pointcloud before uploading")
+                )
+            }
+        )
+    }
+}
+
+// MARK: POP OVER
 
 extension StandMapView {
     // TODO: this is a hack since changing the vm.selectedTree property alone

@@ -18,20 +18,14 @@ struct TreeCaptures: View {
                     .padding(.bottom)
                 treeDetails
                     .padding(.bottom, 2)
-                if (vm.isFetchingCaptures) {
-                    ProgressView("Downloading captures...")
-                } else if vm.captures.isEmpty {
+                if vm.captures.isEmpty {
                     Text("Tree has no capture to display")
                 } else {
                     Text("Capture")
                         .font(.title3)
                         .bold()
                     CapturePicker(captures: vm.captures, selectedCapture: $vm.selectedCapture)
-                    CaptureProperties(
-                        capture: vm.selectedCapture,
-                        diameters: vm.diameters,
-                        isFetchingDiameter: vm.isFetchingDiameters
-                    )
+                    CaptureProperties(capture: vm.selectedCapture, diameters: vm.diameters)
                     Divider()
                         .padding()
                     BarChart(title: "DBH history (meters)", data: vm.chartData)
@@ -69,7 +63,7 @@ extension TreeCaptures {
 private struct CapturePicker : View {
     
     let captures : [TreeCaptureEntity]
-    @Binding var selectedCapture: TreeCaptureEntity?
+    @Binding var selectedCapture: TreeCaptureEntity
     
     var body: some View {
         VStack {
@@ -79,7 +73,7 @@ private struct CapturePicker : View {
                         DateParser.formatDateString(dateString: capture.capturedAt ?? "") ?? "date error"
                     )
                     .font(.body)
-                    .tag(capture)
+                    .tag("\(capture.id)")
                 }
             }
             .frame(height: 80)
@@ -89,9 +83,8 @@ private struct CapturePicker : View {
 }
 
 private struct CaptureProperties : View {
-    var capture : TreeCaptureEntity?
+    var capture : TreeCaptureEntity
     var diameters : [DiameterEntity]
-    var isFetchingDiameter : Bool
 
     private let columns = [
         GridItem(.fixed(100)),
@@ -108,32 +101,28 @@ private struct CaptureProperties : View {
                 .padding(.bottom)
             }
             
-            if (isFetchingDiameter) {
-                ProgressView("Downloading diameters...")
-            } else {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Height :")
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("Diameter :")
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    HStack {
-                        VStack {
-                            ForEach(diameters, id: \.self) { diameter in
-                                HStack {
-                                    Text(diameter.height.roundedToString(toPlaces: 3))
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    Text(diameter.diameter.roundedToString(toPlaces: 3))
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                }
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Height :")
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("Diameter :")
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                HStack {
+                    VStack {
+                        ForEach(diameters, id: \.self) { diameter in
+                            HStack {
+                                Text(diameter.height.roundedToString(toPlaces: 3))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Text(diameter.diameter.roundedToString(toPlaces: 3))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }

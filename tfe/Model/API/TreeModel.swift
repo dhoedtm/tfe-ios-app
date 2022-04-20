@@ -53,6 +53,17 @@ extension TreeModel {
         deletedAt = treeFormState.deletedAt.isEmpty ? nil : treeFormState.deletedAt
     }
     
+    init(treeEntity: TreeEntity) {
+        id = Int(treeEntity.id)
+        idStand = Int(treeEntity.idStand)
+        latitude = treeEntity.latitude
+        longitude = treeEntity.longitude
+        x = treeEntity.x
+        y = treeEntity.y
+        description = treeEntity.treeDescription
+        deletedAt = treeEntity.deletedAt
+    }
+    
     static func < (lhs: TreeModel, rhs: TreeModel) -> Bool {
         lhs.id < rhs.id
     }

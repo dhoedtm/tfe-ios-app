@@ -241,7 +241,21 @@ class ApiDataService {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
                 .eraseToAnyPublisher()
         }
-        let subscription = FileUploader().upload(fileUrl: fileURL, apiUrl: url)
+        let subscription = FileUploader().upload(fileUrl: fileURL, apiUrl: url, method: "POST")
+        return subscription
+            .mapError { error -> Error in
+                ApiError.unexpectedError(error)
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func uploadPointCloud(idStand: Int, fileURL: URL) -> AnyPublisher<UploadResponse, Error> {
+        let resourceString = "stands/\(idStand)/pointcloud"
+        guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
+            return Fail(error: ApiError.invalidRequest("URL invalid"))
+                .eraseToAnyPublisher()
+        }
+        let subscription = FileUploader().upload(fileUrl: fileURL, apiUrl: url, method: "PUT")
         return subscription
             .mapError { error -> Error in
                 ApiError.unexpectedError(error)

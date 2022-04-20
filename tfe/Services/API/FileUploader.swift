@@ -21,7 +21,7 @@ class FileUploader: NSObject {
         .init(configuration: .default, delegate: self, delegateQueue: nil)
     }()
     
-    func upload(fileUrl: URL, apiUrl: URL) -> AnyPublisher<UploadResponse, Error> {
+    func upload(fileUrl: URL, apiUrl: URL, method: String) -> AnyPublisher<UploadResponse, Error> {
         if (!Reachability.isConnectedToNetwork()) {
             return Fail(error: ApiError.noInternetAccess(""))
                 .eraseToAnyPublisher()
@@ -40,7 +40,7 @@ class FileUploader: NSObject {
         let bodyData = FileUploader.createFormdataBodyData(data: pointcloudData!, boundary:boundary, fileName:fileName)
         
         var request = URLRequest(url: apiUrl)
-        request.httpMethod = "POST"
+        request.httpMethod = method
         
         // headers
         request.setValue(

@@ -33,7 +33,8 @@ final class StandDetailsVM: ObservableObject {
     init(selectedStand: StandEntity) {
         self.subscribeToCoreDataResources()
         self.coreData.refreshLocalHistoriesForStand(id: selectedStand.id)
-        self.isFetchingHistories = true
+        self.name = selectedStand.name ?? ""
+        self.description = selectedStand.standDescription ?? ""
     }
     
     // MARK: DATA STORE functions
@@ -46,11 +47,7 @@ final class StandDetailsVM: ObservableObject {
             .store(in: &cancellables)
     }
     
-    // MARK: API functions
-    
-    func getHistories() {
-        print("[StandDetailsVM][getHistories] TODO")
-    }
+    // MARK: CORE DATA functions
     
     func updateStandDetails() {
         if !isValidName() {

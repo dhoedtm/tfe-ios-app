@@ -60,10 +60,35 @@ class StandListVM : ObservableObject {
                     self?.notificationManager.notification = Notification(
                         message: "An error occurred while fetching the data\n\(error)",
                         type: .error)
+                    print(error)
                     break
                 case .finished:
                     self?.notificationManager.notification = Notification(
                         message: "Sync was successful",
+                        type: .success)
+                    break
+                }
+            } receiveValue: { [weak self] isOK in
+                self?.coreData.save()
+                self?.coreData.refreshLocalStands()
+                self?.isSyncingWithApi = false
+            }
+    }
+    
+    func hardSyncWithApi() {
+        self.isSyncingWithApi = true
+        self.apiSyncCancellable = coreData.hardOneWayApiSync()
+            .sink { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.notificationManager.notification = Notification(
+                        message: "An error occurred while fetching the data\n\(error)",
+                        type: .error)
+                    print(error)
+                    break
+                case .finished:
+                    self?.notificationManager.notification = Notification(
+                        message: "Hard sync was successful",
                         type: .success)
                     break
                 }
