@@ -11,11 +11,11 @@ import MapKit
 struct StandMapView: View {
     
     @EnvironmentObject private var vm : StandMapVM
-    @StateObject var locationManager = LocationManager.shared
     
     @State var filePaths : [URL] = [URL]()
     @State var showAlert : Bool = false
     @State private var showDocumentPicker = false
+    @State var showingOptions = false
     
     var body: some View {
         if (vm.isFetchingTrees) {
@@ -42,6 +42,18 @@ struct StandMapView: View {
                 }
             }
             .navigationBarHidden(true)
+            .sheet(isPresented: self.$showDocumentPicker) {
+                DocumentPicker(filePaths: $filePaths)
+            }
+            .alert(
+                isPresented: $showAlert,
+                content: {
+                    Alert(
+                        title: Text("Upload error"),
+                        message: Text("please select a pointcloud before uploading")
+                    )
+                }
+            )
         }
     }
     
@@ -163,14 +175,43 @@ extension StandMapView {
             Spacer()
             header_date
             Spacer()
-            VStack {
-                header_updateStandFilePicker
-                    .padding(.top, 5)
-                header_updateStandSubmit
-                    .padding(.horizontal, 5)
-                header_fetchRemoteTrees
-                    .padding(.bottom, 5)
+            Button(
+                action: {
+                    showingOptions.toggle()
+                },
+                label: {
+                    Image(systemName: "ellipsis")
+                        .foregroundColor(.black)
+                        .padding()
+                }
+            )
+            .actionSheet(
+                isPresented: $showingOptions) {
+                ActionSheet(
+                    title: Text("Action on stand :"),
+                    buttons: [
+                        .default(Text("fetch trees from server")) {
+                            vm.updateTrees()
+                        },
+                        .default(Text("select pointcloud")) {
+                            showDocumentPicker = true
+                        },
+                        .default(Text("upload pointcloud")) {
+                            if (filePaths.isEmpty) {
+                                showAlert = true
+                            } else {
+                                vm.uploadPointClouds(filePaths: filePaths)
+                                // TODO: only reset selection when upload is successful
+                                filePaths = [URL]()
+                            }
+                        },
+                        .cancel()
+                    ]
+                )
             }
+            .background(Color.black.opacity(0.1))
+            .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 15)
+            .cornerRadius(10)
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -195,57 +236,6 @@ extension StandMapView {
         Text(DateParser.formatDateString(dateString: vm.selectedStand.capturedAt ?? "") ?? "error displaying date")
             .font(.title2)
             .fontWeight(.black)
-    }
-}
-extension StandMapView {
-    private var header_fetchRemoteTrees: some View {
-        Button(action: {
-            vm.updateTrees()
-        }, label: {
-            Image(systemName: "arrow.clockwise")
-                .scaledToFit()
-                .foregroundColor(.black)
-        })
-    }
-}
-extension StandMapView {
-    private var header_updateStandFilePicker: some View {
-        Button(action: {
-            showDocumentPicker = true
-        }, label: {
-            Image(systemName: "folder")
-                .scaledToFit()
-                .foregroundColor(.black)
-        })
-        .sheet(isPresented: self.$showDocumentPicker) {
-            DocumentPicker(filePaths: $filePaths)
-        }
-    }
-}
-extension StandMapView {
-    private var header_updateStandSubmit: some View {
-        Button(action: {
-            if (filePaths.isEmpty) {
-                showAlert = true
-            } else {
-                vm.uploadPointClouds(filePaths: filePaths)
-                // TODO: only reset selection when upload is successful
-                filePaths = [URL]()
-            }
-        }, label: {
-            Image(systemName: "icloud.and.arrow.up")
-                .scaledToFit()
-                .foregroundColor(.black)
-        })
-        .alert(
-            isPresented: $showAlert,
-            content: {
-                Alert(
-                    title: Text("Upload error"),
-                    message: Text("please select a pointcloud before uploading")
-                )
-            }
-        )
     }
 }
 

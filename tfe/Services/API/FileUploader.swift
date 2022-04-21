@@ -21,22 +21,22 @@ class FileUploader: NSObject {
         .init(configuration: .default, delegate: self, delegateQueue: nil)
     }()
     
-    func upload(fileUrl: URL, apiUrl: URL, method: String) -> AnyPublisher<UploadResponse, Error> {
+    func upload(fileURL: URL, apiUrl: URL, method: String) -> AnyPublisher<UploadResponse, Error> {
         if (!Reachability.isConnectedToNetwork()) {
-            return Fail(error: ApiError.noInternetAccess(""))
+            return Fail(error: ApiError.noInternetAccess("no access to internet"))
                 .eraseToAnyPublisher()
         }
         
         let pointcloudData : Data?
         do {
-            pointcloudData = try Data(contentsOf: fileUrl)
+            pointcloudData = try Data(contentsOf: fileURL)
         } catch(let error) {
             return Fail(error: ApiError.invalidRequest("Data error :\n\(error)"))
                 .eraseToAnyPublisher()
         }
         
         let boundary = UUID().uuidString
-        let fileName = fileUrl.lastPathComponent
+        let fileName = fileURL.lastPathComponent
         let bodyData = FileUploader.createFormdataBodyData(data: pointcloudData!, boundary:boundary, fileName:fileName)
         
         var request = URLRequest(url: apiUrl)
@@ -56,25 +56,32 @@ class FileUploader: NSObject {
             "\(bodyData.count)",
             forHTTPHeaderField: "Content-Length"
         )
+    
+//        let bodyFilePath = FileManager.default.urls(
+//            for: .documentDirectory,
+//            in: .userDomainMask
+//        )[0].appendingPathComponent("lul")
+//        do {
+//            try bodyData.write(to: bodyFilePath)
+//        } catch(let error) {
+//            print(error)
+//            return Fail(error: ApiError.unexpected("")).eraseToAnyPublisher()
+//        }
         
         let subject: PassthroughSubject<UploadResponse, Error> = .init()
-        let session = URLSession.shared
         
         let task: URLSessionUploadTask = session.uploadTask(
             with: request,
             from: bodyData
         ) { data, response, error in
             if let error = error {
-                print("[URLSessionUploadTask] Error : \(error)")
                 subject.send(completion: .failure(error))
                 return
             }
             if (response as? HTTPURLResponse)?.statusCode == 200 {
-                print("[URLSessionUploadTask] Response : \(response?.description ?? "")")
                 subject.send(.response(data: data))
                 return
             }
-            print("[URLSessionUploadTask] task continues")
             subject.send(.response(data: nil))
         }
         task.resume()
@@ -82,7 +89,6 @@ class FileUploader: NSObject {
         return progress
             .filter{ $0.id == task.taskIdentifier }
             .setFailureType(to: Error.self)
-            .print("upload task :")
             .map { .progress(percentage: $0.progress) }
             .merge(with: subject)
             .eraseToAnyPublisher()
@@ -119,7 +125,6 @@ extension FileUploader: URLSessionTaskDelegate {
         totalBytesSent: Int64,
         totalBytesExpectedToSend: Int64
     ) {
-        print("progress : \(task.progress.fractionCompleted)")
         progress.send((
             id: task.taskIdentifier,
             progress: task.progress.fractionCompleted

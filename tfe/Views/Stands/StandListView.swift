@@ -25,12 +25,12 @@ struct StandListView: View {
                         Image(systemName: "icloud.and.arrow.down")
                             .foregroundColor(.green)
                             .onTapGesture {
-                                vm.syncWithApi()
+                                vm.syncWithApi(isHardSync: false)
                             }
                             .onLongPressGesture(
                                 minimumDuration: 2,
                                 perform: {
-                                    vm.hardSyncWithApi()
+                                    vm.syncWithApi(isHardSync: true)
                                 }
                             )
                 )
@@ -67,12 +67,14 @@ extension StandListView {
     private var uploadList : some View {
         VStack {
             ForEach(vm.cancellableUploads, id: \.id) { item in
-                Button(action: { vm.cancelUpload(item: item) }, label: {
+                Button(action: { vm.cancelUpload(fileURL: item.id) }, label: {
                     HStack {
                         Image(systemName: "xmark")
                         HStack {
-                            Text("Uploading :")
-                            Text(item.label)
+                            let action = item.action.rawValue
+                            let progress = item.progress != nil ? "[\(item.progress!)]" : ""
+                            Text("\(action) \(progress) :")
+                            Text(item.fileName)
                                 .lineLimit(1)
                                 .truncationMode(.head)
                         }

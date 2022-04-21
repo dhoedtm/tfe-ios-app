@@ -18,7 +18,7 @@ class NetworkingManager {
     }
     
     static func download(url: URL) -> AnyPublisher<Data, Error> {
-        print("[NetworkingManager][download] \(url)")
+//        print("[NetworkingManager][download] \(url)")
         if (!Reachability.isConnectedToNetwork()) {
             return Fail(error: ApiError.noInternetAccess(""))
                 .eraseToAnyPublisher()

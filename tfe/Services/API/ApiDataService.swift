@@ -8,6 +8,44 @@
 import Foundation
 import Combine
 
+enum StandUploadResponseStatus : String {
+    case uploading
+    case waitingForServer
+    case failure
+    case done
+}
+
+enum StandUploadResponse : Equatable {
+    case standIdResponse(id: Int)
+    case standModelResponse(stand: StandModel)
+}
+
+struct CancellableItem : Identifiable, Hashable {
+    let id: String
+    let action: StandUploadResponseStatus
+    let fileName: String
+    let progress: Double?
+    let cancellable: AnyCancellable
+    
+    init(id: String, action: StandUploadResponseStatus, fileName: String, progress: Double, cancellable: AnyCancellable) {
+        self.id = id
+        self.action = action
+        self.fileName = fileName
+        self.progress = progress
+        self.cancellable = cancellable
+    }
+    
+    func updateProgress(progress: Double) -> CancellableItem {
+        return CancellableItem(
+            id: self.id,
+            action: self.action,
+            fileName: self.fileName,
+            progress: progress,
+            cancellable: self.cancellable
+        )
+    }
+}
+
 class ApiDataService {
     
     private init() {}
@@ -27,6 +65,7 @@ class ApiDataService {
     var deleteTreeSubscription: AnyCancellable?
     var deleteStandSubscription: AnyCancellable?
     
+    var cancellables = Set<AnyCancellable>()
     @Published var uploadStandSubscriptions = Set<CancellableItem>()
     
     // MARK: bulk api calls
@@ -103,6 +142,21 @@ class ApiDataService {
     }
     
     // MARK: targeted resource api calls
+    
+    func getStand(idStand: Int) -> AnyPublisher<[StandModel], Error> {
+        let resourceString = "stands/\(idStand)"
+        guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
+            return Fail(error: ApiError.invalidRequest("URL invalid"))
+                .eraseToAnyPublisher()
+        }
+        
+        return NetworkingManager.download(url: url)
+            .mapError { error -> Error in
+                ApiError.unexpectedError(error)
+            }
+            .decode(type: [StandModel].self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
+    }
     
     func getTreesForStand(idStand: Int) -> AnyPublisher<[TreeModel], Error> {
         let resourceString = "stands/\(idStand)/trees"
@@ -235,13 +289,81 @@ class ApiDataService {
             .eraseToAnyPublisher()
     }
     
-    func uploadPointCloud(fileURL: URL) -> AnyPublisher<UploadResponse, Error> {
+    func createNewStand(fileURL: URL) -> AnyPublisher<StandUploadResponse, Error> {
+        let fileName = fileURL.lastPathComponent
+        let subject = PassthroughSubject<StandUploadResponse, Error>()
+        
+        let subscription = self.createStandWithPointcloud(fileURL: fileURL)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print(error)
+                    break
+                case .finished:
+                    break
+                }
+            },
+            receiveValue: { uploadResponse in
+                switch uploadResponse {
+                case .progress(percentage: let percentage):
+                    self.updateStandSubscriptionProgress(fileURL: fileName, progress: percentage)
+                case .response(data: let data):
+                    if let data = data {
+                        do {
+                            let standModel = try JSONDecoder().decode(StandModel.self, from: data)
+                            subject.send(.standIdResponse(id: standModel.id))
+                        } catch(let error) {
+                            print(error)
+                        }
+                    }
+                }
+            })
+        
+        self.addCancellableUpload(
+            fileURL: fileURL,
+            action: .uploading,
+            fileName: fileName,
+            progress: 0,
+            cancellable: subscription
+        )
+        
+        subject
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print(error)
+                    self.cancelUploadStandSubscriptions(fileURL: fileURL.absoluteString)
+                    break
+                case .finished:
+                    break
+                }
+            }, receiveValue: { standUploadResponse in
+                switch standUploadResponse {
+                case .standIdResponse(id: let id):
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        let timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { timer in
+                            print("yoyoyo \(id)")
+                        }
+                        timer.fire()
+                    }
+                    break
+                case .standModelResponse(_):
+                    break
+                }
+            })
+            .store(in: &cancellables)
+        
+        return subject
+            .eraseToAnyPublisher()
+    }
+    
+    private func createStandWithPointcloud(fileURL: URL) -> AnyPublisher<UploadResponse, Error> {
         let resourceString = "stands/pointcloud"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
                 .eraseToAnyPublisher()
         }
-        let subscription = FileUploader().upload(fileUrl: fileURL, apiUrl: url, method: "POST")
+        let subscription = FileUploader().upload(fileURL: fileURL, apiUrl: url, method: "POST")
         return subscription
             .mapError { error -> Error in
                 ApiError.unexpectedError(error)
@@ -249,13 +371,13 @@ class ApiDataService {
             .eraseToAnyPublisher()
     }
     
-    func uploadPointCloud(idStand: Int, fileURL: URL) -> AnyPublisher<UploadResponse, Error> {
+    private func updateStandWithPointcloud(idStand: Int, fileURL: URL) -> AnyPublisher<UploadResponse, Error> {
         let resourceString = "stands/\(idStand)/pointcloud"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
                 .eraseToAnyPublisher()
         }
-        let subscription = FileUploader().upload(fileUrl: fileURL, apiUrl: url, method: "PUT")
+        let subscription = FileUploader().upload(fileURL: fileURL, apiUrl: url, method: "PUT")
         return subscription
             .mapError { error -> Error in
                 ApiError.unexpectedError(error)
@@ -265,6 +387,24 @@ class ApiDataService {
     
     // MARK: cancellables management
     
+    private func addCancellableUpload(
+        fileURL: URL,
+        action: StandUploadResponseStatus,
+        fileName: String,
+        progress: Double,
+        cancellable: AnyCancellable
+    ) { 
+        self.uploadStandSubscriptions.insert(
+            CancellableItem(
+                id: fileURL.absoluteString,
+                action: action,
+                fileName: fileName,
+                progress: progress,
+                cancellable: cancellable
+            )
+        )
+    }
+    
     func getCancellableUpload(id: String) -> CancellableItem? {
         let itemFound = self.uploadStandSubscriptions.first { item in
             return item.id == id
@@ -272,7 +412,18 @@ class ApiDataService {
         return itemFound
     }
     
-    func cancelUploadStandSubscriptions(cancellableItemId: String) {
+    private func updateStandSubscriptionProgress(fileURL cancellableItemId: String, progress: Double) {
+        if let oldItem = self.getCancellableUpload(id: cancellableItemId) {
+            self.uploadStandSubscriptions.remove(oldItem)
+            self.uploadStandSubscriptions.insert(oldItem.updateProgress(progress: progress))
+        }
+    }
+    
+    func uploadStandSubscriptionExists(fileURL cancellableItemId: String) -> Bool {
+        return getCancellableUpload(id: cancellableItemId) != nil
+    }
+    
+    func cancelUploadStandSubscriptions(fileURL cancellableItemId: String) {
         if let item = self.getCancellableUpload(id: cancellableItemId) {
             item.cancellable.cancel()
             self.uploadStandSubscriptions.remove(item)

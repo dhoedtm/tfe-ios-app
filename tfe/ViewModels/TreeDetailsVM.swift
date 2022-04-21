@@ -27,6 +27,7 @@ final class TreeDetailsVM : ObservableObject {
     @Published var description : String = ""
     
     init(selectedTree: TreeEntity) {
+        print("TreeDetailsVM - INIT")
         self.selectedTree = selectedTree
         self.latitude = String(selectedTree.latitude)
         self.longitude = String(selectedTree.longitude)
@@ -60,16 +61,17 @@ final class TreeDetailsVM : ObservableObject {
                     )
                 break
                 case .finished:
-                    self?.notificationManager.notification = Notification(
-                        message: "Tree has been updated",
-                        type: .success
-                    )
+                    
                 break
                 }
             }, receiveValue: { [weak self] treeModel in
                 self?.coreData.updateLocalTreeDetails(treeModel: treeModel)
                 self?.coreData.refreshLocalTreesForStand(id: (self?.selectedTree.idStand)!)
                 self?.isUpdating = false
+                self?.notificationManager.notification = Notification(
+                    message: "Tree has been updated",
+                    type: .success
+                )
             })
     }
     

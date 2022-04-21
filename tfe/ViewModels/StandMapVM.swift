@@ -43,6 +43,7 @@ class StandMapVM : ObservableObject {
     // MARK: init
     
     init(selectedStand: StandEntity) {
+        print("StandMapVM - INIT")
         self.selectedStand = selectedStand
         self.coreData.refreshLocalTreesForStand(id: selectedStand.id)
         self.subscribeToCoreDataResources()
@@ -85,7 +86,6 @@ class StandMapVM : ObservableObject {
         self.coreData.$localTreeEntitiesForSelectedStand
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .sink { [weak self] (treeEntities) in
-                print("NEW TREES : \(treeEntities.count)")
                 let sortedTrees = treeEntities.sorted(by: { tree1, tree2 in
                     tree1.id < tree2.id
                 })
@@ -142,7 +142,7 @@ class StandMapVM : ObservableObject {
     
     func uploadPointClouds(filePaths: [URL]) {
         for path in filePaths {
-            if (self.api.getCancellableUpload(id: path.absoluteString) != nil) {
+            if (self.api.uploadStandSubscriptionExists(fileURL: path.absoluteString)) {
                 notificationManager.notification = Notification(
                     message: "already uploading file \(path.lastPathComponent)",
                     type: .warning
@@ -153,52 +153,8 @@ class StandMapVM : ObservableObject {
         }
     }
     
-    func uploadPointCloud(filePath: URL) {
-        let cancellableItemId = filePath.absoluteString
-        let cancellableItemLabel = filePath.lastPathComponent
-        
-        let subscription = api.uploadPointCloud(idStand: Int(self.selectedStand.id), fileURL: filePath)
-            .receive(on: DispatchQueue.main)
-            .print("VM upload :")
-            .sink(
-                receiveCompletion: { [weak self] (completion) in
-                    switch completion {
-                    case .failure(let error):
-                        self?.notificationManager.notification = Notification(
-                            message: "stand couldn't be uploaded\n(\(error.localizedDescription))",
-                            type: .error)
-                        self?.api.cancelUploadStandSubscriptions(cancellableItemId: cancellableItemId)
-                        break
-                    case .finished:
-                        break
-                    }
-                },
-                receiveValue: { [weak self] uploadResponse in
-                    // progress not working for an upload task with Data
-                    // works fine for an upload task with a file
-                    switch uploadResponse {
-                    case let .progress(percentage):
-                        print("progress : \(percentage)")
-                    case let .response(data):
-                        self?.notificationManager.notification = Notification(
-                            message: "stand \(cancellableItemLabel) uploaded)",
-                            type: .success)
-                        self?.api.cancelUploadStandSubscriptions(cancellableItemId: cancellableItemId)
-                        // print("response OK [\(data)B]")
-                    }
-                })
-        
-        self.api.uploadStandSubscriptions.insert(
-            CancellableItem(
-                id: cancellableItemId,
-                cancellable: subscription,
-                label: cancellableItemLabel
-            )
-        )
-    }
+    func uploadPointCloud(filePath: URL) { }
     
-    func cancelUpload(item: CancellableItem) {
-        self.api.cancelUploadStandSubscriptions(cancellableItemId: item.id)
-    }
+    func cancelUpload(item: CancellableItem) { }
 }
 

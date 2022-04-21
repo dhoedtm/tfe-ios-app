@@ -25,12 +25,20 @@ final class StandDetailsVM: ObservableObject {
     // data
     @Published var selectedStand : StandEntity
     @Published var histories : [StandHistoryEntity] = []
+    {
+        didSet {
+            if (!self.histories.isEmpty) {
+                self.selectedHistory = self.histories.first!
+            }
+        }
+    }
     @Published var selectedHistory : StandHistoryEntity = StandHistoryEntity()
     // TODO: find a way to auto-bind coredata entity properties to textfields
     @Published var name : String = ""
     @Published var description : String = ""
     
     init(selectedStand: StandEntity) {
+        print("StandDetailsVM - INIT")
         self.selectedStand = selectedStand
         self.subscribeToCoreDataResources()
         self.name = selectedStand.name ?? ""
@@ -44,7 +52,6 @@ final class StandDetailsVM: ObservableObject {
         self.coreData.$localHistoriesEntitiesForSelectedStand
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .sink { historyEntities in
-                print("HISTORIES : \(historyEntities.count)")
                 self.histories = historyEntities
             }
             .store(in: &cancellables)

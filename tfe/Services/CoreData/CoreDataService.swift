@@ -22,6 +22,8 @@ class CoreDataService: ObservableObject {
     let api = ApiDataService.shared
     private var subscriptions : Set<AnyCancellable> = []
     
+    @Published var isSyncingWithApi = false
+    
     @Published var localStandEntities: [StandEntity] = []
     @Published var localHistoriesEntitiesForSelectedStand: [StandHistoryEntity] = []
     @Published var localTreeEntitiesForSelectedStand: [TreeEntity] = []
@@ -51,6 +53,7 @@ class CoreDataService: ObservableObject {
     /// ```
     /// It finally, stores local CoreData entities into persistent storage
     func oneWayApiSync() -> AnyPublisher<Bool, Error> {
+        self.isSyncingWithApi = true
         return api.getStands()
             .receive(on: DispatchQueue.global(qos: .background))
             .map({ standModels -> [StandEntity] in
@@ -82,6 +85,7 @@ class CoreDataService: ObservableObject {
     
     /// purges local data before syncing
     func hardOneWayApiSync() -> AnyPublisher<Bool, Error> {
+        self.isSyncingWithApi = true
         // purges local data
         manager.resetContainer()
         // fetches data
@@ -267,20 +271,20 @@ class CoreDataService: ObservableObject {
     
     // MARK: STANDS
     
-//    func addStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
-//        let standEntity = updateOrCreateStandEntityFromModel(standModel: stand)
-//
-//        return Publishers
-//            .MergeMany([
-//                self.populateStandHistories(standEntities: [standEntity]),
-//                self.populateStandTrees(standEntities: [standEntity])
-//            ])
-//            .reduce(true, { accumulator, isCurrOk in
-//                accumulator && isCurrOk
-//            })
-//            .receive(on: DispatchQueue.main)
-//            .eraseToAnyPublisher()
-//    }
+    func addStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
+        let standEntity = updateOrCreateStandEntityFromModel(standModel: stand)
+
+        return Publishers
+            .MergeMany([
+                self.populateStandHistories(standEntities: [standEntity]),
+                self.populateStandTrees(standEntities: [standEntity])
+            ])
+            .reduce(true, { accumulator, isCurrOk in
+                accumulator && isCurrOk
+            })
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
     
     func updateLocalStandDetails(standModel: StandModel) {
         let fetchRequest : NSFetchRequest<StandEntity> = StandEntity.fetchRequest()
@@ -431,9 +435,6 @@ class CoreDataService: ObservableObject {
     func deleteLocalTree(id: Int32) {
         if let treeEntity = self.fetchLocalTreeEntity(id: id) {
             self.manager.context.delete(treeEntity)
-//            self.localTreeEntitiesForSelectedStand.removeAll { entity in
-//                entity.id == treeEntity.id
-//            }
             self.save()
         }
     }
@@ -602,7 +603,7 @@ class CoreDataService: ObservableObject {
     {
         entity.id = Int32(historyModel.id)
         entity.name = historyModel.name
-        entity.standHistoryDescription = historyModel.description
+        entity.treeCount = Int16(historyModel.treeCount)
         entity.basalArea = historyModel.basalArea
         entity.capturedAt = historyModel.capturedAt
         entity.concaveAreaHectare = historyModel.concaveAreaHectare
@@ -611,6 +612,7 @@ class CoreDataService: ObservableObject {
         entity.convexAreaMeter = historyModel.concaveAreaMeter
         entity.meanDbh = historyModel.meanDbh
         entity.meanDistance = historyModel.meanDistance
+        entity.standHistoryDescription = historyModel.description
         return entity
     }
     func mapTreeModelToTreeEntity(treeModel: TreeModel, entity: TreeEntity)

@@ -9,6 +9,7 @@ import Foundation
 
 enum ApiError: Error {
     case invalidRequest(_ msg: String)
+    case unexpected(_ msg: String)
     case unexpectedError(_ error: Error)
     case noInternetAccess(_ msg: String)
 }
@@ -25,6 +26,8 @@ extension ApiError: CustomStringConvertible {
         switch self {
         case .invalidRequest(_):
             return "An invalid request lead to an error."
+        case .unexpected(_):
+            return "An unexpected event happened."
         case .unexpectedError(_):
             return "An unexpected error occurred."
         case .noInternetAccess(_):
@@ -40,6 +43,11 @@ extension ApiError: LocalizedError {
             return NSLocalizedString(
                 "An invalid request lead to an error",
                 comment: "Invalid request"
+            )
+        case .unexpected(_):
+            return NSLocalizedString(
+                "An unexpected event happened.",
+                comment: "Unexpected event"
             )
         case .unexpectedError(_):
             return NSLocalizedString(
