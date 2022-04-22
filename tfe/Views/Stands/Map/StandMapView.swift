@@ -196,13 +196,16 @@ extension StandMapView {
                         .default(Text("select pointcloud")) {
                             showDocumentPicker = true
                         },
-                        .default(Text("upload pointcloud")) {
+                        .default(Text(vm.isUploadingPointcloud ? "cancel pointcloud" : "upload pointcloud")) {
                             if (filePaths.isEmpty) {
                                 showAlert = true
                             } else {
-                                vm.uploadPointClouds(filePaths: filePaths)
-                                // TODO: only reset selection when upload is successful
-                                filePaths = [URL]()
+                                if (vm.isUploadingPointcloud) {
+                                    vm.cancelUpload()
+                                } else {
+                                    vm.uploadPointCloud(filePath: filePaths.first!)
+                                    filePaths = [URL]()
+                                }
                             }
                         },
                         .cancel()

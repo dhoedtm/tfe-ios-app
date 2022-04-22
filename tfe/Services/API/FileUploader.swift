@@ -41,6 +41,7 @@ class FileUploader: NSObject {
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = method
+        request.timeoutInterval = 99999
         
         // headers
         request.setValue(

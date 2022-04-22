@@ -47,7 +47,7 @@ class StandListVM : ObservableObject {
     func subscribeToApiUploadCancellables() {
         self.api.$uploadStandSubscriptions
             .sink { cancellableUploads in
-                self.cancellableUploads = Array(cancellableUploads)
+                self.cancellableUploads = Array(cancellableUploads).sorted()
             }
             .store(in: &cancellables)
     }
@@ -134,19 +134,73 @@ class StandListVM : ObservableObject {
     }
     
     func uploadPointCloud(filePath: URL) {
-        self.api.createNewStand(fileURL: filePath)
-            .print("VM :")
+        
+        let subscription = self.api.createStandWithPointcloud(fileURL: filePath)
+            .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
-                case .failure(_):
+                case .failure(let error):
+                    self.notificationManager.notification = Notification(
+                        message: "Couldn't upload file : \(filePath.lastPathComponent)\n\(error)",
+                        type: .error
+                    )
+                    self.api.cancelUploadStandSubscriptions(fileURL: filePath.absoluteString)
                 break
                 case .finished:
+                    print("")
                 break
                 }
-            } receiveValue: { _ in
-                
+            } receiveValue: { uploadResponse in
+                switch uploadResponse{
+                case .progress(percentage: let percentage):
+                    if (percentage > 0 && percentage < 95) {
+                        self.api.updateStandSubscriptionProgress(fileURL: filePath.absoluteString, progress: percentage)
+                        break
+                    }
+                    if (percentage >= 95) {
+                        self.api.updateStandSubscriptionAction(fileURL: filePath.absoluteString, action: .waitingForServer)
+                        self.notificationManager.notification = Notification(
+                            message: "Fully uploaded file : \(filePath.lastPathComponent)\nWaiting for server analysis",
+                            type: .info
+                        )
+                    }
+                case .response(data: let data):
+                    if let data = data {
+                        do {
+                            let standModel = try JSONDecoder().decode(StandModel.self, from: data)
+                            self.coreData.addStand(stand: standModel)
+                                .sink { completion in
+                                    switch completion {
+                                    case .finished:
+                                        self.coreData.refreshLocalStands()
+                                        break
+                                    case .failure(_):
+                                        break
+                                    }
+                                } receiveValue: { _ in }
+                                .store(in: &self.cancellables)
+                        } catch(let error) {
+                            self.notificationManager.notification = Notification(
+                                message: "Internal error\n\(error)",
+                                type: .success
+                            )
+                        }
+                        self.notificationManager.notification = Notification(
+                            message: "Fully analyzed file : \(filePath.lastPathComponent)",
+                            type: .success
+                        )
+                    }
+                    self.api.cancelUploadStandSubscriptions(fileURL: filePath.absoluteString)
+                }
             }
-            .store(in: &cancellables)
+            
+        self.api.addCancellableUpload(
+            fileURL: filePath,
+            action: .uploading,
+            fileName: filePath.lastPathComponent,
+            progress: nil,
+            cancellable: subscription
+        )
     }
     
     func cancelUpload(fileURL: String) {

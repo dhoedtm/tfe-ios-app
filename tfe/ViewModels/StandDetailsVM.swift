@@ -24,11 +24,12 @@ final class StandDetailsVM: ObservableObject {
     
     // data
     @Published var selectedStand : StandEntity
+    var selectedStandAsHistory : StandHistoryEntity = StandHistoryEntity()
     @Published var histories : [StandHistoryEntity] = []
     {
         didSet {
             if (!self.histories.isEmpty) {
-                self.selectedHistory = self.histories.first!
+                self.selectedHistory = self.histories.last!
             }
         }
     }
@@ -53,6 +54,9 @@ final class StandDetailsVM: ObservableObject {
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .sink { historyEntities in
                 self.histories = historyEntities
+                self.histories.sort { history1, history2 in
+                    history1.capturedAt ?? "" < history2.capturedAt ?? ""
+                }
             }
             .store(in: &cancellables)
     }

@@ -72,8 +72,11 @@ extension StandListView {
                         Image(systemName: "xmark")
                         HStack {
                             let action = item.action.rawValue
-                            let progress = item.progress != nil ? "[\(item.progress!)]" : ""
-                            Text("\(action) \(progress) :")
+                            if let progress = item.progress {
+                                Text("\(action) [\((progress * 100).roundedToString(toPlaces: 1))] :")
+                            } else {
+                                Text("\(action) :")
+                            }
                             Text(item.fileName)
                                 .lineLimit(1)
                                 .truncationMode(.head)

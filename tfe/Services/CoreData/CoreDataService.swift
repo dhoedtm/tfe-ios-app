@@ -101,9 +101,15 @@ class CoreDataService: ObservableObject {
         for standEntity in standEntities {
             let publisher = self.api.getHistoriesForStand(idStand: Int(standEntity.id))
                 .map({ historyModels -> [StandHistoryEntity] in
-                    historyModels.map { historyModel in
-                        self.updateOrCreateHistoryEntityFromModel(history: historyModel)
+                    var histories = historyModels.map { historyModel -> StandHistoryEntity in
+                        print("history : \(historyModel.capturedAt)")
+                        return self.updateOrCreateHistoryEntityFromModel(history: historyModel)
                     }
+                    print("stand : \(standEntity.capturedAt ?? "")")
+                    histories.append(
+                        self.createHistoryEntityFromStandEntity(stand: standEntity)
+                    )
+                    return histories
                 })
                 .map({ historyEntities -> Bool in
                     // remove histories that no longer exists on the remote server
@@ -274,6 +280,25 @@ class CoreDataService: ObservableObject {
     func addStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
         let standEntity = updateOrCreateStandEntityFromModel(standModel: stand)
 
+        return Publishers
+            .MergeMany([
+                self.populateStandHistories(standEntities: [standEntity]),
+                self.populateStandTrees(standEntities: [standEntity])
+            ])
+            .reduce(true, { accumulator, isCurrOk in
+                accumulator && isCurrOk
+            })
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func updateStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
+        guard let standEntity = self.fetchLocalStandEntity(id: Int32(stand.id)) else {
+            return Fail(error: CoreDataError.entityNotFound("stand not found"))
+                .eraseToAnyPublisher()
+        }
+        
+        _ = self.updateOrCreateStandEntityFromModel(entity: standEntity, standModel: stand)
         return Publishers
             .MergeMany([
                 self.populateStandHistories(standEntities: [standEntity]),
@@ -521,61 +546,58 @@ class CoreDataService: ObservableObject {
     func updateOrCreateStandEntityFromModel(entity: StandEntity? = nil, standModel: StandModel)
     -> StandEntity
     {
-        let localStandEntity : StandEntity = {
-            if let entity : StandEntity = entity {
-                return entity
-            }
-            return StandEntity(context: self.manager.context)
-        }()
-        return mapStandModelToStandEntity(standModel: standModel, entity: localStandEntity)
+        var localEntity = entity
+        if (entity == nil) {
+            localEntity = StandEntity(context: self.manager.context)
+        }
+        return mapStandModelToStandEntity(standModel: standModel, entity: localEntity!)
     }
     
     func updateOrCreateHistoryEntityFromModel(entity: StandHistoryEntity? = nil, history: StandHistoryModel)
     -> StandHistoryEntity
     {
-        let localHistoryEntity : StandHistoryEntity = {
-            if let entity : StandHistoryEntity = entity {
-                return entity
-            }
-            return StandHistoryEntity(context: self.manager.context)
-        }()
-        return mapStandHistoryModelToStandHistoryEntity(historyModel: history, entity: localHistoryEntity)
+        var localHistoryEntity = entity
+        if (entity == nil) {
+            localHistoryEntity = StandHistoryEntity(context: self.manager.context)
+        }
+        return mapStandHistoryModelToStandHistoryEntity(historyModel: history, entity: localHistoryEntity!)
+    }
+    
+    func createHistoryEntityFromStandEntity(stand: StandEntity)
+    -> StandHistoryEntity
+    {
+        let localHistoryEntity = StandHistoryEntity(context: self.manager.context)
+        return mapStandEntityToHistoryEntity(standEntity: stand, entity: localHistoryEntity)
     }
     
     func updateOrCreateTreeEntityFromModel(entity: TreeEntity? = nil, treeModel: TreeModel)
     -> TreeEntity
     {
-        let localTreeEntity : TreeEntity = {
-            if let entity : TreeEntity = entity {
-                return entity
-            }
-            return TreeEntity(context: self.manager.context)
-        }()
-        return mapTreeModelToTreeEntity(treeModel: treeModel, entity: localTreeEntity)
+        var localTreeEntity = entity
+        if (entity == nil) {
+            localTreeEntity = TreeEntity(context: self.manager.context)
+        }
+        return mapTreeModelToTreeEntity(treeModel: treeModel, entity: localTreeEntity!)
     }
     
     func updateOrCreateCaptureEntityFromModel(entity: TreeCaptureEntity? = nil, captureModel: TreeCaptureModel)
     -> TreeCaptureEntity
     {
-        let localCaptureEntity : TreeCaptureEntity = {
-            if let entity : TreeCaptureEntity = entity {
-                return entity
-            }
-            return TreeCaptureEntity(context: self.manager.context)
-        }()
-        return mapCaptureModelToCaptureEntity(captureModel: captureModel, entity: localCaptureEntity)
+        var localCaptureEntity = entity
+        if (entity == nil) {
+            localCaptureEntity = TreeCaptureEntity(context: self.manager.context)
+        }
+        return mapCaptureModelToCaptureEntity(captureModel: captureModel, entity: localCaptureEntity!)
     }
     
     func updateOrCreateDiameterEntityFromModel(entity: DiameterEntity? = nil, diameterModel: DiameterModel)
     -> DiameterEntity
     {
-        let localDiameterEntity : DiameterEntity = {
-            if let entity : DiameterEntity = entity {
-                return entity
-            }
-            return DiameterEntity(context: self.manager.context)
-        }()
-        return mapDiameterModelToDiameterEntity(diameterModel: diameterModel, entity: localDiameterEntity)
+        var localDiameterEntity = entity
+        if (entity == nil) {
+            localDiameterEntity = DiameterEntity(context: self.manager.context)
+        }
+        return mapDiameterModelToDiameterEntity(diameterModel: diameterModel, entity: localDiameterEntity!)
     }
     
     // MARK: MAPPING
@@ -605,7 +627,7 @@ class CoreDataService: ObservableObject {
         entity.name = historyModel.name
         entity.treeCount = Int16(historyModel.treeCount)
         entity.basalArea = historyModel.basalArea
-        entity.capturedAt = historyModel.capturedAt
+        entity.capturedAt = historyModel.capturedAt + "_mapping_history"
         entity.concaveAreaHectare = historyModel.concaveAreaHectare
         entity.concaveAreaMeter = historyModel.concaveAreaMeter
         entity.convexAreaHectare = historyModel.convexAreaHectare
@@ -613,6 +635,22 @@ class CoreDataService: ObservableObject {
         entity.meanDbh = historyModel.meanDbh
         entity.meanDistance = historyModel.meanDistance
         entity.standHistoryDescription = historyModel.description
+        return entity
+    }
+    func mapStandEntityToHistoryEntity(standEntity: StandEntity, entity: StandHistoryEntity)
+    -> StandHistoryEntity {
+        entity.id = standEntity.id
+        entity.name = standEntity.name
+        entity.treeCount = standEntity.treeCount
+        entity.basalArea = standEntity.basalArea
+        entity.capturedAt = standEntity.capturedAt! + "_mapping_stand"
+        entity.concaveAreaHectare = standEntity.concaveAreaHectare
+        entity.concaveAreaMeter = standEntity.concaveAreaMeter
+        entity.convexAreaHectare = standEntity.convexAreaHectare
+        entity.convexAreaMeter = standEntity.convexAreaMeter
+        entity.meanDbh = standEntity.meanDbh
+        entity.meanDistance = standEntity.meanDistance
+        entity.standHistoryDescription = standEntity.standDescription
         return entity
     }
     func mapTreeModelToTreeEntity(treeModel: TreeModel, entity: TreeEntity)
