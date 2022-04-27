@@ -51,8 +51,8 @@ extension TreeCaptures {
     
     @ViewBuilder var treeDetails : some View {
         HStack {
-            LabelledText("longitude", String(vm.selectedTree.longitude))
             LabelledText("latitude", String(vm.selectedTree.latitude))
+            LabelledText("longitude", String(vm.selectedTree.longitude))
         }
         if let description = vm.selectedTree.treeDescription {
             LabelledText("description", !description.isEmpty ? description : "/")

@@ -27,7 +27,6 @@ final class TreeDetailsVM : ObservableObject {
     @Published var description : String = ""
     
     init(selectedTree: TreeEntity) {
-        print("TreeDetailsVM - INIT")
         self.selectedTree = selectedTree
         self.latitude = String(selectedTree.latitude)
         self.longitude = String(selectedTree.longitude)

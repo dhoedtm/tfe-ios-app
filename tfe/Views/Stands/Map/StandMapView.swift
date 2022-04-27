@@ -175,46 +175,7 @@ extension StandMapView {
             Spacer()
             header_date
             Spacer()
-            Button(
-                action: {
-                    showingOptions.toggle()
-                },
-                label: {
-                    Image(systemName: "ellipsis")
-                        .foregroundColor(.black)
-                        .padding()
-                }
-            )
-            .actionSheet(
-                isPresented: $showingOptions) {
-                ActionSheet(
-                    title: Text("Action on stand :"),
-                    buttons: [
-                        .default(Text("fetch trees from server")) {
-                            vm.updateTrees()
-                        },
-                        .default(Text("select pointcloud")) {
-                            showDocumentPicker = true
-                        },
-                        .default(Text(vm.isUploadingPointcloud ? "cancel pointcloud" : "upload pointcloud")) {
-                            if (filePaths.isEmpty) {
-                                showAlert = true
-                            } else {
-                                if (vm.isUploadingPointcloud) {
-                                    vm.cancelUpload()
-                                } else {
-                                    vm.uploadPointCloud(filePath: filePaths.first!)
-                                    filePaths = [URL]()
-                                }
-                            }
-                        },
-                        .cancel()
-                    ]
-                )
-            }
-            .background(Color.black.opacity(0.1))
-            .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 15)
-            .cornerRadius(10)
+            header_actionSheet
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -239,6 +200,50 @@ extension StandMapView {
         Text(DateParser.formatDateString(dateString: vm.selectedStand.capturedAt ?? "") ?? "error displaying date")
             .font(.title2)
             .fontWeight(.black)
+    }
+}
+extension StandMapView {
+    private var header_actionSheet: some View {
+        Button(
+            action: {
+                showingOptions.toggle()
+            },
+            label: {
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.black)
+                    .padding()
+            }
+        )
+        .actionSheet(
+            isPresented: $showingOptions) {
+            ActionSheet(
+                title: Text("Action on stand :"),
+                buttons: [
+                    .default(Text("fetch trees from server")) {
+                        vm.updateTrees()
+                    },
+                    .default(Text("select pointcloud")) {
+                        showDocumentPicker = true
+                    },
+                    .default(Text(vm.isUploadingPointcloud ? "cancel pointcloud upload" : "upload pointcloud")) {
+                        if (filePaths.isEmpty) {
+                            showAlert = true
+                        } else {
+                            if (vm.isUploadingPointcloud) {
+                                vm.cancelUpload()
+                            } else {
+                                vm.uploadPointCloud(filePath: filePaths.first!)
+                                filePaths = [URL]()
+                            }
+                        }
+                    },
+                    .cancel()
+                ]
+            )
+        }
+        .background(Color.black.opacity(0.1))
+        .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 15)
+        .cornerRadius(10)
     }
 }
 

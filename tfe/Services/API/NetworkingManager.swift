@@ -32,7 +32,7 @@ class NetworkingManager {
     }
     
     static func sendData(url: URL, method: HTTPMethods, data: Data?) -> AnyPublisher<Data, Error> {
-        print("[NetworkingManager][sendData][\(method.rawValue)] \(url)")
+//        print("[NetworkingManager][sendData][\(method.rawValue)] \(url)")
         if (!Reachability.isConnectedToNetwork()) {
             return Fail(error: ApiError.noInternetAccess(""))
                 .eraseToAnyPublisher()

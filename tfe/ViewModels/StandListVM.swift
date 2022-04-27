@@ -30,7 +30,6 @@ class StandListVM : ObservableObject {
     // MARK: init
     
     init() {
-        print("StandListVM - INIT")
         subscribeToCoreDataResources()
         subscribeToApiUploadCancellables()
     }
@@ -53,14 +52,11 @@ class StandListVM : ObservableObject {
     }
     
     func syncWithApi(isHardSync: Bool) {
-        print("ATTEMPT")
         if (self.coreData.isSyncingWithApi) {
-            print("NON")
             self.notificationManager.notification = Notification(
                 message: "Already syncing with API",
                 type: .warning)
         } else {
-            print("OUI")
             if (isHardSync) {
                 sinkForApiSync(publisher: coreData.hardOneWayApiSync())
             } else {
@@ -70,7 +66,6 @@ class StandListVM : ObservableObject {
     }
     
     func sinkForApiSync(publisher: AnyPublisher<Bool, Error>) {
-        print("WENT THROUGH")
         self.apiSyncCancellable = publisher
             .receive(on: DispatchQueue.main)
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
@@ -80,7 +75,7 @@ class StandListVM : ObservableObject {
                     self?.notificationManager.notification = Notification(
                         message: "An error occurred while fetching the data\n\(error)",
                         type: .error)
-                    print(error)
+                    self?.coreData.isSyncingWithApi = false
                     break
                 case .finished:
                     self?.notificationManager.notification = Notification(
@@ -93,12 +88,6 @@ class StandListVM : ObservableObject {
                 }
             } receiveValue: { _ in }
     }
-    
-    //    func cancelSync() {
-    //        self.apiSyncCancellable?.cancel()
-    //        self.coreData.refreshLocalStands()
-    //        self.isSyncingWithApi = false
-    //    }
     
     func deleteStand(offsets: IndexSet) {
         if let offset = offsets.first {
@@ -134,7 +123,6 @@ class StandListVM : ObservableObject {
     }
     
     func uploadPointCloud(filePath: URL) {
-        
         let subscription = self.api.createStandWithPointcloud(fileURL: filePath)
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -147,51 +135,10 @@ class StandListVM : ObservableObject {
                     self.api.cancelUploadStandSubscriptions(fileURL: filePath.absoluteString)
                 break
                 case .finished:
-                    print("")
                 break
                 }
             } receiveValue: { uploadResponse in
-                switch uploadResponse{
-                case .progress(percentage: let percentage):
-                    if (percentage > 0 && percentage < 95) {
-                        self.api.updateStandSubscriptionProgress(fileURL: filePath.absoluteString, progress: percentage)
-                        break
-                    }
-                    if (percentage >= 95) {
-                        self.api.updateStandSubscriptionAction(fileURL: filePath.absoluteString, action: .waitingForServer)
-                        self.notificationManager.notification = Notification(
-                            message: "Fully uploaded file : \(filePath.lastPathComponent)\nWaiting for server analysis",
-                            type: .info
-                        )
-                    }
-                case .response(data: let data):
-                    if let data = data {
-                        do {
-                            let standModel = try JSONDecoder().decode(StandModel.self, from: data)
-                            self.coreData.addStand(stand: standModel)
-                                .sink { completion in
-                                    switch completion {
-                                    case .finished:
-                                        self.coreData.refreshLocalStands()
-                                        break
-                                    case .failure(_):
-                                        break
-                                    }
-                                } receiveValue: { _ in }
-                                .store(in: &self.cancellables)
-                        } catch(let error) {
-                            self.notificationManager.notification = Notification(
-                                message: "Internal error\n\(error)",
-                                type: .success
-                            )
-                        }
-                        self.notificationManager.notification = Notification(
-                            message: "Fully analyzed file : \(filePath.lastPathComponent)",
-                            type: .success
-                        )
-                    }
-                    self.api.cancelUploadStandSubscriptions(fileURL: filePath.absoluteString)
-                }
+                self.handleUploadResponse(filePath: filePath, uploadResponse: uploadResponse)
             }
             
         self.api.addCancellableUpload(
@@ -201,6 +148,54 @@ class StandListVM : ObservableObject {
             progress: nil,
             cancellable: subscription
         )
+    }
+    
+    func handleUploadResponse(filePath: URL, uploadResponse: UploadResponse) {
+        switch uploadResponse{
+        case .progress(percentage: let percentage):
+            if (percentage > 0.0 && percentage < 0.95) {
+                self.api.updateStandSubscriptionProgress(fileURL: filePath.absoluteString, progress: percentage)
+                break
+            } else if (percentage >= 0.95) {
+                self.api.updateStandSubscriptionAction(fileURL: filePath.absoluteString, action: .waitingForServer)
+                self.notificationManager.notification = Notification(
+                    message: "Fully uploaded file : \(filePath.lastPathComponent)\nWaiting for server analysis",
+                    type: .info
+                )
+            }
+        case .response(data: let data):
+            if let data = data {
+                do {
+                    let standModel = try JSONDecoder().decode(StandModel.self, from: data)
+                    self.addStandToCoreData(standModel: standModel)
+                    self.notificationManager.notification = Notification(
+                        message: "Fully analyzed file : \(filePath.lastPathComponent)",
+                        type: .success
+                    )
+                } catch(let error) {
+                    self.notificationManager.notification = Notification(
+                        message: "Internal error\n\(error)",
+                        type: .success
+                    )
+                }
+            }
+            self.api.cancelUploadStandSubscriptions(fileURL: filePath.absoluteString)
+        }
+    }
+    
+    func addStandToCoreData(standModel: StandModel) {
+        self.coreData.addStand(stand: standModel)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    self.coreData.save()
+                    self.coreData.refreshLocalStands()
+                    break
+                case .failure(_):
+                    break
+                }
+            } receiveValue: { _ in }
+            .store(in: &self.cancellables)
     }
     
     func cancelUpload(fileURL: String) {

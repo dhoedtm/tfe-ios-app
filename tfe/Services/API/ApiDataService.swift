@@ -157,7 +157,7 @@ class ApiDataService {
     
     // MARK: targeted resource api calls
     
-    func getStand(idStand: Int) -> AnyPublisher<[StandModel], Error> {
+    func getStand(idStand: Int) -> AnyPublisher<StandModel, Error> {
         let resourceString = "stands/\(idStand)"
         guard let url = ApiDataService.baseURL?.appendingPathComponent(resourceString) else {
             return Fail(error: ApiError.invalidRequest("URL invalid"))
@@ -168,7 +168,7 @@ class ApiDataService {
             .mapError { error -> Error in
                 ApiError.unexpectedError(error)
             }
-            .decode(type: [StandModel].self, decoder: JSONDecoder())
+            .decode(type: StandModel.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
     }
     

@@ -39,11 +39,8 @@ private struct HistoryPicker : View {
         Picker("Capture date", selection: $selectedHistory) {
             ForEach(captures, id: \.self) { capture in
                 Text(
-                    capture.capturedAt ?? ""
-//                    DateParser.formatDateString(dateString: capture.capturedAt ?? "") ?? "date error"
-                ).tag(capture)                
-                .lineLimit(1)
-                .truncationMode(.head)
+                    DateParser.formatDateString(dateString: capture.capturedAt ?? "") ?? "date error"
+                ).tag(capture)
             }
         }
         .frame(height: 100)

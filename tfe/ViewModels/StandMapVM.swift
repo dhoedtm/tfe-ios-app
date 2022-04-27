@@ -45,7 +45,6 @@ class StandMapVM : ObservableObject {
     // MARK: init
     
     init(selectedStand: StandEntity) {
-        print("StandMapVM - INIT")
         self.selectedStand = selectedStand
         self.coreData.refreshLocalTreesForStand(id: selectedStand.id)
         self.subscribeToCoreDataResources()
@@ -58,6 +57,10 @@ class StandMapVM : ObservableObject {
     /// - the trees are refreshed and references have become stale
     /// - the selected tree is deleted
     func treeSelection() {
+        if (self.trees.isEmpty) {
+            self.selectedTree = nil
+            return
+        }
         // update stale reference to a selected tree that no longer exists
         let treeToSelect = self.trees.first(where: { entity in
             entity.id == (self.selectedTree?.id ?? 0)
@@ -107,11 +110,11 @@ class StandMapVM : ObservableObject {
                         type: .error)
                     break
                 case .finished:
-                    self?.coreData.refreshLocalTreesForStand(id: self?.selectedStand.id ?? 0)
                     self?.notificationManager.notification = Notification(
                         message: "Trees inside this stand are now up to date",
                         type: .success)
                     self?.coreData.save()
+                    self?.coreData.refreshLocalTreesForStand(id: self?.selectedStand.id ?? 0)
                     self?.isFetchingTrees = false
                     break
                 }
@@ -135,9 +138,18 @@ class StandMapVM : ObservableObject {
                 case .finished:
                     break
                 }
-            } receiveValue: { [weak self] _ in
-                self?.coreData.deleteLocalTree(id: idTree)
-                self?.coreData.save()
+            } receiveValue: { _ in
+                self.coreData.deleteLocalTree(id: idTree)
+                self.coreData.refreshLocalTreesForStand(id: self.selectedStand.id)
+                self.coreData.fetchRemoteStandAndHistories(standEntity: self.selectedStand)
+                    .sink(
+                        receiveCompletion: { _ in },
+                        receiveValue: { _ in
+                            self.coreData.save()
+                            self.coreData.refreshLocalHistoriesForStand(id: self.selectedStand.id)
+                        }
+                    )
+                    .store(in: &self.cancellables)
             }
             .store(in: &cancellables)
     }
@@ -169,12 +181,17 @@ class StandMapVM : ObservableObject {
                     message: "Couldn't upload file : \(filePath.lastPathComponent)\n\(error)",
                     type: .error
                 )
+                self.isUploadingPointcloud = false
                 break
             case .finished:
-                print("")
                 break
             }
         } receiveValue: { uploadResponse in
+            self.handleUploadResponse(filePath: filePath, uploadResponse: uploadResponse)
+        }
+    }
+    
+    func handleUploadResponse(filePath: URL, uploadResponse: UploadResponse) {
             switch uploadResponse{
             case .progress(percentage: let percentage):
                 if (percentage > 0 && percentage < 95) {
@@ -190,43 +207,46 @@ class StandMapVM : ObservableObject {
                 }
             case .response(data: let data):
                 if let data = data {
-                    do {
-                        let standModel = try JSONDecoder().decode(StandModel.self, from: data)
-                        self.coreData.updateStand(stand: standModel)
-                            .sink { completion in
-                                switch completion {
-                                case .failure(_):
-                                    self.notificationManager.notification = Notification(
-                                        message: "Updated stand couldn't be saved locally",
-                                        type: .success
-                                    )
-                                case .finished:
-                                    break
-                                }
-                            } receiveValue: { isOk in
-                                self.notificationManager.notification = Notification(
-                                    message: "Updated stand is now available offline",
-                                    type: .success
-                                )
-                                self.coreData.refreshLocalStands()
-                                self.coreData.refreshLocalHistoriesForStand(id: self.selectedStand.id)
-                                self.coreData.refreshLocalTreesForStand(id: self.selectedStand.id)
-                                self.isUploadingPointcloud = false
-                            }
-                            .store(in: &self.cancellables)
-                    } catch(let error) {
-                        self.notificationManager.notification = Notification(
-                            message: "Internal error\n\(error)",
-                            type: .success
-                        )
-                    }
-                    self.notificationManager.notification = Notification(
-                        message: "Fully analyzed file : \(filePath.lastPathComponent)",
-                        type: .success
-                    )
+                    self.updateStandInCoreData(filePath:filePath, standData: data)
                 }
             }
+    }
+    
+    func updateStandInCoreData(filePath: URL, standData: Data) {
+        do {
+            let standModel = try JSONDecoder().decode(StandModel.self, from: standData)
+            self.coreData.updateStand(stand: standModel)
+                .sink { completion in
+                    switch completion {
+                    case .failure(_):
+                        self.notificationManager.notification = Notification(
+                            message: "Updated stand couldn't be saved locally",
+                            type: .success
+                        )
+                    case .finished:
+                        break
+                    }
+                } receiveValue: { isOk in
+                    self.notificationManager.notification = Notification(
+                        message: "Updated stand is now available offline",
+                        type: .success
+                    )
+                    self.coreData.refreshLocalStands()
+                    self.coreData.refreshLocalHistoriesForStand(id: self.selectedStand.id)
+                    self.coreData.refreshLocalTreesForStand(id: self.selectedStand.id)
+                }
+                .store(in: &self.cancellables)
+        } catch(let error) {
+            self.notificationManager.notification = Notification(
+                message: "Internal error\n\(error)",
+                type: .success
+            )
         }
+        self.notificationManager.notification = Notification(
+            message: "Fully analyzed file : \(filePath.lastPathComponent)",
+            type: .success
+        )
+        self.isUploadingPointcloud = false
     }
     
     func cancelUpload() {

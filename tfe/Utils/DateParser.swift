@@ -9,7 +9,7 @@ import Foundation
 
 class DateParser {
     
-    private static let fr_BE = Locale(identifier: "fr_BE")
+    private static let locale = Locale(identifier: "en_GB")
     
     private static var sharedStringParser: DateFormatter = {
         let formatter = DateFormatter()
@@ -20,7 +20,7 @@ class DateParser {
     private static var sharedDateParser: DateFormatter = {
         let formatter = DateFormatter()
         let template = "dMyyyyHH:mm:ss"
-        let custom = DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: fr_BE)
+        let custom = DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: locale)
         formatter.dateFormat = custom
         return formatter
     }()
@@ -28,7 +28,7 @@ class DateParser {
     private static var sharedShortDateParser: DateFormatter = {
         let formatter = DateFormatter()
         let template = "dMyyyy"
-        let custom = DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: fr_BE)
+        let custom = DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: locale)
         formatter.dateFormat = custom
         return formatter
     }()

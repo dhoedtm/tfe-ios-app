@@ -72,8 +72,9 @@ extension StandListView {
                         Image(systemName: "xmark")
                         HStack {
                             let action = item.action.rawValue
-                            if let progress = item.progress {
-                                Text("\(action) [\((progress * 100).roundedToString(toPlaces: 1))] :")
+                            if (item.action == .uploading && item.progress != nil) {
+                                let formattedProgress = (item.progress! * 100).roundedToString(toPlaces: 1)
+                                Text("\(action) [\(formattedProgress)] :")
                             } else {
                                 Text("\(action) :")
                             }
@@ -84,7 +85,7 @@ extension StandListView {
                     }
                 })
                 .buttonStyle(StandardButton())
-                .padding(5)
+                .padding(.vertical, 10)
             }
         }
     }

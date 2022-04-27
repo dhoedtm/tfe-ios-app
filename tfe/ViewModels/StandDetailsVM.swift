@@ -39,7 +39,6 @@ final class StandDetailsVM: ObservableObject {
     @Published var description : String = ""
     
     init(selectedStand: StandEntity) {
-        print("StandDetailsVM - INIT")
         self.selectedStand = selectedStand
         self.subscribeToCoreDataResources()
         self.name = selectedStand.name ?? ""

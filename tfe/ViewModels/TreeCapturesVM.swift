@@ -44,7 +44,6 @@ final class TreeCapturesVM: ObservableObject {
     @Published var diameters : [DiameterEntity]  = []
     
     init(selectedTree: TreeEntity) {
-        print("TreeCapturesVM - INIT")
         self.selectedTree = selectedTree
         self.subscribeToCoreDataResources()
         self.coreData.refreshLocalCapturesForTree(id: selectedTree.id)

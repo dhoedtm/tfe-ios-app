@@ -79,6 +79,7 @@ class CoreDataService: ObservableObject {
                     })
                     .eraseToAnyPublisher()
             })
+            .timeout(.seconds(180), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
@@ -101,11 +102,11 @@ class CoreDataService: ObservableObject {
         for standEntity in standEntities {
             let publisher = self.api.getHistoriesForStand(idStand: Int(standEntity.id))
                 .map({ historyModels -> [StandHistoryEntity] in
-                    var histories = historyModels.map { historyModel -> StandHistoryEntity in
-                        print("history : \(historyModel.capturedAt)")
-                        return self.updateOrCreateHistoryEntityFromModel(history: historyModel)
+                    // all known histories for a given stand
+                    var histories = historyModels.map { historyModel in
+                        self.updateOrCreateHistoryEntityFromModel(history: historyModel)
                     }
-                    print("stand : \(standEntity.capturedAt ?? "")")
+                    // the stand itself as the latest history for that stand
                     histories.append(
                         self.createHistoryEntityFromStandEntity(stand: standEntity)
                     )
@@ -254,12 +255,13 @@ class CoreDataService: ObservableObject {
             .eraseToAnyPublisher()
     }
     
-    static func handleCompletion(completion: Subscribers.Completion<Error>) {
+    func handleCompletion(completion: Subscribers.Completion<Error>) {
         switch completion {
         case .finished:
             break
         case .failure(let error):
             print("[oneWaySyncWithApi - completion] error : \(error)")
+            self.isSyncingWithApi = false
             break
         }
     }
@@ -277,9 +279,7 @@ class CoreDataService: ObservableObject {
     
     // MARK: STANDS
     
-    func addStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
-        let standEntity = updateOrCreateStandEntityFromModel(standModel: stand)
-
+    func populateStandEntity(standEntity: StandEntity) -> AnyPublisher<Bool, Error> {
         return Publishers
             .MergeMany([
                 self.populateStandHistories(standEntities: [standEntity]),
@@ -292,23 +292,18 @@ class CoreDataService: ObservableObject {
             .eraseToAnyPublisher()
     }
     
+    func addStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
+        let standEntity = updateOrCreateStandEntityFromModel(standModel: stand)
+        return populateStandEntity(standEntity: standEntity)
+    }
+    
     func updateStand(stand: StandModel) -> AnyPublisher<Bool, Error> {
         guard let standEntity = self.fetchLocalStandEntity(id: Int32(stand.id)) else {
             return Fail(error: CoreDataError.entityNotFound("stand not found"))
                 .eraseToAnyPublisher()
         }
-        
         _ = self.updateOrCreateStandEntityFromModel(entity: standEntity, standModel: stand)
-        return Publishers
-            .MergeMany([
-                self.populateStandHistories(standEntities: [standEntity]),
-                self.populateStandTrees(standEntities: [standEntity])
-            ])
-            .reduce(true, { accumulator, isCurrOk in
-                accumulator && isCurrOk
-            })
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return populateStandEntity(standEntity: standEntity)
     }
     
     func updateLocalStandDetails(standModel: StandModel) {
@@ -324,6 +319,31 @@ class CoreDataService: ObservableObject {
         } catch(let error) {
             print("[CoreDataEntities][updateLocalStandDetails] ERROR : \(error)")
         }
+    }
+    
+    func fetchRemoteStandAndHistories(standEntity: StandEntity) -> AnyPublisher<Bool, Error> {
+        return api.getStand(idStand: Int(standEntity.id))
+            .receive(on: DispatchQueue.global(qos: .background))
+            .map({ standModel -> StandEntity in
+                self.updateOrCreateStandEntityFromModel(entity: standEntity, standModel: standModel)
+            })
+            .flatMap({ standEntity -> AnyPublisher<Bool, Error> in
+                // remove stand that no longer exists on the remote server
+                Set(self.localStandEntities)
+                    .subtracting([standEntity])
+                    .forEach({ stand in
+                        self.manager.context.delete(stand)
+                    })
+                // query and insert relationship data into fetched stands
+                return self.populateStandHistories(standEntities: [standEntity])
+                    .reduce(true, { accumulator, isCurrOk in
+                        accumulator && isCurrOk
+                    })
+                    .eraseToAnyPublisher()
+            })
+            .timeout(.seconds(180), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
     
     func fetchLocalStandEntity(id: Int32) -> StandEntity? {
@@ -364,6 +384,17 @@ class CoreDataService: ObservableObject {
             historyEntity.stand = standEntity
             standEntity.addToHistories(historyEntity)
         }
+    }
+    
+    func fetchRemoteHistoriesForStand(id: Int32) -> AnyPublisher<Bool, Error> {
+        guard let standEntity = fetchLocalStandEntity(id: id) else {
+            print("[CoreDataService][updateTreesForStand] stand not found")
+            return createMissingEntityPublisher(message: "stand not found")
+        }
+        // populate histories data for stand
+        return self.populateStandHistories(standEntities: [standEntity])
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
     
     func fetchLocalHistoriesForStand(id: Int32) -> [StandHistoryEntity] {
@@ -627,7 +658,7 @@ class CoreDataService: ObservableObject {
         entity.name = historyModel.name
         entity.treeCount = Int16(historyModel.treeCount)
         entity.basalArea = historyModel.basalArea
-        entity.capturedAt = historyModel.capturedAt + "_mapping_history"
+        entity.capturedAt = historyModel.capturedAt
         entity.concaveAreaHectare = historyModel.concaveAreaHectare
         entity.concaveAreaMeter = historyModel.concaveAreaMeter
         entity.convexAreaHectare = historyModel.convexAreaHectare
@@ -643,7 +674,7 @@ class CoreDataService: ObservableObject {
         entity.name = standEntity.name
         entity.treeCount = standEntity.treeCount
         entity.basalArea = standEntity.basalArea
-        entity.capturedAt = standEntity.capturedAt! + "_mapping_stand"
+        entity.capturedAt = standEntity.capturedAt
         entity.concaveAreaHectare = standEntity.concaveAreaHectare
         entity.concaveAreaMeter = standEntity.concaveAreaMeter
         entity.convexAreaHectare = standEntity.convexAreaHectare

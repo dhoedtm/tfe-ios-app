@@ -13,7 +13,6 @@ class StandMasterVM : ObservableObject {
     @Published var selectedStand : StandEntity
     
     init(selectedStand: StandEntity) {
-        print("StandMasterVM - INIT")
         self.selectedStand = selectedStand
     }
 }
